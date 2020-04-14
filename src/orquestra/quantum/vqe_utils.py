@@ -1,6 +1,5 @@
 from openfermion.utils import uccsd_singlet_paramsize
 
-# TODO: check input parameters
 def build_circuit_template(ansatz_type, n_mo, n_alpha, n_beta, transformation='Jordan-Wigner',
                            fermion_generator=None, spin_ordering='interleaved', 
                            n_qubits=None, ordering=None, layers=None,
