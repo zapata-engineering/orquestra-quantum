@@ -6,12 +6,12 @@ from typing import List
 
 from zquantum.core.bitstring_distribution import BitstringDistribution
 
-def get_bars_and_stripes_target_distribution(nrows, ncols, percentage=1., method="zigzag"):
-    ''' Generates bars and stripes data in zigzag pattern
+def get_bars_and_stripes_target_distribution(nrows, ncols, fraction=1., method="zigzag"):
+    ''' Generates bars and stripes (BAS) data in zigzag pattern
     Args: 
         nrows (int): number of rows in BAS dataset 
         ncols (int): number of columns in BAS dataset 
-        percentage (float): maximum percentage of patterns to include (at least one pattern will always be included)
+        fraction (float): maximum fraction of patterns to include (at least one pattern will always be included)
         method (string): the method to use to label the qubits
     Returns: 
         Array of list of BAS pattern. 
@@ -22,7 +22,7 @@ def get_bars_and_stripes_target_distribution(nrows, ncols, percentage=1., method
         raise RuntimeError("Method: {} is not supported for generated a target distribution for bars and stripes".format(method))
 
     # Remove patterns until left with a subset that has cardinality less than or equal to the percentage * total number of patterns
-    num_desired_patterns = int(len(data) * percentage)
+    num_desired_patterns = int(len(data) * fraction)
     num_desired_patterns = max(num_desired_patterns, 1)
     data = random.sample(list(data), num_desired_patterns)
 
@@ -38,12 +38,11 @@ def get_bars_and_stripes_target_distribution(nrows, ncols, percentage=1., method
 
 
 # Generate BAS with specified rows and columns in zigzag pattern (taken from Vicente's code, would be careful about ownership of code)
-def bars_and_stripes_zigzag(nrows, ncols, percentage=1.):
+def bars_and_stripes_zigzag(nrows, ncols):
     ''' Generates bars and stripes data in zigzag pattern
     Args: 
         nrows (int): number of rows in BAS dataset 
-        ncols (int): number of columns in BAS dataset 
-        percentage (float): maximum percentage of patterns to include
+        ncols (int): number of columns in BAS dataset
     Returns: 
         Array of list of BAS pattern. 
     '''
