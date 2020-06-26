@@ -13,8 +13,7 @@ def exponentiate_fermion_operator(
     fermion_generator: Union[FermionOperator, InteractionOperator],
     transformation: str = "Jordan-Wigner",
 ) -> Circuit:
-    """
-    Create a pyQuil circuit corresponding to the exponentiation of an operator.
+    """Create a circuit corresponding to the exponentiation of an operator.
 
     Args:
         fermion_generator (openfermion.FermionOperator or 
@@ -52,10 +51,9 @@ def create_layer_of_gates(number_of_qubits: int, gate_name: str) -> Circuit:
     Creates a circuit consisting of a single layer of specific gate.
     """
     circuit = Circuit()
-    qubits = [Qubit(i) for i in range(0, number_of_qubits)]
-    circuit.qubits = qubits
-    gates = []
+    circuit.qubits = [Qubit(i) for i in range(0, number_of_qubits)]
+    circuit.gates = []
     for i in range(number_of_qubits):
-        gates.append(Gate(gate_name, [qubits[i]]))
-    circuit.gates = gates
+        circuit.gates.append(Gate(gate_name, [circuit.qubits[i]]))
+
     return circuit
