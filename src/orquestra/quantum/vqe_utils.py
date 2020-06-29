@@ -13,7 +13,7 @@ def exponentiate_fermion_operator(
     fermion_generator: Union[FermionOperator, InteractionOperator],
     transformation: str = "Jordan-Wigner",
 ) -> Circuit:
-    """Create a circuit corresponding to the exponentiation of an operator.
+    """Create a circuit corresponding to the exponentiation of an operator. Works only for antihermitian fermionic operators.
 
     Args:
         fermion_generator (openfermion.FermionOperator or 
