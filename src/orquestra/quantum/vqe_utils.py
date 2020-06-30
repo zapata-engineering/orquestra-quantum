@@ -1,4 +1,4 @@
-from zquantum.core.circuit import Circuit, Gate, Qubit
+from zquantum.core.circuit import Circuit
 from forestopenfermion import exponentiate
 from openfermion import (
     jordan_wigner,
@@ -6,6 +6,7 @@ from openfermion import (
     FermionOperator,
     InteractionOperator,
 )
+import numpy as np
 from typing import Union
 
 
@@ -37,10 +38,12 @@ def exponentiate_fermion_operator(
     qubit_generator = transformation(fermion_generator)
 
     for term in qubit_generator.terms:
+        if not np.isclose(qubit_generator.terms[term].real, 0.0):
+            raise RuntimeError("Transformed fermion_generator is not anti-hermitian.")
         qubit_generator.terms[term] = float(qubit_generator.terms[term].imag)
     qubit_generator.compress()
 
     # Quantum circuit implementing the excitation operators
     circuit = exponentiate(qubit_generator)
 
-    return circuit
+    return Circuit(circuit)
