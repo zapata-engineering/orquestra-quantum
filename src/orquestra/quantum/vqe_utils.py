@@ -22,7 +22,9 @@ def exponentiate_fermion_operator(
         fermion_generator (openfermion.FermionOperator or 
             openfermion.InteractionOperator): fermionic generator.
         transformation (str): The name of the qubit-to-fermion transformation to use.
-        number_of_qubits (int): The number of qubits in the system. Defaults to None.
+        number_of_qubits (int|None): This can be used to force the number of qubits in the resulting operator 
+            above the number that appears in the input operator. Defaults to None and the number of qubits in 
+            the resulting operator will match the number that appears in the input operator. 
 
     Returns:
         zquantum.core.circuit.Circuit: Circuit corresponding to the exponentiation of the
