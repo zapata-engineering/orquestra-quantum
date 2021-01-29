@@ -1,5 +1,6 @@
 from zquantum.core.circuit import Circuit, Gate, Qubit
-from forestopenfermion import exponentiate
+from zquantum.core.evolution import time_evolution
+from zquantum.core.openfermion import qubitop_to_pyquilpauli
 from openfermion import (
     jordan_wigner,
     bravyi_kitaev,
@@ -19,16 +20,16 @@ def exponentiate_fermion_operator(
     """Create a circuit corresponding to the exponentiation of an operator. Works only for antihermitian fermionic operators.
 
     Args:
-        fermion_generator (openfermion.FermionOperator or 
+        fermion_generator (openfermion.FermionOperator or
             openfermion.InteractionOperator): fermionic generator.
         transformation (str): The name of the qubit-to-fermion transformation to use.
-        number_of_qubits (int|None): This can be used to force the number of qubits in the resulting operator 
-            above the number that appears in the input operator. Defaults to None and the number of qubits in 
-            the resulting operator will match the number that appears in the input operator. 
+        number_of_qubits (int|None): This can be used to force the number of qubits in the resulting operator
+            above the number that appears in the input operator. Defaults to None and the number of qubits in
+            the resulting operator will match the number that appears in the input operator.
 
     Returns:
         zquantum.core.circuit.Circuit: Circuit corresponding to the exponentiation of the
-            transformed operator. 
+            transformed operator.
     """
     if transformation not in ["Jordan-Wigner", "Bravyi-Kitaev"]:
         raise RuntimeError(f"Unrecognized transformation {transformation}")
@@ -48,9 +49,11 @@ def exponentiate_fermion_operator(
     qubit_generator.compress()
 
     # Quantum circuit implementing the excitation operators
-    circuit = exponentiate(qubit_generator)
+    circuit = time_evolution(
+        qubitop_to_pyquilpauli(qubit_generator), 1, method="Trotter", trotter_order=1
+    )
 
-    return Circuit(circuit)
+    return circuit
 
 
 def build_hartree_fock_circuit(
@@ -60,17 +63,17 @@ def build_hartree_fock_circuit(
     transformation: str,
     spin_ordering: str = "interleaved",
 ) -> Circuit:
-    """Creates a circuit that prepares the Hartree-Fock state.  
+    """Creates a circuit that prepares the Hartree-Fock state.
 
     Args:
         number_of_qubits (int): the number of qubits in the system.
         number_of_alpha_electrons (int): the number of alpha electrons in the system.
         number_of_beta_electrons (int): the number of beta electrons in the system.
-        transformation (str): the Hamiltonian transformation to use. 
+        transformation (str): the Hamiltonian transformation to use.
         spin_ordering (str, optional): the spin ordering convention to use. Defaults to "interleaved".
-    
+
     Returns:
-        zquantum.core.circuit.Circuit: a circuit that prepares the Hartree-Fock state. 
+        zquantum.core.circuit.Circuit: a circuit that prepares the Hartree-Fock state.
     """
     if spin_ordering != "interleaved":
         raise RuntimeError(
