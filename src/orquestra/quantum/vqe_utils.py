@@ -1,5 +1,5 @@
 from zquantum.core.circuit import Circuit, Gate, Qubit
-from zquantum.core.evolution import exponentiate
+from zquantum.core.evolution import time_evolution
 from zquantum.core.openfermion import qubitop_to_pyquilpauli
 from openfermion import (
     jordan_wigner,
@@ -49,7 +49,9 @@ def exponentiate_fermion_operator(
     qubit_generator.compress()
 
     # Quantum circuit implementing the excitation operators
-    circuit = exponentiate(qubit_generator, 1)
+    circuit = time_evolution(
+        qubitop_to_pyquilpauli(qubit_generator), 1, method="Trotter", trotter_order=1
+    )
 
     return circuit
 
