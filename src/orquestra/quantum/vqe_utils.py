@@ -10,6 +10,7 @@ from openfermion import (
 )
 import numpy as np
 from typing import Optional, Union
+import sympy
 
 
 def exponentiate_fermion_operator(
@@ -43,15 +44,22 @@ def exponentiate_fermion_operator(
         qubit_generator = bravyi_kitaev(fermion_generator, n_qubits=number_of_qubits)
 
     for term in qubit_generator.terms:
-        if not np.isclose(qubit_generator.terms[term].real, 0.0):
-            raise RuntimeError("Transformed fermion_generator is not anti-hermitian.")
-        qubit_generator.terms[term] = float(qubit_generator.terms[term].imag)
+        if isinstance(qubit_generator.terms[term], sympy.Expr):
+            if sympy.re(qubit_generator.terms[term]) != 0:
+                raise RuntimeError(
+                    "Transformed fermion_generator is not anti-hermitian."
+                )
+            qubit_generator.terms[term] = sympy.im(qubit_generator.terms[term])
+        else:
+            if not np.isclose(qubit_generator.terms[term].real, 0.0):
+                raise RuntimeError(
+                    "Transformed fermion_generator is not anti-hermitian."
+                )
+            qubit_generator.terms[term] = float(qubit_generator.terms[term].imag)
     qubit_generator.compress()
 
     # Quantum circuit implementing the excitation operators
-    circuit = time_evolution(
-        qubitop_to_pyquilpauli(qubit_generator), 1, method="Trotter", trotter_order=1
-    )
+    circuit = time_evolution(qubit_generator, 1, method="Trotter", trotter_order=1)
 
     return circuit
 
