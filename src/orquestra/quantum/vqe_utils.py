@@ -89,6 +89,8 @@ def build_hartree_fock_circuit(
         )
     circuit = Circuit()
     circuit.gates = []
+    circuit.qubits = [Qubit(i) for i in range(number_of_qubits)]
+
     alpha_indexes = list(range(0, number_of_qubits, 2))
     beta_indexes = list(range(1, number_of_qubits, 2))
     index_list = []
