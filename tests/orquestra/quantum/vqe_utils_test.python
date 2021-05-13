@@ -10,6 +10,7 @@ class TestVQEUtils:
         number_of_beta_electrons = 1
         transformation = "Jordan-Wigner"
         expected_circuit = Circuit()
+        expected_circuit.qubits = [Qubit(0), Qubit(1), Qubit(2), Qubit(3)]
         expected_circuit.gates = [Gate("X", [Qubit(0)]), Gate("X", [Qubit(1)])]
         actual_circuit = build_hartree_fock_circuit(
             number_of_qubits,
@@ -25,6 +26,7 @@ class TestVQEUtils:
         number_of_beta_electrons = 1
         transformation = "Bravyi-Kitaev"
         expected_circuit = Circuit()
+        expected_circuit.qubits = [Qubit(0), Qubit(1), Qubit(2), Qubit(3)]
         expected_circuit.gates = [Gate("X", [Qubit(0)])]
         actual_circuit = build_hartree_fock_circuit(
             number_of_qubits,
