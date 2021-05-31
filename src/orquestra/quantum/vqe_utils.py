@@ -1,5 +1,5 @@
-from zquantum.core.wip.circuits import Circuit, X
-from zquantum.core.wip.evolution import time_evolution
+from zquantum.core.circuits import Circuit, X
+from zquantum.core.evolution import time_evolution
 from openfermion import (
     jordan_wigner,
     bravyi_kitaev,
