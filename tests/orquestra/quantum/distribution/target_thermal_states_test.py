@@ -1,7 +1,8 @@
+import random
 import unittest
 import numpy as np
+import numpy.testing
 from zquantum.core.utils import dec2bin, convert_tuples_to_bitstrings
-from zquantum.core.bitstring_distribution import BitstringDistribution
 from zquantum.core.bitstring_distribution.distance_measures.mmd import compute_mmd
 from zquantum.qcbm.target_thermal_states import (
     convert_integer_to_ising_bitstring,
@@ -135,7 +136,9 @@ class TestThermalTarget(unittest.TestCase):
         n_samples = 5000
         n_spins = 2
         temperature = 0.85
-        np.random.seed(SEED)
+        np.random.seed(SEED)  # needed by our samplers
+        random.seed(SEED)  # needed to make lea reproducible
+
         external_fields = np.random.rand(n_spins)
         two_body_couplings = np.random.rand(n_spins, n_spins)
         hamiltonian_parameters = [external_fields, two_body_couplings]
@@ -165,17 +168,16 @@ class TestThermalTarget(unittest.TestCase):
         n_spins = 4
         temperature = 1.0
         distance_measure_parameters = {"sigma": 1.0}
-        np.random.seed(SEED)
+        np.random.seed(SEED)  # needed by our samplers
+        random.seed(SEED)  # needed to make lea reproducible
+
         external_fields = np.random.rand(n_spins)
         two_body_couplings = np.random.rand(n_spins, n_spins)
         hamiltonian_parameters = [external_fields, two_body_couplings]
-        np.random.seed(SEED)
+
         actual = get_thermal_target_bitstring_distribution(
-            n_spins,
-            temperature,
-            hamiltonian_parameters,
+            n_spins, temperature, hamiltonian_parameters
         )
-        np.random.seed(SEED)
         model = get_thermal_sampled_distribution(
             n_samples, n_spins, temperature, hamiltonian_parameters
         )
@@ -191,7 +193,9 @@ class TestThermalTarget(unittest.TestCase):
         n_samples = 10000
         n_spins = 4
         temperature = 1.0
-        np.random.seed(SEED)
+        np.random.seed(SEED)  # needed by our samplers
+        random.seed(SEED)  # needed to make lea reproducible
+
         external_fields = np.random.rand(n_spins)
         two_body_couplings = np.random.rand(n_spins, n_spins)
         hamiltonian_parameters = [external_fields, two_body_couplings]
