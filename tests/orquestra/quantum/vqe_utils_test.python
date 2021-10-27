@@ -1,5 +1,5 @@
 from zquantum.core.circuits import Circuit, X
-from zquantum.vqe.utils import exponentiate_fermion_operator, build_hartree_fock_circuit
+from zquantum.vqe.utils import build_hartree_fock_circuit, exponentiate_fermion_operator
 
 
 class TestVQEUtils:

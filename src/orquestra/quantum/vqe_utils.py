@@ -1,15 +1,16 @@
-from zquantum.core.circuits import Circuit, X
-from zquantum.core.evolution import time_evolution
+from typing import Optional, Union
+
+import numpy as np
+import sympy
 from openfermion import (
-    jordan_wigner,
-    bravyi_kitaev,
     FermionOperator,
     InteractionOperator,
+    bravyi_kitaev,
     get_fermion_operator,
+    jordan_wigner,
 )
-import numpy as np
-from typing import Optional, Union
-import sympy
+from zquantum.core.circuits import Circuit, X
+from zquantum.core.evolution import time_evolution
 
 
 def exponentiate_fermion_operator(
