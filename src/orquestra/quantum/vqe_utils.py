@@ -1,15 +1,16 @@
-from zquantum.core.circuits import Circuit, X
-from zquantum.core.evolution import time_evolution
+from typing import Optional, Union
+
+import numpy as np
+import sympy
 from openfermion import (
-    jordan_wigner,
-    bravyi_kitaev,
     FermionOperator,
     InteractionOperator,
+    bravyi_kitaev,
     get_fermion_operator,
+    jordan_wigner,
 )
-import numpy as np
-from typing import Optional, Union
-import sympy
+from zquantum.core.circuits import Circuit, X
+from zquantum.core.evolution import time_evolution
 
 
 def exponentiate_fermion_operator(
@@ -17,14 +18,16 @@ def exponentiate_fermion_operator(
     transformation: str = "Jordan-Wigner",
     number_of_qubits: Optional[int] = None,
 ) -> Circuit:
-    """Create a circuit corresponding to the exponentiation of an operator. Works only for antihermitian fermionic operators.
+    """Create a circuit corresponding to the exponentiation of an operator.
+        Works only for antihermitian fermionic operators.
 
     Args:
         fermion_generator: fermionic generator.
         transformation: The name of the qubit-to-fermion transformation to use.
-        number_of_qubits: This can be used to force the number of qubits in the resulting operator
-            above the number that appears in the input operator. Defaults to None and the number of qubits in
-            the resulting operator will match the number that appears in the input operator.
+        number_of_qubits: This can be used to force the number of qubits in
+            the resulting operator above the number that appears in the input operator.
+            Defaults to None and the number of qubits in the resulting operator will
+            match the number that appears in the input operator.
     """
     if transformation not in ["Jordan-Wigner", "Bravyi-Kitaev"]:
         raise RuntimeError(f"Unrecognized transformation {transformation}")
@@ -79,7 +82,8 @@ def build_hartree_fock_circuit(
     """
     if spin_ordering != "interleaved":
         raise RuntimeError(
-            f"{spin_ordering} is not supported at this time. Interleaved is the only supported spin-ordering."
+            f"{spin_ordering} is not supported at this time. Interleaved is the only"
+            "supported spin-ordering."
         )
     circuit = Circuit(n_qubits=number_of_qubits)
 
@@ -99,7 +103,8 @@ def build_hartree_fock_circuit(
         transformed_op = bravyi_kitaev(fermion_op, n_qubits=number_of_qubits)
     else:
         raise RuntimeError(
-            f"{transformation} is not a supported transformation. Jordan-Wigner and Bravyi-Kitaev are supported at this time."
+            f"{transformation} is not a supported transformation. Jordan-Wigner and "
+            "Bravyi-Kitaev are supported at this time."
         )
     term = next(iter(transformed_op.terms.items()))
     for op in term[0]:
