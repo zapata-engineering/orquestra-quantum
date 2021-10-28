@@ -1,11 +1,12 @@
 import bisect
 import typing
+
 import numpy as np
 from zquantum.core.bitstring_distribution import BitstringDistribution
 from zquantum.core.utils import (
-    dec2bin,
     bin2dec,
     convert_tuples_to_bitstrings,
+    dec2bin,
     sample_from_probability_distribution,
 )
 
@@ -13,8 +14,10 @@ from zquantum.core.utils import (
 def convert_integer_to_ising_bitstring(number: int, length: int) -> typing.List[int]:
     """Converts an integer into a +/-1s bitstring (also called Ising bitstring).
     Args:
-        number: positive number to be converted into its corresponding Ising bitstring representation
-        length: length of the Ising bitstring (i.e. positive number of spins in the Ising system)
+        number: positive number to be converted into its corresponding
+            Ising bitstring representation
+        length: length of the Ising bitstring (i.e. positive number of spins
+            in the Ising system)
     Returns:
         Ising bitstring representation (1D array of +/-1)."""
 
@@ -40,15 +43,20 @@ def convert_ising_bitstring_to_integer(ising_bitstring: typing.List[int]) -> int
 def _get_random_ising_hamiltonian_parameters(
     n_spins: int,
 ) -> typing.Tuple[np.ndarray, np.ndarray]:
-    """Generates random h, J, and where h and J are arrays of random coefficients sampled from a normal distribution with zero mean and sqrt(n_spins) sd.
-    For reproducibilty, fix random generator seed in the higher level from which this function is called.
-    Useful in the following Ising Hamiltonian: 1D Nearest Neighbor Ising Model with open boundary conditions,
-    where h's are the external field values and J's the two-body couplings coefficients.
+    """Generates random h, J, and where h and J are arrays of random coefficients
+    sampled from a normal distribution with zero mean and sqrt(n_spins) sd.
+    For reproducibilty, fix random generator seed in the higher level from which
+    this function is called.
+    Useful in the following Ising Hamiltonian: 1D Nearest Neighbor Ising Model with
+    open boundary conditions, where h's are the external field values and J's
+    the two-body couplings coefficients.
     Args:
-        n_spins (int): positive number of spins in the Ising system.
+        n_spins: positive number of spins in the Ising system.
     Returns:
-       external_fields (array): n_spin coefficients sampled from a normal distribution with zero mean and sqrt(n_spins) sd
-       two_body_couplings (array): n_spin x n_spin symmetric array of coefficients sampled from a normal distribution with zero mean and sqrt(n_spins) sd
+       external_fields: n_spin coefficients sampled from a normal distribution with
+        zero mean and sqrt(n_spins) sd
+       two_body_couplings: n_spin x n_spin symmetric array of coefficients sampled
+        from a normal distribution with zero mean and sqrt(n_spins) sd
     """
     external_fields = np.zeros((n_spins))
     two_body_couplings = np.zeros((n_spins, n_spins))
@@ -68,13 +76,15 @@ def get_thermal_target_bitstring_distribution(
     temperature: float,
     hamiltonian_parameters: typing.Tuple[np.ndarray, np.ndarray],
 ) -> BitstringDistribution:
-    """Generates thermal states target distribution, saved in a dict where keys are bitstrings and
-    values are corresponding probabilities according to the Boltzmann Distribution formula.
+    """Generates thermal states target distribution, saved in a dict where keys are
+    bitstrings and values are corresponding probabilities according to the Boltzmann
+    distribution formula.
 
     Args:
         n_spins: positive number of spins in the Ising system
         temperature: temperature factor in the boltzman distribution
-        hamiltonian_parameters: values of hamiltonian parameters, namely external fields and two body couplings.
+        hamiltonian_parameters: values of hamiltonian parameters, namely external
+            fields and two body couplings.
 
     Returns:
        Thermal target distribution.
@@ -121,7 +131,8 @@ def get_thermal_sampled_distribution(
         n_spins: number of spins in the Ising system
         temperature: temperature factor in the Boltzmann distribution
     Returns:
-       histogram_samples: keys are binary string representations and values are corresponding probabilities.
+       histogram_samples: keys are binary string representations and values
+        are corresponding probabilities.
     """
     distribution = get_thermal_target_bitstring_distribution(
         n_spins, temperature, hamiltonian_parameters
@@ -147,12 +158,15 @@ def get_thermal_sampled_distribution(
 def get_cardinality_distribution(
     n_samples: int, n_spins: int, sampled_distribution: BitstringDistribution
 ) -> typing.List[int]:
-    """Generates a list with all the occurrences associated to different cardinalities in a sampled distribution.
+    """Generates a list with all the occurrences associated to different cardinalities
+        in a sampled distribution.
 
     Args:
-        n_samples: the number of samples used to build the sampled distribution (used for normalization purposes)
+        n_samples: the number of samples used to build the sampled distribution
+            (used for normalization purposes)
         n_spins: positive number of spins in the Ising system
-        sampled_distribution: bitstring distribution built of samples drawn for a target distribution
+        sampled_distribution: bitstring distribution built of samples drawn
+            for a target distribution
 
     Returns:
         cardinality_list: a list with the cardinalities of all the sampled bitstrings.
