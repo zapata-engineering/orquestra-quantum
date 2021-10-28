@@ -1,18 +1,18 @@
 import random
 import unittest
+
 import numpy as np
 import numpy.testing
-from zquantum.core.utils import dec2bin, convert_tuples_to_bitstrings
 from zquantum.core.bitstring_distribution.distance_measures.mmd import compute_mmd
+from zquantum.core.utils import convert_tuples_to_bitstrings, dec2bin
 from zquantum.qcbm.target_thermal_states import (
+    _get_random_ising_hamiltonian_parameters,
     convert_integer_to_ising_bitstring,
     convert_ising_bitstring_to_integer,
-    _get_random_ising_hamiltonian_parameters,
-    get_thermal_target_bitstring_distribution,
-    get_thermal_sampled_distribution,
     get_cardinality_distribution,
+    get_thermal_sampled_distribution,
+    get_thermal_target_bitstring_distribution,
 )
-
 
 SEED = 14943
 

@@ -1,11 +1,11 @@
 import unittest
+
 import numpy as np
 from zquantum.core.bitstring_distribution import BitstringDistribution
-
 from zquantum.qcbm.target import (
-    get_num_bars_and_stripes_patterns,
-    get_bars_and_stripes_target_distribution,
     bars_and_stripes_zigzag,
+    get_bars_and_stripes_target_distribution,
+    get_num_bars_and_stripes_patterns,
 )
 
 

@@ -1,9 +1,9 @@
 import itertools
-import numpy as np
 import math
 import random
 from typing import List
 
+import numpy as np
 from zquantum.core.bitstring_distribution import BitstringDistribution
 
 

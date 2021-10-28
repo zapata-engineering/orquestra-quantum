@@ -1,11 +1,12 @@
 import bisect
 import typing
+
 import numpy as np
 from zquantum.core.bitstring_distribution import BitstringDistribution
 from zquantum.core.utils import (
-    dec2bin,
     bin2dec,
     convert_tuples_to_bitstrings,
+    dec2bin,
     sample_from_probability_distribution,
 )
 
