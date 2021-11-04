@@ -105,9 +105,9 @@ class TestThermalTarget(unittest.TestCase):
         # Given
         n_spins = 5
         temperature = 1.0
-        expected_bitstrings = convert_tuples_to_bitstrings(
-            [dec2bin(number, n_spins) for number in range(int(2 ** n_spins))]
-        )
+        expected_bitstrings = [
+            tuple(dec2bin(number, n_spins)) for number in range(int(2 ** n_spins))
+        ]
         expected_keys = expected_bitstrings[len(expected_bitstrings) :: -1]
         np.random.seed(SEED)
         external_fields = np.random.rand(n_spins)
@@ -141,9 +141,9 @@ class TestThermalTarget(unittest.TestCase):
         external_fields = np.random.rand(n_spins)
         two_body_couplings = np.random.rand(n_spins, n_spins)
         hamiltonian_parameters = [external_fields, two_body_couplings]
-        expected_bitstrings = convert_tuples_to_bitstrings(
-            [dec2bin(number, n_spins) for number in range(int(2 ** n_spins))]
-        )
+        expected_bitstrings = [
+            tuple(dec2bin(number, n_spins)) for number in range(int(2 ** n_spins))
+        ]
         expected_keys = expected_bitstrings[len(expected_bitstrings) :: -1]
 
         # When
