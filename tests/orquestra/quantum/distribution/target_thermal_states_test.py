@@ -2,8 +2,7 @@ import random
 import unittest
 
 import numpy as np
-import numpy.testing
-from zquantum.core.bitstring_distribution.distance_measures.mmd import compute_mmd
+from zquantum.core.distribution import compute_mmd
 from zquantum.core.utils import convert_tuples_to_bitstrings, dec2bin
 from zquantum.qcbm.target_thermal_states import (
     _get_random_ising_hamiltonian_parameters,
