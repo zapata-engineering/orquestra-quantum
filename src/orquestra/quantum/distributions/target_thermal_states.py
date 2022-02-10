@@ -108,7 +108,9 @@ def get_thermal_target_bitstring_distribution(
         boltzmann_factor = np.exp(energy * beta)
         partition_function += boltzmann_factor
 
-        binary_bitstring = convert_tuples_to_bitstrings([dec2bin(spin, n_spins)])[0]
+        binary_bitstring = convert_tuples_to_bitstrings(
+            [dec2bin(spin, n_spins)]  # type: ignore
+        )[0]
         distribution[binary_bitstring] = boltzmann_factor
 
     normalized_distribution = {
@@ -149,7 +151,9 @@ def get_thermal_sampled_distribution(
 
     sample_distribution_dict: typing.Dict[str, float] = {}
     for spin in range(int(2 ** n_spins)):
-        binary_bitstring = convert_tuples_to_bitstrings([dec2bin(spin, n_spins)])[0]
+        binary_bitstring = convert_tuples_to_bitstrings(
+            [dec2bin(spin, n_spins)]  # type: ignore
+        )[0]
         sample_distribution_dict[binary_bitstring] = histogram_samples[spin]
 
     return BitstringDistribution(sample_distribution_dict)
