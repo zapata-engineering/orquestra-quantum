@@ -1,4 +1,3 @@
-import bisect
 import typing
 
 import numpy as np
@@ -109,7 +108,9 @@ def get_thermal_target_bitstring_distribution(
         boltzmann_factor = np.exp(energy * beta)
         partition_function += boltzmann_factor
 
-        binary_bitstring = convert_tuples_to_bitstrings([dec2bin(spin, n_spins)])[0]
+        binary_bitstring = convert_tuples_to_bitstrings(
+            [dec2bin(spin, n_spins)]  # type: ignore
+        )[0]
         distribution[binary_bitstring] = boltzmann_factor
 
     normalized_distribution = {
@@ -137,19 +138,22 @@ def get_thermal_sampled_distribution(
     distribution = get_thermal_target_bitstring_distribution(
         n_spins, temperature, hamiltonian_parameters
     ).distribution_dict
-    sample_distribution_dict = sample_from_probability_distribution(
+    temp_sample_distribution_dict = sample_from_probability_distribution(
         distribution, n_samples
     )
     histogram_samples = np.zeros(2 ** n_spins)
-    for samples, counts in sample_distribution_dict.items():
+    for samples, counts in temp_sample_distribution_dict.items():
         integer_list: typing.List[int] = []
         for elem in samples:
             integer_list.append(int(elem))
         idx = convert_ising_bitstring_to_integer(integer_list)
         histogram_samples[idx] += counts / n_samples
 
+    sample_distribution_dict: typing.Dict[str, float] = {}
     for spin in range(int(2 ** n_spins)):
-        binary_bitstring = convert_tuples_to_bitstrings([dec2bin(spin, n_spins)])[0]
+        binary_bitstring = convert_tuples_to_bitstrings(
+            [dec2bin(spin, n_spins)]  # type: ignore
+        )[0]
         sample_distribution_dict[binary_bitstring] = histogram_samples[spin]
 
     return BitstringDistribution(sample_distribution_dict)
