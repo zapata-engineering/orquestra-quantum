@@ -94,7 +94,7 @@ def get_thermal_target_bitstring_distribution(
     beta = 1.0 / temperature
     distribution = {}
 
-    for spin in range(int(2 ** n_spins)):
+    for spin in range(int(2**n_spins)):
         ising_bitstring = convert_integer_to_ising_bitstring(spin, n_spins)
         energy = 0
         for i in range(n_spins):
@@ -141,7 +141,7 @@ def get_thermal_sampled_distribution(
     temp_sample_distribution_dict = sample_from_probability_distribution(
         distribution, n_samples
     )
-    histogram_samples = np.zeros(2 ** n_spins)
+    histogram_samples = np.zeros(2**n_spins)
     for samples, counts in temp_sample_distribution_dict.items():
         integer_list: typing.List[int] = []
         for elem in samples:
@@ -150,7 +150,7 @@ def get_thermal_sampled_distribution(
         histogram_samples[idx] += counts / n_samples
 
     sample_distribution_dict: typing.Dict[str, float] = {}
-    for spin in range(int(2 ** n_spins)):
+    for spin in range(int(2**n_spins)):
         binary_bitstring = convert_tuples_to_bitstrings(
             [dec2bin(spin, n_spins)]  # type: ignore
         )[0]
@@ -176,7 +176,7 @@ def get_cardinality_distribution(
         cardinality_list: a list with the cardinalities of all the sampled bitstrings.
 
     """
-    histogram_samples = np.zeros(2 ** n_spins)
+    histogram_samples = np.zeros(2**n_spins)
     cardinality_list: typing.List[int] = []
     for samples, counts in sampled_distribution.distribution_dict.items():
         integer_list: typing.List[int] = []
