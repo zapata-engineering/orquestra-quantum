@@ -18,8 +18,8 @@ from typing import (
 
 import numpy as np
 from orquestra.quantum.openfermion.ops import IsingOperator
-from orquestra.quantum.serialization import ensure_open
 from orquestra.quantum.typing import AnyPath, LoadSource
+from orquestra.quantum.utils import ensure_open
 from orquestra.quantum.wavefunction import Wavefunction
 
 from .distribution import MeasurementOutcomeDistribution

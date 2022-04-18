@@ -6,8 +6,7 @@ from typing import Dict, Iterable, List, Mapping, Union
 import sympy
 from orquestra.quantum.typing import DumpTarget, LoadSource
 
-from ..serialization import ensure_open
-from ..utils import SCHEMA_VERSION
+from ..utils import SCHEMA_VERSION, ensure_open
 from . import _builtin_gates, _circuit, _gates
 
 CIRCUIT_SCHEMA = SCHEMA_VERSION + "-circuit-v2"
