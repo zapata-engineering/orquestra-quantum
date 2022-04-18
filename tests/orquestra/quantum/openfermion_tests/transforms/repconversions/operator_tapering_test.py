@@ -16,8 +16,8 @@
 
 import unittest
 
-from zquantum.core.openfermion.ops.operators import FermionOperator
-from zquantum.core.openfermion.transforms.repconversions.operator_tapering import (
+from orquestra.quantum.openfermion.ops.operators import FermionOperator
+from orquestra.quantum.openfermion.transforms.repconversions.operator_tapering import (
     freeze_orbitals,
     prune_unused_indices,
 )

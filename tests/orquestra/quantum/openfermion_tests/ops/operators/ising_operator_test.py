@@ -15,8 +15,8 @@
 
 import unittest
 
-from zquantum.core.openfermion.ops.operators.ising_operator import IsingOperator
-from zquantum.core.openfermion.testing.testing_utils import EqualsTester
+from orquestra.quantum.openfermion.ops.operators.ising_operator import IsingOperator
+from orquestra.quantum.openfermion.testing.testing_utils import EqualsTester
 
 
 def test_properties():

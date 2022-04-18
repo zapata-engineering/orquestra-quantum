@@ -18,9 +18,11 @@ import unittest
 
 import numpy
 import sympy
-from zquantum.core.openfermion.config import EQ_TOLERANCE
-from zquantum.core.openfermion.ops.operators.symbolic_operator import SymbolicOperator
-from zquantum.core.openfermion.testing.testing_utils import EqualsTester
+from orquestra.quantum.openfermion.config import EQ_TOLERANCE
+from orquestra.quantum.openfermion.ops.operators.symbolic_operator import (
+    SymbolicOperator,
+)
+from orquestra.quantum.openfermion.testing.testing_utils import EqualsTester
 
 
 class DummyOperator1(SymbolicOperator):
@@ -522,11 +524,11 @@ class SymbolicOperatorTest1(unittest.TestCase):
         op = DummyOperator1(((1, 0), (8, 1)), 0.5)
         op += DummyOperator1(((1, 1), (9, 1)), 1.4j)
         res = op * op
-        correct = DummyOperator1(((1, 0), (8, 1), (1, 0), (8, 1)), 0.5**2)
+        correct = DummyOperator1(((1, 0), (8, 1), (1, 0), (8, 1)), 0.5 ** 2)
         correct += DummyOperator1(
             ((1, 0), (8, 1), (1, 1), (9, 1)), 0.7j
         ) + DummyOperator1(((1, 1), (9, 1), (1, 0), (8, 1)), 0.7j)
-        correct += DummyOperator1(((1, 1), (9, 1), (1, 1), (9, 1)), 1.4j**2)
+        correct += DummyOperator1(((1, 1), (9, 1), (1, 1), (9, 1)), 1.4j ** 2)
         self.assertTrue(res == correct)
 
     def test_rmul_scalar_real(self):
@@ -840,8 +842,8 @@ class SymbolicOperatorTest1(unittest.TestCase):
         coeff = 6.7j
         ops = ((3, 1), (1, 0), (4, 1))
         term = DummyOperator1(ops, coeff)
-        squared = term**2
-        expected = DummyOperator1(ops + ops, coeff**2)
+        squared = term ** 2
+        expected = DummyOperator1(ops + ops, coeff ** 2)
         self.assertTrue(squared == term * term)
         self.assertTrue(squared == expected)
 
@@ -849,7 +851,7 @@ class SymbolicOperatorTest1(unittest.TestCase):
         coeff = 6.7j
         ops = ((3, 1), (1, 0), (4, 1))
         term = DummyOperator1(ops, coeff)
-        zerod = term**0
+        zerod = term ** 0
         expected = DummyOperator1(())
         self.assertTrue(expected == zerod)
 
@@ -857,14 +859,14 @@ class SymbolicOperatorTest1(unittest.TestCase):
         coeff = 6.7j
         ops = ((3, 1), (1, 0), (4, 1))
         term = DummyOperator1(ops, coeff)
-        self.assertTrue(term == term**1)
+        self.assertTrue(term == term ** 1)
 
     def test_pow_high_term(self):
         coeff = 6.7j
         ops = ((3, 1), (1, 0), (4, 1))
         term = DummyOperator1(ops, coeff)
-        high = term**10
-        expected = DummyOperator1(ops * 10, coeff**10)
+        high = term ** 10
+        expected = DummyOperator1(ops * 10, coeff ** 10)
         self.assertTrue(expected == high)
 
     def test_pow_neg_error(self):

@@ -18,19 +18,21 @@ import itertools
 import unittest
 
 import numpy
-from zquantum.core.openfermion.hamiltonians.special_operators import number_operator
-from zquantum.core.openfermion.ops.operators import FermionOperator
-from zquantum.core.openfermion.testing.testing_utils import random_interaction_operator
-from zquantum.core.openfermion.transforms.opconversions import (
+from orquestra.quantum.openfermion.hamiltonians.special_operators import number_operator
+from orquestra.quantum.openfermion.ops.operators import FermionOperator
+from orquestra.quantum.openfermion.testing.testing_utils import (
+    random_interaction_operator,
+)
+from orquestra.quantum.openfermion.transforms.opconversions import (
     get_fermion_operator,
     jordan_wigner,
 )
-from zquantum.core.openfermion.transforms.opconversions.term_reordering import (
+from orquestra.quantum.openfermion.transforms.opconversions.term_reordering import (
     chemist_ordered,
     normal_ordered,
     reorder,
 )
-from zquantum.core.openfermion.utils import up_then_down
+from orquestra.quantum.openfermion.utils import up_then_down
 
 
 class ChemistOrderingTest(unittest.TestCase):
@@ -137,7 +139,7 @@ class TestNormalOrdering(unittest.TestCase):
             n_orbitals = len(two_body_tensor)
             ones = numpy.ones((n_orbitals,) * 2)
             triu = numpy.triu(ones, 1)
-            shape = (n_orbitals**2, 1)
+            shape = (n_orbitals ** 2, 1)
             mask = (
                 triu.reshape(shape) * ones.reshape(shape[::-1])
                 + ones.reshape(shape) * triu.reshape(shape[::-1])

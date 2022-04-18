@@ -1,11 +1,11 @@
 """Test cases for symbolic_expressions module."""
 import pytest
 import sympy
-from zquantum.core.circuits.symbolic.sympy_expressions import (
+from orquestra.quantum.circuits.symbolic.sympy_expressions import (
     SYMPY_DIALECT,
     expression_from_sympy,
 )
-from zquantum.core.circuits.symbolic.translations import translate_expression
+from orquestra.quantum.circuits.symbolic.translations import translate_expression
 
 
 @pytest.mark.parametrize(

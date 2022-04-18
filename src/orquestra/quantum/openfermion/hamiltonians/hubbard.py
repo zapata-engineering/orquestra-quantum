@@ -15,9 +15,9 @@
 """This module constructs Hamiltonians for the Fermi- and Bose-Hubbard models.
 """
 
-from zquantum.core.openfermion.hamiltonians.special_operators import number_operator
-from zquantum.core.openfermion.ops.operators import FermionOperator
-from zquantum.core.openfermion.utils.indexing import down_index, up_index
+from orquestra.quantum.openfermion.hamiltonians.special_operators import number_operator
+from orquestra.quantum.openfermion.ops.operators import FermionOperator
+from orquestra.quantum.openfermion.utils.indexing import down_index, up_index
 
 
 def fermi_hubbard(

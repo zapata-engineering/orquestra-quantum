@@ -4,7 +4,7 @@ from functools import singledispatch
 from typing import Dict, Iterable, List, Mapping, Union
 
 import sympy
-from zquantum.core.typing import DumpTarget, LoadSource
+from orquestra.quantum.typing import DumpTarget, LoadSource
 
 from ..serialization import ensure_open
 from ..utils import SCHEMA_VERSION

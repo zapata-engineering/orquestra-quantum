@@ -21,11 +21,11 @@ import scipy
 from scipy.linalg import eigh, norm
 from scipy.sparse import csc_matrix
 from scipy.special import comb
-from zquantum.core.openfermion.chem import MolecularData
-from zquantum.core.openfermion.config import DATA_DIRECTORY
-from zquantum.core.openfermion.hamiltonians import fermi_hubbard
-from zquantum.core.openfermion.hamiltonians.special_operators import number_operator
-from zquantum.core.openfermion.linalg.sparse_tools import (
+from orquestra.quantum.openfermion.chem import MolecularData
+from orquestra.quantum.openfermion.config import DATA_DIRECTORY
+from orquestra.quantum.openfermion.hamiltonians import fermi_hubbard
+from orquestra.quantum.openfermion.hamiltonians.special_operators import number_operator
+from orquestra.quantum.openfermion.linalg.sparse_tools import (
     _iterate_basis_,
     eigenspectrum,
     expectation,
@@ -42,13 +42,15 @@ from zquantum.core.openfermion.linalg.sparse_tools import (
     qubit_operator_sparse,
     sparse_eigenspectrum,
 )
-from zquantum.core.openfermion.ops.operators import FermionOperator, QubitOperator
-from zquantum.core.openfermion.transforms.opconversions import (
+from orquestra.quantum.openfermion.ops.operators import FermionOperator, QubitOperator
+from orquestra.quantum.openfermion.transforms.opconversions import (
     get_fermion_operator,
     jordan_wigner,
 )
-from zquantum.core.openfermion.transforms.repconversions import get_interaction_operator
-from zquantum.core.openfermion.utils.operator_utils import (
+from orquestra.quantum.openfermion.transforms.repconversions import (
+    get_interaction_operator,
+)
+from orquestra.quantum.openfermion.utils.operator_utils import (
     count_qubits,
     hermitian_conjugated,
     is_hermitian,
@@ -69,7 +71,7 @@ class EigenSpectrumTest(unittest.TestCase):
         fermion_eigenspectrum = eigenspectrum(self.fermion_operator)
         qubit_eigenspectrum = eigenspectrum(self.qubit_operator)
         interaction_eigenspectrum = eigenspectrum(self.interaction_operator)
-        for i in range(2**self.n_qubits):
+        for i in range(2 ** self.n_qubits):
             self.assertAlmostEqual(fermion_eigenspectrum[i], qubit_eigenspectrum[i])
             self.assertAlmostEqual(
                 fermion_eigenspectrum[i], interaction_eigenspectrum[i]
@@ -208,9 +210,9 @@ class JWNumberRestrictOperatorTest(unittest.TestCase):
         hamiltonian_sparse = (
             penalty_const
             * (
-                number_sparse - target_electrons * scipy.sparse.identity(2**n_qubits)
+                number_sparse - target_electrons * scipy.sparse.identity(2 ** n_qubits)
             ).dot(
-                number_sparse - target_electrons * scipy.sparse.identity(2**n_qubits)
+                number_sparse - target_electrons * scipy.sparse.identity(2 ** n_qubits)
             )
             + bias_sparse
         )
@@ -483,7 +485,7 @@ class GetNumberPreservingSparseOperatorIntegrationTestLiH(unittest.TestCase):
         make_hf_fop = FermionOperator(((3, 1), (2, 1), (1, 1), (0, 1)))
         make_hf_sparse_op = get_sparse_operator(make_hf_fop, n_qubits=12)
 
-        hf_state = numpy.zeros((2**12))
+        hf_state = numpy.zeros((2 ** 12))
         hf_state[0] = 1.0
         hf_state = make_hf_sparse_op.dot(hf_state)
 

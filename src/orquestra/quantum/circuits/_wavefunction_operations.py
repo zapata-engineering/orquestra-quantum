@@ -5,7 +5,7 @@ from typing import Iterable, Tuple
 
 import numpy as np
 import sympy
-from zquantum.core.typing import ParameterizedVector
+from orquestra.quantum.typing import ParameterizedVector
 
 from ._operations import Parameter, get_free_symbols, sub_symbols
 

@@ -20,31 +20,27 @@ import unittest
 import numpy
 import scipy
 from numpy.random import randn
-from zquantum.core.openfermion.chem import MolecularData
-from zquantum.core.openfermion.circuits.unitary_cc import (
+from orquestra.quantum.openfermion.chem import MolecularData
+from orquestra.quantum.openfermion.circuits.unitary_cc import (
     uccsd_generator,
     uccsd_singlet_generator,
     uccsd_singlet_get_packed_amplitudes,
     uccsd_singlet_paramsize,
 )
-from zquantum.core.openfermion.config import DATA_DIRECTORY
-from zquantum.core.openfermion.linalg.sparse_tools import (
+from orquestra.quantum.openfermion.config import DATA_DIRECTORY
+from orquestra.quantum.openfermion.linalg.sparse_tools import (
     expectation,
     get_sparse_operator,
     jordan_wigner_sparse,
     jw_hartree_fock_state,
 )
-from zquantum.core.openfermion.ops.operators import FermionOperator
-from zquantum.core.openfermion.transforms.opconversions import (
+from orquestra.quantum.openfermion.ops.operators import FermionOperator
+from orquestra.quantum.openfermion.transforms.opconversions import (
     get_fermion_operator,
     jordan_wigner,
     normal_ordered,
 )
-from zquantum.core.openfermion.utils import (
-    commutator,
-    count_qubits,
-    hermitian_conjugated,
-)
+from orquestra.quantum.openfermion.utils import count_qubits, hermitian_conjugated
 
 
 class UnitaryCC(unittest.TestCase):

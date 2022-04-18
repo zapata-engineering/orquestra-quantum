@@ -1,16 +1,16 @@
 from typing import Iterable, Sequence
 
-from zquantum.core.circuits._builtin_gates import RY, RZ
-from zquantum.core.circuits._circuit import Circuit
-from zquantum.core.circuits._gates import ControlledGate, GateOperation
-from zquantum.core.decompositions._decomposition import (
+from orquestra.quantum.circuits._builtin_gates import RY, RZ
+from orquestra.quantum.circuits._circuit import Circuit
+from orquestra.quantum.circuits._gates import ControlledGate, GateOperation
+from orquestra.quantum.decompositions._decomposition import (
     DecompositionRule,
     decompose_operations,
 )
 
 
 class U3GateToRotation(DecompositionRule[GateOperation]):
-    """Decomposition of ZQuantum's U3 gate.
+    """Decomposition of Orquestra's U3 gate.
 
     Note that this gets rid of global phase.
     """

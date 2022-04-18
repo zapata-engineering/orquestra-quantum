@@ -16,14 +16,12 @@
 
 import unittest
 
-from zquantum.core.openfermion.ops.operators import FermionOperator, QubitOperator
-from zquantum.core.openfermion.transforms.opconversions import (
+from orquestra.quantum.openfermion import (
     jordan_wigner,
     normal_ordered,
-)
-from zquantum.core.openfermion.transforms.opconversions.reverse_jordan_wigner import (
     reverse_jordan_wigner,
 )
+from orquestra.quantum.openfermion.ops.operators import FermionOperator, QubitOperator
 
 
 class ReverseJWTest(unittest.TestCase):

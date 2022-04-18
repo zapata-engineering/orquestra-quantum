@@ -16,15 +16,15 @@
 import unittest
 
 import numpy
-from zquantum.core.openfermion.chem import MolecularData
-from zquantum.core.openfermion.config import EQ_TOLERANCE
-from zquantum.core.openfermion.ops.operators import FermionOperator
-from zquantum.core.openfermion.ops.representations import InteractionOperatorError
-from zquantum.core.openfermion.transforms.opconversions import get_fermion_operator
-from zquantum.core.openfermion.transforms.opconversions.term_reordering import (
+from orquestra.quantum.openfermion.chem import MolecularData
+from orquestra.quantum.openfermion.config import EQ_TOLERANCE
+from orquestra.quantum.openfermion.ops.operators import FermionOperator
+from orquestra.quantum.openfermion.ops.representations import InteractionOperatorError
+from orquestra.quantum.openfermion.transforms.opconversions import get_fermion_operator
+from orquestra.quantum.openfermion.transforms.opconversions.term_reordering import (
     normal_ordered,
 )
-from zquantum.core.openfermion.transforms.repconversions.conversions import (
+from orquestra.quantum.openfermion.transforms.repconversions.conversions import (
     get_interaction_operator,
     get_molecular_data,
 )

@@ -3,11 +3,11 @@ from os import remove
 
 import numpy as np
 import pytest
-from zquantum.core.circuits import CNOT, Circuit, H, X
-from zquantum.core.distribution import MeasurementOutcomeDistribution
-from zquantum.core.measurement import Measurements
-from zquantum.core.symbolic_simulator import SymbolicSimulator
-from zquantum.core.trackers import MeasurementTrackingBackend
+from orquestra.quantum.circuits import CNOT, Circuit, H, X
+from orquestra.quantum.distribution import MeasurementOutcomeDistribution
+from orquestra.quantum.measurement import Measurements
+from orquestra.quantum.symbolic_simulator import SymbolicSimulator
+from orquestra.quantum.trackers import MeasurementTrackingBackend
 
 
 @pytest.fixture

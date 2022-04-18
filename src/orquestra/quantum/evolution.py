@@ -1,14 +1,14 @@
 """Functions for constructing circuits simulating evolution under given Hamiltonian."""
 import operator
-from functools import reduce, singledispatch
+from functools import reduce
 from itertools import chain
 from typing import Iterable, List, Optional, Tuple, Union
 
 import numpy as np
 import sympy
-from zquantum.core import circuits
-from zquantum.core.circuits import CNOT, RX, RZ, H
-from zquantum.core.openfermion import QubitOperator
+from orquestra.quantum import circuits
+from orquestra.quantum.circuits import CNOT, RX, RZ, H
+from orquestra.quantum.openfermion import QubitOperator
 
 
 def time_evolution(

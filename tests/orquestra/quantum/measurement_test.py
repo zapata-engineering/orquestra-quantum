@@ -5,8 +5,8 @@ from collections import Counter
 
 import numpy as np
 import pytest
-from zquantum.core.distribution import MeasurementOutcomeDistribution
-from zquantum.core.measurement import (
+from orquestra.quantum.distribution import MeasurementOutcomeDistribution
+from orquestra.quantum.measurement import (
     ExpectationValues,
     Measurements,
     Parities,
@@ -27,16 +27,16 @@ from zquantum.core.measurement import (
     save_parities,
     save_wavefunction,
 )
-from zquantum.core.openfermion.ops import IsingOperator
-from zquantum.core.testing import create_random_wavefunction
-from zquantum.core.utils import (
+from orquestra.quantum.openfermion.ops import IsingOperator
+from orquestra.quantum.testing import create_random_wavefunction
+from orquestra.quantum.utils import (
     RNDSEED,
     SCHEMA_VERSION,
     convert_bitstrings_to_tuples,
     convert_tuples_to_bitstrings,
     get_ordered_list_of_bitstrings,
 )
-from zquantum.core.wavefunction import Wavefunction
+from orquestra.quantum.wavefunction import Wavefunction
 
 
 def remove_file_if_exists(filename):
@@ -127,7 +127,7 @@ def test_sample_from_wavefunction():
 def test_sample_from_wavefunction_column_vector():
     n_qubits = 4
     expected_bitstring = (0, 0, 0, 1)
-    amplitudes = np.array([0] * (2**n_qubits)).reshape(2**n_qubits, 1)
+    amplitudes = np.array([0] * (2 ** n_qubits)).reshape(2 ** n_qubits, 1)
     amplitudes[1] = 1  # |0001> will be measured in all cases.
     wavefunction = Wavefunction(amplitudes)
     sample = set(sample_from_wavefunction(wavefunction, 500))
@@ -138,7 +138,7 @@ def test_sample_from_wavefunction_column_vector():
 def test_sample_from_wavefunction_row_vector():
     n_qubits = 4
     expected_bitstring = (0, 0, 0, 1)
-    amplitudes = np.array([0] * (2**n_qubits))
+    amplitudes = np.array([0] * (2 ** n_qubits))
     amplitudes[1] = 1  # |0001> will be measured in all cases.
     wavefunction = Wavefunction(amplitudes)
     sample = set(sample_from_wavefunction(wavefunction, 500))
@@ -149,7 +149,7 @@ def test_sample_from_wavefunction_row_vector():
 def test_sample_from_wavefunction_list():
     n_qubits = 4
     expected_bitstring = (0, 0, 0, 1)
-    amplitudes = [0] * (2**n_qubits)
+    amplitudes = [0] * (2 ** n_qubits)
     amplitudes[1] = 1  # |0001> will be measured in all cases.
     wavefunction = Wavefunction(amplitudes)
     sample = set(sample_from_wavefunction(wavefunction, 500))
@@ -160,7 +160,7 @@ def test_sample_from_wavefunction_list():
 @pytest.mark.parametrize("n_samples", [-1, 0])
 def test_sample_from_wavefunction_fails_for_invalid_n_samples(n_samples):
     n_qubits = 4
-    amplitudes = [0] * (2**n_qubits)
+    amplitudes = [0] * (2 ** n_qubits)
     amplitudes[1] = 1
     wavefunction = Wavefunction(amplitudes)
     with pytest.raises(ValueError):
@@ -749,10 +749,14 @@ class TestMeasurements:
                 bitstring_distribution, number_of_samples
             )
 
-            assert measurements.get_counts() == {
-                "00": 25,
-                "11": 26,
-            } or measurements.get_counts() == {"00": 26, "11": 25}
+            assert (
+                measurements.get_counts()
+                == {
+                    "00": 25,
+                    "11": 26,
+                }
+                or measurements.get_counts() == {"00": 26, "11": 25}
+            )
 
             if measurements.get_counts() != previous_measurements.get_counts():
                 got_different_measurements = True

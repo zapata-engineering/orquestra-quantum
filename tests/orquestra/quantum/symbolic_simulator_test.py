@@ -1,11 +1,11 @@
 import pytest
 import sympy
-from zquantum.core import circuits
-from zquantum.core.interfaces.backend_test import (
+from orquestra.quantum import circuits
+from orquestra.quantum.interfaces.backend_test import (
     QuantumSimulatorGatesTest,
     QuantumSimulatorTests,
 )
-from zquantum.core.symbolic_simulator import SymbolicSimulator
+from orquestra.quantum.symbolic_simulator import SymbolicSimulator
 
 
 @pytest.fixture

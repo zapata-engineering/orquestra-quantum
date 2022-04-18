@@ -12,12 +12,10 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-import itertools
 
 import sympy
-from zquantum.core.openfermion.ops.operators import FermionOperator
-from zquantum.core.openfermion.ops.representations import PolynomialTensor
-from zquantum.core.openfermion.utils.operator_utils import count_qubits
+from orquestra.quantum.openfermion.ops.operators import FermionOperator
+from orquestra.quantum.openfermion.ops.representations import PolynomialTensor
 
 
 def check_no_sympy(operator):

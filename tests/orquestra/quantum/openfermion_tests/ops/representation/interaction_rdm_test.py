@@ -17,13 +17,13 @@ import os
 import unittest
 
 import numpy
-from zquantum.core.openfermion.chem import MolecularData
-from zquantum.core.openfermion.config import DATA_DIRECTORY, EQ_TOLERANCE
-from zquantum.core.openfermion.ops.operators import QubitOperator
-from zquantum.core.openfermion.ops.representations.interaction_rdm import (
+from orquestra.quantum.openfermion.chem import MolecularData
+from orquestra.quantum.openfermion.config import DATA_DIRECTORY, EQ_TOLERANCE
+from orquestra.quantum.openfermion.ops.operators import QubitOperator
+from orquestra.quantum.openfermion.ops.representations.interaction_rdm import (
     InteractionRDMError,
 )
-from zquantum.core.openfermion.transforms.opconversions import jordan_wigner
+from orquestra.quantum.openfermion.transforms.opconversions import jordan_wigner
 
 
 class InteractionRDMTest(unittest.TestCase):

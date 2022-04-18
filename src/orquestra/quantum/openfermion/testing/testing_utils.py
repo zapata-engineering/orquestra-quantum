@@ -19,8 +19,8 @@ import itertools
 
 import numpy
 from scipy.linalg import qr
-from zquantum.core.openfermion.ops.operators import QubitOperator
-from zquantum.core.openfermion.ops.representations import InteractionOperator
+from orquestra.quantum.openfermion.ops.operators import QubitOperator
+from orquestra.quantum.openfermion.ops.representations import InteractionOperator
 
 
 def random_antisymmetric_matrix(n, real=False, seed=None):

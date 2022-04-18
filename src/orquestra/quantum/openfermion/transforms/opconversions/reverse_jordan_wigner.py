@@ -14,9 +14,9 @@
 #   limitations under the License.
 """Reverse Jordan-Wigner transform on QubitOperators."""
 
-from zquantum.core.openfermion.hamiltonians.special_operators import number_operator
-from zquantum.core.openfermion.ops.operators import FermionOperator, QubitOperator
-from zquantum.core.openfermion.utils.operator_utils import count_qubits
+from orquestra.quantum.openfermion.hamiltonians.special_operators import number_operator
+from orquestra.quantum.openfermion.ops.operators import FermionOperator, QubitOperator
+from orquestra.quantum.openfermion.utils.operator_utils import count_qubits
 
 
 def reverse_jordan_wigner(qubit_operator, n_qubits=None):

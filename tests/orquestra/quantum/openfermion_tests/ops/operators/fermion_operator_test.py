@@ -15,8 +15,8 @@
 """Tests  fermion_operator.py."""
 import unittest
 
-from zquantum.core.openfermion.hamiltonians.special_operators import number_operator
-from zquantum.core.openfermion.ops.operators.fermion_operator import FermionOperator
+from orquestra.quantum.openfermion.hamiltonians.special_operators import number_operator
+from orquestra.quantum.openfermion.ops.operators.fermion_operator import FermionOperator
 
 
 class FermionOperatorTest(unittest.TestCase):

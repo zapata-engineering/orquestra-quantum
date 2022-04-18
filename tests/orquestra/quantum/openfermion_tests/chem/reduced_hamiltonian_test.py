@@ -15,14 +15,16 @@
 import os
 
 import numpy
-from zquantum.core.openfermion.chem import MolecularData
-from zquantum.core.openfermion.chem.reduced_hamiltonian import make_reduced_hamiltonian
-from zquantum.core.openfermion.config import DATA_DIRECTORY
-from zquantum.core.openfermion.linalg.sparse_tools import (
+from orquestra.quantum.openfermion.chem import MolecularData
+from orquestra.quantum.openfermion.chem.reduced_hamiltonian import (
+    make_reduced_hamiltonian,
+)
+from orquestra.quantum.openfermion.config import DATA_DIRECTORY
+from orquestra.quantum.openfermion.linalg.sparse_tools import (
     get_number_preserving_sparse_operator,
 )
-from zquantum.core.openfermion.ops.representations import InteractionOperator
-from zquantum.core.openfermion.transforms.opconversions import get_fermion_operator
+from orquestra.quantum.openfermion.ops.representations import InteractionOperator
+from orquestra.quantum.openfermion.transforms.opconversions import get_fermion_operator
 
 
 def test_mrd_return_type():

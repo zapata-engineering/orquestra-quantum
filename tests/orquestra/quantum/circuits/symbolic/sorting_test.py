@@ -1,7 +1,7 @@
 import pytest
 import sympy
-from zquantum.core.circuits import natural_key, natural_key_revlex
-from zquantum.core.circuits.symbolic import natural_key_fixed_names_order
+from orquestra.quantum.circuits import natural_key, natural_key_revlex
+from orquestra.quantum.circuits.symbolic import natural_key_fixed_names_order
 
 
 @pytest.mark.parametrize(

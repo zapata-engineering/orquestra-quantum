@@ -16,7 +16,7 @@
 from itertools import product
 
 import numpy
-from zquantum.core.openfermion.ops.representations import InteractionOperator
+from orquestra.quantum.openfermion.ops.representations import InteractionOperator
 
 
 def make_reduced_hamiltonian(

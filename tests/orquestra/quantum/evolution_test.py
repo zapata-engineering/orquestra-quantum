@@ -2,16 +2,16 @@ import numpy as np
 import pytest
 import sympy
 from scipy.linalg import fractional_matrix_power
-from zquantum.core import circuits
-from zquantum.core.circuits import XX, YY, ZZ, Circuit
-from zquantum.core.evolution import (
+from orquestra.quantum import circuits
+from orquestra.quantum.circuits import XX, YY, ZZ, Circuit
+from orquestra.quantum.evolution import (
     _generate_circuit_sequence,
     time_evolution,
     time_evolution_derivatives,
     time_evolution_for_term,
 )
-from zquantum.core.openfermion import QubitOperator
-from zquantum.core.utils import compare_unitary
+from orquestra.quantum.openfermion import QubitOperator
+from orquestra.quantum.utils import compare_unitary
 
 OPENFERMION_TERM_TO_ZQUANTUM_GATE = {
     ((0, "X"), (1, "X")): XX,

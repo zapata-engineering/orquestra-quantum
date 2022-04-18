@@ -1,10 +1,10 @@
 from typing import Any, Dict, Optional
 
 from sympy import Symbol
-from zquantum.core.circuits import Circuit, Operation
-from zquantum.core.circuits.layouts import CircuitConnectivity
-from zquantum.core.interfaces.backend import QuantumSimulator, StateVector
-from zquantum.core.measurement import Measurements, sample_from_wavefunction
+from orquestra.quantum.circuits import Circuit, Operation
+from orquestra.quantum.circuits.layouts import CircuitConnectivity
+from orquestra.quantum.interfaces.backend import QuantumSimulator, StateVector
+from orquestra.quantum.measurement import Measurements, sample_from_wavefunction
 
 
 class SymbolicSimulator(QuantumSimulator):

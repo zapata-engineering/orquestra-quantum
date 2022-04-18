@@ -15,9 +15,9 @@
 """Jordan-Wigner transform on fermionic operators."""
 import itertools
 
-from zquantum.core.openfermion.ops.operators import FermionOperator, QubitOperator
-from zquantum.core.openfermion.ops.representations import InteractionOperator
-from zquantum.core.openfermion.utils.operator_utils import count_qubits
+from orquestra.quantum.openfermion.ops.operators import FermionOperator, QubitOperator
+from orquestra.quantum.openfermion.ops.representations import InteractionOperator
+from orquestra.quantum.openfermion.utils.operator_utils import count_qubits
 
 
 def jordan_wigner(operator):

@@ -6,8 +6,7 @@ from functools import partial
 import numpy as np
 import pytest
 import sympy
-from scipy.stats import unitary_group
-from zquantum.core.utils import (
+from orquestra.quantum.utils import (
     RNDSEED,
     SCHEMA_VERSION,
     ValueEstimate,
@@ -36,6 +35,7 @@ from zquantum.core.utils import (
     save_value_estimate,
     scale_and_discretize,
 )
+from scipy.stats import unitary_group
 
 
 def remove_file_if_exists(filename):
@@ -59,7 +59,7 @@ class TestUtils:
         assert np.allclose(arr, new_arr)
 
     def test_dec_bin_conversion(self):
-        integer = random.randint(1, 10**9)
+        integer = random.randint(1, 10 ** 9)
         integer2 = bin2dec(dec2bin(integer, 30))
         assert integer == integer2
 
@@ -193,7 +193,7 @@ class TestUtils:
         # Given
         function_name = "MockQuantumBackend"
         specs = {
-            "module_name": "zquantum.core.interfaces.mock_objects",
+            "module_name": "orquestra.quantum.interfaces.mock_objects",
             "function_name": function_name,
         }
 
@@ -212,7 +212,7 @@ class TestUtils:
         data = np.array([1.0, 2.0])
         target_value = 5.0
         specs = {
-            "module_name": "zquantum.core.interfaces.mock_objects",
+            "module_name": "orquestra.quantum.interfaces.mock_objects",
             "function_name": function_name,
             "parameters": data,
         }
@@ -229,7 +229,7 @@ class TestUtils:
         data = np.array([1.0, 2.0])
         target_value = 5.0
         specs = {
-            "module_name": "zquantum.core.interfaces.mock_objects",
+            "module_name": "orquestra.quantum.interfaces.mock_objects",
             "function_name": function_name,
         }
         # When
@@ -244,7 +244,7 @@ class TestUtils:
         function_name = "mock_cost_function"
         data = np.array([1.0, 2.0])
         specs = {
-            "module_name": "zquantum.core.interfaces.mock_objects",
+            "module_name": "orquestra.quantum.interfaces.mock_objects",
             "function_name": function_name,
             "parameters": data,
         }
@@ -267,7 +267,7 @@ class TestUtils:
         data = np.array([1.0, 2.0])
         target_value = 5.0
         specs = {
-            "module_name": "zquantum.core.interfaces.mock_objects",
+            "module_name": "orquestra.quantum.interfaces.mock_objects",
             "function_name": function_name,
         }
         # When
@@ -284,7 +284,7 @@ class TestUtils:
             f.write(
                 json.dumps(
                     {
-                        "module_name": "zquantum.core.testing.mocks",
+                        "module_name": "orquestra.quantum.testing.mocks",
                         "function_name": "mock_create_noise_model",
                         "data": {"testing": "data"},
                         "schema": "THIS IS FOR TESTING ONLY",
@@ -300,7 +300,7 @@ class TestUtils:
 
     def test_noise_model_io(self):
         # Given
-        module_name = "zquantum.core.testing.mocks"
+        module_name = "orquestra.quantum.testing.mocks"
         function_name = "mock_create_noise_model"
         noise_model_data = {"testing": "data"}
 
@@ -444,7 +444,7 @@ def test_scale_and_discretize(values, total, expected_result):
 def test_ordered_bitstring(num_qubits):
     bitstrings = get_ordered_list_of_bitstrings(num_qubits)
     expected_bitstrings = convert_tuples_to_bitstrings(
-        [dec2bin(integer, num_qubits) for integer in range(2**num_qubits)]
+        [dec2bin(integer, num_qubits) for integer in range(2 ** num_qubits)]
     )
     assert np.all(expected_bitstrings == bitstrings)
     assert np.all([len(bitstring) == num_qubits for bitstring in bitstrings])

@@ -19,25 +19,29 @@ import unittest
 
 import numpy
 import sympy
-from zquantum.core.openfermion.chem import MolecularData
-from zquantum.core.openfermion.config import DATA_DIRECTORY
-from zquantum.core.openfermion.hamiltonians.special_operators import number_operator
-from zquantum.core.openfermion.ops.operators import FermionOperator, QubitOperator
-from zquantum.core.openfermion.ops.representations import InteractionOperator
-from zquantum.core.openfermion.testing.testing_utils import random_interaction_operator
-from zquantum.core.openfermion.transforms.opconversions import (
+from orquestra.quantum.openfermion.chem import MolecularData
+from orquestra.quantum.openfermion.config import DATA_DIRECTORY
+from orquestra.quantum.openfermion.hamiltonians.special_operators import number_operator
+from orquestra.quantum.openfermion.ops.operators import FermionOperator, QubitOperator
+from orquestra.quantum.openfermion.ops.representations import InteractionOperator
+from orquestra.quantum.openfermion.testing.testing_utils import (
+    random_interaction_operator,
+)
+from orquestra.quantum.openfermion.transforms.opconversions import (
     get_fermion_operator,
     normal_ordered,
     reverse_jordan_wigner,
 )
-from zquantum.core.openfermion.transforms.opconversions.jordan_wigner import (
+from orquestra.quantum.openfermion.transforms.opconversions.jordan_wigner import (
     _jordan_wigner_interaction_op,
     jordan_wigner,
     jordan_wigner_one_body,
     jordan_wigner_two_body,
 )
-from zquantum.core.openfermion.transforms.repconversions import get_interaction_operator
-from zquantum.core.openfermion.utils import hermitian_conjugated
+from orquestra.quantum.openfermion.transforms.repconversions import (
+    get_interaction_operator,
+)
+from orquestra.quantum.openfermion.utils import hermitian_conjugated
 
 
 class JordanWignerTransformTest(unittest.TestCase):

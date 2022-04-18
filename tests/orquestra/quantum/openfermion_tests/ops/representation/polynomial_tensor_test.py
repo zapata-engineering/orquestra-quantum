@@ -18,8 +18,8 @@ import copy
 import unittest
 
 import numpy
-from zquantum.core.openfermion.ops.representations import PolynomialTensor
-from zquantum.core.openfermion.transforms.opconversions import get_fermion_operator
+from orquestra.quantum.openfermion.ops.representations import PolynomialTensor
+from orquestra.quantum.openfermion.transforms.opconversions import get_fermion_operator
 
 
 class PolynomialTensorTest(unittest.TestCase):

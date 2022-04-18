@@ -20,22 +20,25 @@ import unittest
 
 import numpy
 import sympy
-from scipy.sparse import csc_matrix
-from zquantum.core.openfermion.config import DATA_DIRECTORY
-from zquantum.core.openfermion.hamiltonians import fermi_hubbard
-from zquantum.core.openfermion.ops.operators import (
+from orquestra.quantum.openfermion.config import DATA_DIRECTORY
+from orquestra.quantum.openfermion.hamiltonians import fermi_hubbard
+from orquestra.quantum.openfermion.ops.operators import (
     FermionOperator,
     IsingOperator,
     QubitOperator,
 )
-from zquantum.core.openfermion.ops.representations import InteractionOperator
-from zquantum.core.openfermion.testing.testing_utils import random_interaction_operator
-from zquantum.core.openfermion.transforms.opconversions import (
+from orquestra.quantum.openfermion.ops.representations import InteractionOperator
+from orquestra.quantum.openfermion.testing.testing_utils import (
+    random_interaction_operator,
+)
+from orquestra.quantum.openfermion.transforms.opconversions import (
     bravyi_kitaev,
     jordan_wigner,
 )
-from zquantum.core.openfermion.transforms.repconversions import get_interaction_operator
-from zquantum.core.openfermion.utils.operator_utils import (
+from orquestra.quantum.openfermion.transforms.repconversions import (
+    get_interaction_operator,
+)
+from orquestra.quantum.openfermion.utils.operator_utils import (
     OperatorUtilsError,
     count_qubits,
     get_file_path,
@@ -45,6 +48,7 @@ from zquantum.core.openfermion.utils.operator_utils import (
     load_operator,
     save_operator,
 )
+from scipy.sparse import csc_matrix
 
 
 class OperatorUtilsTest(unittest.TestCase):

@@ -15,7 +15,9 @@
 """QubitOperator stores a sum of Pauli operators acting on qubits."""
 
 import numpy
-from zquantum.core.openfermion.ops.operators.symbolic_operator import SymbolicOperator
+from orquestra.quantum.openfermion.ops.operators.symbolic_operator import (
+    SymbolicOperator,
+)
 
 # Define products of all Pauli operators for symbolic multiplication.
 _PAULI_OPERATOR_PRODUCTS = {

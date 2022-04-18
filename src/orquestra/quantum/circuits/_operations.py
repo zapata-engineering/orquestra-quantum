@@ -5,7 +5,7 @@ from typing import Dict, Iterable, Tuple, TypeVar
 
 import sympy
 from typing_extensions import Protocol
-from zquantum.core.typing import Parameter, ParameterizedVector
+from orquestra.quantum.typing import Parameter, ParameterizedVector
 
 T = TypeVar("T", bound="Operation")
 

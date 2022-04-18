@@ -7,7 +7,7 @@ from unittest import mock
 
 import numpy as np
 import pytest
-from zquantum.core.distribution._measurement_outcome_distribution import (
+from orquestra.quantum.distribution._measurement_outcome_distribution import (
     MeasurementOutcomeDistribution,
     _are_keys_non_negative_integer_tuples,
     _is_key_length_fixed,
@@ -24,7 +24,7 @@ from zquantum.core.distribution._measurement_outcome_distribution import (
     save_measurement_outcome_distribution,
     save_measurement_outcome_distributions,
 )
-from zquantum.core.utils import SCHEMA_VERSION
+from orquestra.quantum.utils import SCHEMA_VERSION
 
 
 class TestVerifiersAndValidators:
@@ -153,9 +153,9 @@ class TestInitializations:
                 ),
             ),
             (
-                np.ones(2**5) / 2**5,
+                np.ones(2 ** 5) / 2 ** 5,
                 MeasurementOutcomeDistribution(
-                    {tup: 1 / 2**5 for tup in product([0, 1], repeat=5)}
+                    {tup: 1 / 2 ** 5 for tup in product([0, 1], repeat=5)}
                 ),
             ),
         ],
@@ -282,7 +282,7 @@ class TestSavingDistributions:
     def mock_open(self):
         mock_open = mock.mock_open()
         with mock.patch(
-            "zquantum.core.distribution._measurement_outcome_distribution.open",
+            "orquestra.quantum.distribution._measurement_outcome_distribution.open",
             mock_open,
         ):
             yield mock_open

@@ -1,8 +1,8 @@
 import random
 
 import numpy as np
-from zquantum.core.openfermion.ops import IsingOperator, QubitOperator
-from zquantum.core.wavefunction import Wavefunction
+from orquestra.quantum.openfermion.ops import IsingOperator, QubitOperator
+from orquestra.quantum.wavefunction import Wavefunction
 
 
 def create_random_qubitop(nqubits, nterms, seed=None):
@@ -124,7 +124,7 @@ def create_random_wavefunction(n_qubits, seed=None):
 
     random_vector = [
         complex(a, b)
-        for a, b in zip(np.random.rand(2**n_qubits), np.random.rand(2**n_qubits))
+        for a, b in zip(np.random.rand(2 ** n_qubits), np.random.rand(2 ** n_qubits))
     ]
     normalization_factor = np.sqrt(np.sum(np.abs(random_vector) ** 2))
     random_vector /= normalization_factor

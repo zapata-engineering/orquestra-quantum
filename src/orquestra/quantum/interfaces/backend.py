@@ -2,9 +2,9 @@ from abc import ABC, abstractmethod
 from typing import Any, List, Optional, Sequence, Union
 
 import numpy as np
-from zquantum.core.bitstring_distribution import BitstringDistribution
-from zquantum.core.openfermion import IsingOperator, QubitOperator, SymbolicOperator
-from zquantum.core.wavefunction import Wavefunction
+from orquestra.quantum.bitstring_distribution import BitstringDistribution
+from orquestra.quantum.openfermion import IsingOperator, QubitOperator, SymbolicOperator
+from orquestra.quantum.wavefunction import Wavefunction
 
 from ..circuits import Circuit, GateOperation, Operation
 from ..circuits._circuit import split_circuit
@@ -195,7 +195,7 @@ class QuantumSimulator(QuantumBackend):
         """
         state: StateVector
         if initial_state is None:
-            state = np.zeros(2**circuit.n_qubits)
+            state = np.zeros(2 ** circuit.n_qubits)
             state[0] = 1
         else:
             state = initial_state

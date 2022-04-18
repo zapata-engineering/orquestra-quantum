@@ -16,11 +16,13 @@
 import itertools
 from typing import TYPE_CHECKING, Optional
 
-from zquantum.core.openfermion import ops
-from zquantum.core.openfermion.testing.testing_utils import random_interaction_operator
+from orquestra.quantum.openfermion import ops
+from orquestra.quantum.openfermion.testing.testing_utils import (
+    random_interaction_operator,
+)
 
 if TYPE_CHECKING:
-    import zquantum.core.openfermion as openfermion
+    import orquestra.quantum.openfermion as openfermion
 
 
 def random_interaction_operator_term(

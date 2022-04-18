@@ -3,8 +3,11 @@ from functools import reduce
 
 import numpy as np
 import pytest
-from zquantum.core.circuits import CNOT, RY, U3, Circuit, GateOperation, X, Y, Z
-from zquantum.core.decompositions import U3GateToRotation, decompose_zquantum_circuit
+from orquestra.quantum.circuits import CNOT, RY, U3, Circuit, GateOperation, X, Y, Z
+from orquestra.quantum.decompositions import (
+    U3GateToRotation,
+    decompose_zquantum_circuit,
+)
 
 DECOMPOSITION_RULES = [U3GateToRotation()]
 

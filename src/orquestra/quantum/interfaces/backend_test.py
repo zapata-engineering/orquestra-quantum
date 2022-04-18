@@ -37,10 +37,9 @@ from typing import List
 
 import numpy as np
 import pytest
-from zquantum.core.interfaces.backend import QuantumSimulator
-from zquantum.core.interfaces.estimation import EstimationTask
-from zquantum.core.openfermion import QubitOperator
-from zquantum.core.wavefunction import Wavefunction
+from orquestra.quantum.interfaces.estimation import EstimationTask
+from orquestra.quantum.openfermion import QubitOperator
+from orquestra.quantum.wavefunction import Wavefunction
 
 from ..circuits import CNOT, Circuit, H, X, builtin_gate_by_name
 from ..distribution import MeasurementOutcomeDistribution

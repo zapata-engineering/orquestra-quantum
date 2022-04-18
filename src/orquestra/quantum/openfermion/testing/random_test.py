@@ -17,8 +17,8 @@ import random
 
 import numpy as np
 import pytest
-from zquantum.core.openfermion import is_hermitian
-from zquantum.core.openfermion.testing import random_interaction_operator_term
+from orquestra.quantum.openfermion import is_hermitian
+from orquestra.quantum.openfermion.testing import random_interaction_operator_term
 
 
 @pytest.mark.parametrize(

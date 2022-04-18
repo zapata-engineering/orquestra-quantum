@@ -17,7 +17,7 @@
 
 from collections import namedtuple
 
-from zquantum.core.openfermion.ops.operators import FermionOperator
+from orquestra.quantum.openfermion.ops.operators import FermionOperator
 
 TunnelingParameter = namedtuple(
     "TunnelingParameter", ("edge_type", "dofs", "coefficient")

@@ -20,18 +20,18 @@ from builtins import map, zip
 import numpy
 import sympy
 from scipy.sparse import spmatrix
-from zquantum.core.openfermion.config import DATA_DIRECTORY, EQ_TOLERANCE
-from zquantum.core.openfermion.ops.operators import (
+from orquestra.quantum.openfermion.config import DATA_DIRECTORY, EQ_TOLERANCE
+from orquestra.quantum.openfermion.ops.operators import (
     FermionOperator,
     IsingOperator,
     QubitOperator,
 )
-from zquantum.core.openfermion.ops.representations import (
+from orquestra.quantum.openfermion.ops.representations import (
     InteractionOperator,
     InteractionRDM,
     PolynomialTensor,
 )
-from zquantum.core.openfermion.transforms.opconversions.term_reordering import (
+from orquestra.quantum.openfermion.transforms.opconversions.term_reordering import (
     normal_ordered,
 )
 

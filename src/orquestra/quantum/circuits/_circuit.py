@@ -31,7 +31,7 @@ def _operation_uses_custom_gate(operation):
 class Circuit:
     """ZQuantum representation of a quantum circuit.
 
-    See `help(zquantum.core.circuits)` for usage guide.
+    See `help(orquestra.quantum.circuits)` for usage guide.
     """
 
     def __init__(

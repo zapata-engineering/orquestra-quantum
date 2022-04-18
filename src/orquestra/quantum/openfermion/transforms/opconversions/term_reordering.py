@@ -17,8 +17,8 @@
 import itertools
 
 import numpy
-from zquantum.core.openfermion.ops.operators import FermionOperator
-from zquantum.core.openfermion.ops.representations import InteractionOperator
+from orquestra.quantum.openfermion.ops.operators import FermionOperator
+from orquestra.quantum.openfermion.ops.representations import InteractionOperator
 
 
 def chemist_ordered(fermion_operator):
