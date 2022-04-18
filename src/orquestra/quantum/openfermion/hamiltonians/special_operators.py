@@ -15,7 +15,7 @@
 """Commonly used operators (mainly instances of SymbolicOperator)."""
 from typing import Optional
 
-from zquantum.core.openfermion.ops.operators import FermionOperator
+from orquestra.quantum.openfermion.ops.operators import FermionOperator
 
 
 def number_operator(

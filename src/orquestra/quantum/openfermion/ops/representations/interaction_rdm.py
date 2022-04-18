@@ -16,8 +16,8 @@
 import copy
 
 import numpy
-from zquantum.core.openfermion.ops.operators import FermionOperator, QubitOperator
-from zquantum.core.openfermion.ops.representations import (
+from orquestra.quantum.openfermion.ops.operators import FermionOperator, QubitOperator
+from orquestra.quantum.openfermion.ops.representations import (
     InteractionOperator,
     PolynomialTensor,
 )
@@ -110,7 +110,7 @@ class InteractionRDM(PolynomialTensor):
             InteractionRDMError: Observable not contained in 1-RDM or 2-RDM.
         """
         # Importing here instead of head of file to prevent circulars
-        from zquantum.core.openfermion.transforms.opconversions import (
+        from orquestra.quantum.openfermion.transforms.opconversions import (
             normal_ordered,
             reverse_jordan_wigner,
         )

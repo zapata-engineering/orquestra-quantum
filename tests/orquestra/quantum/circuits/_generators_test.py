@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from zquantum.core.circuits import (
+from orquestra.quantum.circuits import (
     RY,
     U3,
     Circuit,
@@ -9,7 +9,7 @@ from zquantum.core.circuits import (
     apply_gate_to_qubits,
     create_layer_of_gates,
 )
-from zquantum.core.utils import compare_unitary
+from orquestra.quantum.utils import compare_unitary
 
 
 class TestCreateLayerOfGates:

@@ -23,7 +23,7 @@ www.openfermion.org
 # isort: skip_file
 
 
-from zquantum.core.openfermion.chem import (
+from orquestra.quantum.openfermion.chem import (
     MolecularData,
     angstroms_to_bohr,
     bohr_to_angstroms,
@@ -33,12 +33,12 @@ from zquantum.core.openfermion.chem import (
     name_molecule,
 )
 
-from zquantum.core.openfermion.hamiltonians import (
+from orquestra.quantum.openfermion.hamiltonians import (
     fermi_hubbard,
     interaction_operator,
 )
 
-from zquantum.core.openfermion.linalg import (
+from orquestra.quantum.openfermion.linalg import (
     sparse_eigenspectrum,
     kronecker_operators,
     jw_number_restrict_operator,
@@ -59,8 +59,8 @@ from zquantum.core.openfermion.linalg import (
     qubit_operator_sparse,
 )
 
-from zquantum.core.openfermion.measurements import get_interaction_rdm
-from zquantum.core.openfermion.ops import (
+from orquestra.quantum.openfermion.measurements import get_interaction_rdm
+from orquestra.quantum.openfermion.ops import (
     FermionOperator,
     InteractionOperator,
     InteractionOperatorError,
@@ -75,7 +75,7 @@ from zquantum.core.openfermion.ops import (
 )
 
 # Shifted here to fix circular dependencies
-from zquantum.core.openfermion.circuits import (
+from orquestra.quantum.openfermion.circuits import (
     uccsd_convert_amplitude_format,
     uccsd_generator,
     uccsd_singlet_generator,
@@ -83,7 +83,7 @@ from zquantum.core.openfermion.circuits import (
     uccsd_singlet_paramsize,
 )
 
-from zquantum.core.openfermion.transforms import (
+from orquestra.quantum.openfermion.transforms import (
     jordan_wigner_one_body,
     jordan_wigner_two_body,
     bravyi_kitaev,
@@ -100,7 +100,7 @@ from zquantum.core.openfermion.transforms import (
     reorder,
     reverse_jordan_wigner,
 )
-from zquantum.core.openfermion.utils import (
+from orquestra.quantum.openfermion.utils import (
     OperatorSpecificationError,
     OperatorUtilsError,
     anticommutator,
@@ -118,7 +118,7 @@ from zquantum.core.openfermion.utils import (
     up_then_down,
 )
 
-from zquantum.core.openfermion.zapata_utils import (
+from orquestra.quantum.openfermion.zapata_utils import (
     # _utils.py
     get_qubitop_from_matrix,
     get_qubitop_from_coeffs_and_labels,

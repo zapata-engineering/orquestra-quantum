@@ -16,7 +16,7 @@
 
 import copy
 
-from zquantum.core.openfermion.ops.operators import FermionOperator
+from orquestra.quantum.openfermion.ops.operators import FermionOperator
 
 
 def freeze_orbitals(fermion_operator, occupied, unoccupied=None, prune=True):

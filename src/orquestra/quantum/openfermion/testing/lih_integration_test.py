@@ -17,23 +17,23 @@ import os
 import unittest
 
 import numpy
-from zquantum.core.openfermion.chem import MolecularData
-from zquantum.core.openfermion.config import DATA_DIRECTORY
-from zquantum.core.openfermion.linalg import get_ground_state, get_sparse_operator
-from zquantum.core.openfermion.linalg.sparse_tools import (
+from orquestra.quantum.openfermion.chem import MolecularData
+from orquestra.quantum.openfermion.config import DATA_DIRECTORY
+from orquestra.quantum.openfermion.linalg import get_ground_state, get_sparse_operator
+from orquestra.quantum.openfermion.linalg.sparse_tools import (
     expectation,
     get_density_matrix,
     jw_hartree_fock_state,
 )
-from zquantum.core.openfermion.measurements import get_interaction_rdm
-from zquantum.core.openfermion.transforms.opconversions import (
+from orquestra.quantum.openfermion.measurements import get_interaction_rdm
+from orquestra.quantum.openfermion.transforms.opconversions import (
     get_fermion_operator,
     jordan_wigner,
     normal_ordered,
     reverse_jordan_wigner,
 )
-from zquantum.core.openfermion.transforms.repconversions import freeze_orbitals
-from zquantum.core.openfermion.utils.operator_utils import count_qubits
+from orquestra.quantum.openfermion.transforms.repconversions import freeze_orbitals
+from orquestra.quantum.openfermion.utils.operator_utils import count_qubits
 
 
 class LiHIntegrationTest(unittest.TestCase):

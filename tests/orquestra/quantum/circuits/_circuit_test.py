@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 import sympy
-from zquantum.core.circuits import GateOperation, MultiPhaseOperation, split_circuit
-from zquantum.core.circuits._builtin_gates import (
+from orquestra.quantum.circuits import GateOperation, MultiPhaseOperation, split_circuit
+from orquestra.quantum.circuits._builtin_gates import (
     CNOT,
     CPHASE,
     CZ,
@@ -22,7 +22,7 @@ from zquantum.core.circuits._builtin_gates import (
     Y,
     Z,
 )
-from zquantum.core.circuits._circuit import Circuit
+from orquestra.quantum.circuits._circuit import Circuit
 
 RNG = np.random.default_rng(42)
 

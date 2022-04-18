@@ -3,11 +3,11 @@ from math import sqrt
 import numpy as np
 import pytest
 from sympy import I, Matrix, Symbol, cos, exp, sin
-from zquantum.core.circuits._builtin_gates import RX, RY, U3, H, X
-from zquantum.core.circuits._circuit import Circuit
-from zquantum.core.symbolic_simulator import SymbolicSimulator
-from zquantum.core.testing import create_random_wavefunction
-from zquantum.core.wavefunction import Wavefunction
+from orquestra.quantum.circuits._builtin_gates import RX, RY, U3, H, X
+from orquestra.quantum.circuits._circuit import Circuit
+from orquestra.quantum.symbolic_simulator import SymbolicSimulator
+from orquestra.quantum.testing import create_random_wavefunction
+from orquestra.quantum.wavefunction import Wavefunction
 
 
 class TestInitSystemInZeroState:
@@ -60,7 +60,7 @@ class TestInitSystemInZeroState:
         wavefunction = Wavefunction.zero_state(n_qubits=n_qubits)
 
         # Check length
-        assert len(wavefunction) == 2**n_qubits
+        assert len(wavefunction) == 2 ** n_qubits
 
         # Check internal property
         assert wavefunction.n_qubits == n_qubits

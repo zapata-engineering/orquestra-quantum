@@ -17,12 +17,12 @@
 import itertools
 
 import numpy
-from zquantum.core.openfermion.ops.operators import FermionOperator
-from zquantum.core.openfermion.utils.indexing import down_index, up_index
+from orquestra.quantum.openfermion.ops.operators import FermionOperator
+from orquestra.quantum.openfermion.utils.indexing import down_index, up_index
 
 
 def uccsd_generator(single_amplitudes, double_amplitudes, anti_hermitian=True):
-    r"""Create a fermionic operator that is the generator of uccsd.
+    """Create a fermionic operator that is the generator of uccsd.
 
     This a the most straight-forward method to generate UCCSD operators,
     however it is slightly inefficient. In particular, it parameterizes

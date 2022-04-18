@@ -14,20 +14,20 @@
 #   limitations under the License.
 
 import numpy
-from zquantum.core.openfermion.chem import MolecularData
-from zquantum.core.openfermion.config import EQ_TOLERANCE
-from zquantum.core.openfermion.ops.operators import FermionOperator
-from zquantum.core.openfermion.ops.representations import (
+from orquestra.quantum.openfermion.chem import MolecularData
+from orquestra.quantum.openfermion.config import EQ_TOLERANCE
+from orquestra.quantum.openfermion.ops.operators import FermionOperator
+from orquestra.quantum.openfermion.ops.representations import (
     InteractionOperator,
     InteractionOperatorError,
 )
-from zquantum.core.openfermion.transforms.opconversions import (
+from orquestra.quantum.openfermion.transforms.opconversions import (
     check_no_sympy,
     normal_ordered,
 )
 
 # for breaking cyclic imports
-from zquantum.core.openfermion.utils import operator_utils as op_utils
+from orquestra.quantum.openfermion.utils import operator_utils as op_utils
 
 
 def get_interaction_operator(fermion_operator, n_qubits=None):

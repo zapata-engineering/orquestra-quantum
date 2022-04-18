@@ -17,24 +17,26 @@ import logging
 import time
 
 import numpy
-from zquantum.core.openfermion.hamiltonians import jellium_model
-from zquantum.core.openfermion.linalg import (
+from orquestra.quantum.openfermion.hamiltonians import jellium_model
+from orquestra.quantum.openfermion.linalg import (
     LinearQubitOperator,
     LinearQubitOperatorOptions,
     ParallelLinearQubitOperator,
     jordan_wigner_sparse,
 )
-from zquantum.core.openfermion.ops import FermionOperator, QubitOperator
-from zquantum.core.openfermion.testing.testing_utils import random_interaction_operator
-from zquantum.core.openfermion.transforms import (
+from orquestra.quantum.openfermion.ops import FermionOperator, QubitOperator
+from orquestra.quantum.openfermion.testing.testing_utils import (
+    random_interaction_operator,
+)
+from orquestra.quantum.openfermion.transforms import (
     commutator_ordered_diagonal_coulomb_with_two_body_operator,
 )
-from zquantum.core.openfermion.transforms.opconversions import (
+from orquestra.quantum.openfermion.transforms.opconversions import (
     get_fermion_operator,
     jordan_wigner,
     normal_ordered,
 )
-from zquantum.core.openfermion.utils import Grid, commutator
+from orquestra.quantum.openfermion.utils import Grid, commutator
 
 
 def benchmark_molecular_operator_jordan_wigner(n_qubits):
@@ -178,7 +180,7 @@ def benchmark_linear_qubit_operator(n_qubits, n_terms, processes=None):
     end = time.time()
     runtime_operator = end - start
 
-    vec = numpy.random.rand(2**n_qubits)
+    vec = numpy.random.rand(2 ** n_qubits)
     # Performs matrix multiplication.
     start = time.time()
     _ = linear_operator * vec

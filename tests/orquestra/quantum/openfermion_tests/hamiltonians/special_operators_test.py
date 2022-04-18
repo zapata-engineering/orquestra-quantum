@@ -15,10 +15,8 @@
 """testing angular momentum generators. _fermion_spin_operators.py"""
 import unittest
 
-from zquantum.core.openfermion.hamiltonians.special_operators import number_operator
-from zquantum.core.openfermion.ops.operators import FermionOperator
-from zquantum.core.openfermion.transforms.opconversions import normal_ordered
-from zquantum.core.openfermion.utils import commutator
+from orquestra.quantum.openfermion.hamiltonians.special_operators import number_operator
+from orquestra.quantum.openfermion.ops.operators import FermionOperator
 
 
 class NumberOperatorTest(unittest.TestCase):

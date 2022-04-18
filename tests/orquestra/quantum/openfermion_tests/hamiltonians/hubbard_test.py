@@ -14,7 +14,7 @@
 #   limitations under the License.
 """Tests for Hubbard model module."""
 
-from zquantum.core.openfermion.hamiltonians import fermi_hubbard
+from orquestra.quantum.openfermion.hamiltonians import fermi_hubbard
 
 
 def test_fermi_hubbard_1x3_spinless():

@@ -6,7 +6,7 @@ from typing import Callable, Dict, Iterable, Tuple, Union
 import numpy as np
 import sympy
 from typing_extensions import Protocol, runtime_checkable
-from zquantum.core.typing import ParameterizedVector
+from orquestra.quantum.typing import ParameterizedVector
 
 from ._operations import Parameter, get_free_symbols, sub_symbols
 from ._unitary_tools import _lift_matrix_numpy, _lift_matrix_sympy
@@ -17,7 +17,7 @@ class Gate(Protocol):
     """Interface of a quantum gate representable by a matrix, translatable to other
     frameworks and backends.
 
-    See `zquantum.core.circuits` for a list of built-in gates and usage guide.
+    See `orquestra.quantum.circuits` for a list of built-in gates and usage guide.
     """
 
     @property
@@ -126,7 +126,7 @@ class GateOperation:
 
     def apply(self, amplitude_vector: ParameterizedVector) -> ParameterizedVector:
         num_qubits = np.log2(len(amplitude_vector))
-        if 2**num_qubits != len(amplitude_vector):
+        if 2 ** num_qubits != len(amplitude_vector):
             raise ValueError(
                 "GateOperation can only be applied to multi-qubit state vector but "
                 f"vector of length {len(amplitude_vector)} was provided."
@@ -151,7 +151,7 @@ class MatrixFactoryGate:
     """Data structure for a `Gate` with deferred matrix construction.
 
     Most built-in gates are instances of this class.
-    See `zquantum.core.circuits` for built-in gates and usage guide.
+    See `orquestra.quantum.circuits` for built-in gates and usage guide.
 
     This class requires the gate definition to be present during deserialization, so
     it's not easily applicable for gates defined in Orquestra steps. If you want to
@@ -264,7 +264,7 @@ class ControlledGate(Gate):
     @property
     def matrix(self):
         return sympy.Matrix.diag(
-            sympy.eye(2**self.num_qubits - 2**self.wrapped_gate.num_qubits),
+            sympy.eye(2 ** self.num_qubits - 2 ** self.wrapped_gate.num_qubits),
             self.wrapped_gate.matrix,
         )
 
@@ -333,7 +333,7 @@ class Dagger(Gate):
 
 def _n_qubits(matrix):
     n_qubits = math.floor(math.log2(matrix.shape[0]))
-    if 2**n_qubits != matrix.shape[0] or 2**n_qubits != matrix.shape[1]:
+    if 2 ** n_qubits != matrix.shape[0] or 2 ** n_qubits != matrix.shape[1]:
         raise ValueError("Gate's matrix has to be square with dimension 2^N")
     return n_qubits
 
@@ -374,11 +374,11 @@ class CustomGateMatrixFactory:
 class CustomGateDefinition:
     """Use this class to define a non-built-in gate.
 
-    See "Defining new gates" section in `help(zquantum.core.circuits)` for
+    See "Defining new gates" section in `help(orquestra.quantum.circuits)` for
     usage guide.
 
     User-defined gates are treated differently than the built-in ones,
-    because the built-in ones are defined in `zquantum.core` library, and so
+    because the built-in ones are defined in `orquestra.quantum` library, and so
     we can assume that the definitions will be available during circuit deserialization.
 
     User-provided gates can be defined in one repo (e.g. Orquestra step), serialized,

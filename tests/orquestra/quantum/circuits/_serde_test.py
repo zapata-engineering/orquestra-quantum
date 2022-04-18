@@ -3,8 +3,8 @@ import io
 import numpy as np
 import pytest
 import sympy
-from zquantum.core.circuits import _builtin_gates, _circuit, _gates
-from zquantum.core.circuits._serde import (
+from orquestra.quantum.circuits import _builtin_gates, _circuit, _gates
+from orquestra.quantum.circuits._serde import (
     circuit_from_dict,
     circuitset_from_dict,
     custom_gate_def_from_dict,

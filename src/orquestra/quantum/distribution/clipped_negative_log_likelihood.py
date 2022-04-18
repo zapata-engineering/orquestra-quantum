@@ -2,7 +2,7 @@ import math
 from typing import TYPE_CHECKING, Dict
 
 if TYPE_CHECKING:
-    from zquantum.core.distribution import MeasurementOutcomeDistribution
+    from orquestra.quantum.distribution import MeasurementOutcomeDistribution
 
 
 def compute_clipped_negative_log_likelihood(

@@ -17,11 +17,8 @@ import unittest
 
 import pytest
 import sympy
-from zquantum.core.openfermion.ops.operators import FermionOperator, QubitOperator
-from zquantum.core.openfermion.transforms.opconversions.conversions import (
-    check_no_sympy,
-    get_fermion_operator,
-)
+from orquestra.quantum.openfermion import check_no_sympy, get_fermion_operator
+from orquestra.quantum.openfermion.ops.operators import FermionOperator, QubitOperator
 
 
 def test_get_fermion_operator_wrong_type():

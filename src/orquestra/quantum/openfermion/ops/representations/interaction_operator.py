@@ -16,8 +16,8 @@
 import itertools
 
 import numpy
-from zquantum.core.openfermion.config import EQ_TOLERANCE
-from zquantum.core.openfermion.ops.representations.polynomial_tensor import (
+from orquestra.quantum.openfermion.config import EQ_TOLERANCE
+from orquestra.quantum.openfermion.ops.representations.polynomial_tensor import (
     PolynomialTensor,
 )
 

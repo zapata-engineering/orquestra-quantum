@@ -16,12 +16,12 @@
 import itertools
 
 import numpy
-from zquantum.core.openfermion.ops.operators import FermionOperator
-from zquantum.core.openfermion.ops.representations import InteractionRDM
-from zquantum.core.openfermion.transforms.opconversions.conversions import (
+from orquestra.quantum.openfermion.ops.operators import FermionOperator
+from orquestra.quantum.openfermion.ops.representations import InteractionRDM
+from orquestra.quantum.openfermion.transforms.opconversions.conversions import (
     check_no_sympy,
 )
-from zquantum.core.openfermion.utils.operator_utils import count_qubits
+from orquestra.quantum.openfermion.utils.operator_utils import count_qubits
 
 
 def get_interaction_rdm(qubit_operator, n_qubits=None):
@@ -33,7 +33,7 @@ def get_interaction_rdm(qubit_operator, n_qubits=None):
     check_no_sympy(qubit_operator)
 
     # Avoid circular import.
-    from zquantum.core.openfermion.transforms import jordan_wigner
+    from orquestra.quantum.openfermion.transforms import jordan_wigner
 
     if n_qubits is None:
         n_qubits = count_qubits(qubit_operator)

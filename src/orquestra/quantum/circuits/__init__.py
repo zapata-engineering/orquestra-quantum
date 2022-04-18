@@ -87,11 +87,11 @@ Using custom gates::
 
 Extending built-in gates requires:
 
-- Adding its definition to `zquantum.core.circuits._builtin_gates`. Refer to other
+- Adding its definition to `orquestra.quantum.circuits._builtin_gates`. Refer to other
     1- or multi-qubit, parametric/nonparametric gates there to see how it's been done
     for other gates.
 
-- Adding its matrix to `zquantum.core.circuits._matrices`.
+- Adding its matrix to `orquestra.quantum.circuits._matrices`.
 
 - Adding tests for conversion to other frameworks in:
     - `qeqiskit.conversions.circuit_conversions_test`

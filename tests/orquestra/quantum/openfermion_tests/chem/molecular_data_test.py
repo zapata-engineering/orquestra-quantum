@@ -19,7 +19,7 @@ import unittest
 import numpy as np
 import numpy.random
 import scipy.linalg
-from zquantum.core.openfermion.chem.molecular_data import (
+from orquestra.quantum.openfermion.chem.molecular_data import (
     MissingCalculationError,
     MolecularData,
     MoleculeNameError,
@@ -29,12 +29,8 @@ from zquantum.core.openfermion.chem.molecular_data import (
     load_molecular_hamiltonian,
     name_molecule,
 )
-from zquantum.core.openfermion.config import DATA_DIRECTORY
-from zquantum.core.openfermion.transforms.repconversions import (
-    get_interaction_operator,
-    get_molecular_data,
-)
-from zquantum.core.openfermion.utils import count_qubits
+from orquestra.quantum.openfermion.config import DATA_DIRECTORY
+from orquestra.quantum.openfermion.utils import count_qubits
 
 
 class MolecularDataTest(unittest.TestCase):

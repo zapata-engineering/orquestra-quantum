@@ -4,17 +4,19 @@ import copy
 import importlib
 import inspect
 import json
+import os
 import sys
 import warnings
+from contextlib import contextmanager
 from functools import partial
 from types import FunctionType
-from typing import Any, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Tuple, Union
 
 import lea
 import numpy as np
 import sympy
 
-from .typing import AnyPath, LoadSource, Specs
+from .typing import AnyPath, DumpTarget, LoadSource, Specs
 
 SCHEMA_VERSION = "zapata-v1"
 RNDSEED = 12345
@@ -403,8 +405,8 @@ def get_func_from_specs(specs: Dict):
 
     """
     warnings.warn(
-        "zquantum.core.utils.get_func_from_specs will be deprecated. Please use "
-        "zquantum.core.utils.create_object instead",
+        "orquestra.quantum.utils.get_func_from_specs will be deprecated. Please use "
+        "orquestra.quantum.utils.create_object instead",
         DeprecationWarning,
     )
     return create_object(specs)
@@ -623,9 +625,22 @@ def get_ordered_list_of_bitstrings(num_qubits: int) -> List[str]:
         The ordered bitstring representations of the integers
     """
     bitstrings = []
-    for i in range(2**num_qubits):
+    for i in range(2 ** num_qubits):
         bitstring = "{0:b}".format(i)
         while len(bitstring) < num_qubits:
             bitstring = "0" + bitstring
         bitstrings.append(bitstring)
     return bitstrings
+
+
+@contextmanager
+def ensure_open(path_like: Union[LoadSource, DumpTarget], mode="r", encoding="utf-8"):
+    # str | bytes | PathLike | Readable
+    if isinstance(path_like, (str, bytes, os.PathLike)):
+        with open(path_like, mode, encoding=encoding if "b" not in mode else None) as f:
+            yield f
+    else:
+        # Readable | Writable
+        if set(mode).intersection(set("wxa+")) and not path_like.writable():
+            raise ValueError(f"File isn't writable, can't ensure mode {mode}")
+        yield path_like

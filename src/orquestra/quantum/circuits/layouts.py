@@ -117,7 +117,7 @@ class CircuitConnectivity(object):
 def save_circuit_connectivity(circuit_connectivity, filename):
     """Saves a circuit connectivity to a file.
     Args:
-        circuit_connectivity (zquantum.core.circuit.CircuitConnectivity)
+        circuit_connectivity (orquestra.quantum.circuit.CircuitConnectivity)
         filename (str): the name of the file
     """
 
@@ -133,7 +133,7 @@ def load_circuit_connectivity(file):
         file (str or file-like object): the name of the file, or a file-like object.
 
     Returns:
-        (zquantum.core.circuit.CircuitConnectivity)
+        (orquestra.quantum.circuit.CircuitConnectivity)
     """
 
     if isinstance(file, str):
@@ -155,7 +155,7 @@ def build_circuit_layers_and_connectivity(
         y_dimension (int): number of qubits per column of the array
         layer_type (str): string designating type of layer to be created
     Returns:
-        (zquantum.core.circuit.CircuitConnectivity, zquantum.core.circuit.CircuitLayers)
+        (orquestra.quantum.circuit.CircuitConnectivity, orquestra.quantum.circuit.CircuitLayers)
     """
     if layer_type == "sycamore":
         return _build_circuit_layers_and_connectivity_sycamore(x_dimension, y_dimension)
@@ -172,7 +172,7 @@ def _build_circuit_layers_and_connectivity_sycamore(x_dimension, y_dimension):
         x_dimension (int): number of qubits per row of the array
         y_dimension (int): number of qubits per column of the array
     Returns:
-        (zquantum.core.circuit.CircuitConnectivity, zquantum.core.circuit.CircuitLayers)
+        (orquestra.quantum.circuit.CircuitConnectivity, orquestra.quantum.circuit.CircuitLayers)
     """
     connectivity = []
 
@@ -251,7 +251,7 @@ def _build_circuit_layers_and_connectivity_nearest_neighbors(n_qubits):
     Args:
         n_qubits (int): number of qubits in the qubit array
     Returns:
-        (zquantum.core.circuit.CircuitConnectivity, zquantum.core.circuit.CircuitLayers)
+        (orquestra.quantum.circuit.CircuitConnectivity, orquestra.quantum.circuit.CircuitLayers)
     """
     even_layer = []
     odd_layer = []

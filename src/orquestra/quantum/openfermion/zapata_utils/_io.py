@@ -2,15 +2,15 @@ from typing import Any, Callable, Dict, List
 
 import numpy as np
 import rapidjson as json
-from zquantum.core.openfermion import (
+from orquestra.quantum.openfermion import (
     InteractionOperator,
     InteractionRDM,
     IsingOperator,
     QubitOperator,
     SymbolicOperator,
 )
-from zquantum.core.typing import AnyPath, LoadSource
-from zquantum.core.utils import (
+from orquestra.quantum.typing import AnyPath, LoadSource
+from orquestra.quantum.utils import (
     SCHEMA_VERSION,
     convert_array_to_dict,
     convert_dict_to_array,

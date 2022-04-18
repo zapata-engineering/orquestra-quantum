@@ -15,8 +15,8 @@
 """Module to compute commutators, with optimizations for specific systems."""
 
 import numpy
-from zquantum.core.openfermion.ops.operators import FermionOperator
-from zquantum.core.openfermion.transforms.opconversions.term_reordering import (
+from orquestra.quantum.openfermion.ops.operators import FermionOperator
+from orquestra.quantum.openfermion.transforms.opconversions.term_reordering import (
     normal_ordered,
 )
 

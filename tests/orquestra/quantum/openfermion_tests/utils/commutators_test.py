@@ -15,11 +15,11 @@
 """Tests for commutators.py."""
 import unittest
 
-from zquantum.core.openfermion.ops.operators import FermionOperator, QubitOperator
-from zquantum.core.openfermion.transforms import jordan_wigner
-from zquantum.core.openfermion.transforms.opconversions import normal_ordered
-from zquantum.core.openfermion.utils import hermitian_conjugated
-from zquantum.core.openfermion.utils.commutators import (
+from orquestra.quantum.openfermion.ops.operators import FermionOperator, QubitOperator
+from orquestra.quantum.openfermion.transforms import jordan_wigner
+from orquestra.quantum.openfermion.transforms.opconversions import normal_ordered
+from orquestra.quantum.openfermion.utils import hermitian_conjugated
+from orquestra.quantum.openfermion.utils.commutators import (
     anticommutator,
     commutator,
     double_commutator,

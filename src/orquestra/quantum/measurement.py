@@ -17,10 +17,10 @@ from typing import (
 )
 
 import numpy as np
-from zquantum.core.openfermion.ops import IsingOperator
-from zquantum.core.serialization import ensure_open
-from zquantum.core.typing import AnyPath, LoadSource
-from zquantum.core.wavefunction import Wavefunction
+from orquestra.quantum.openfermion.ops import IsingOperator
+from orquestra.quantum.typing import AnyPath, LoadSource
+from orquestra.quantum.utils import ensure_open
+from orquestra.quantum.wavefunction import Wavefunction
 
 from .distribution import MeasurementOutcomeDistribution
 from .utils import (
@@ -71,7 +71,7 @@ def load_wavefunction(file: LoadSource) -> Wavefunction:
         file (str or file-like object): the name of the file, or a file-like object.
 
     Returns:
-        wavefunction (zquantum.core.Wavefunction): the wavefunction object
+        wavefunction (orquestra.quantum.Wavefunction): the wavefunction object
     """
 
     with ensure_open(file) as f:
@@ -85,7 +85,7 @@ def save_wavefunction(wavefunction: Wavefunction, filename: AnyPath) -> None:
     """Save a wavefunction object to a file.
 
     Args:
-        wavefunction (zquantum.core.Wavefunction): the wavefunction object
+        wavefunction (orquestra.quantum.Wavefunction): the wavefunction object
         filename (str): the name of the file
     """
 
@@ -255,7 +255,7 @@ def save_parities(parities: Parities, filename: AnyPath) -> None:
     """Save parities to a file.
 
     Args:
-        parities (zquantum.core.measurement.Parities): the parities
+        parities (orquestra.quantum.measurement.Parities): the parities
         file (str or file-like object): the name of the file, or a file-like object
     """
     data = parities.to_dict()
@@ -272,7 +272,7 @@ def load_parities(file: LoadSource) -> Parities:
         file (str or file-like object): the name of the file, or a file-like object.
 
     Returns:
-        zquantum.core.measurement.Parities: the parities
+        orquestra.quantum.measurement.Parities: the parities
     """
 
     with ensure_open(file) as f:
@@ -316,7 +316,7 @@ def get_expectation_values_from_parities(parities: Parities) -> ExpectationValue
             precision = 1.0 / np.sqrt(N)
 
         values.append(value)
-        estimator_covariances.append(np.array([[precision**2.0]]))
+        estimator_covariances.append(np.array([[precision ** 2.0]]))
 
     return ExpectationValues(
         values=np.array(values), estimator_covariances=estimator_covariances
@@ -333,7 +333,7 @@ def get_parities_from_measurements(
         ising_operator (openfermion.ops.IsingOperator): the operator
 
     Returns:
-        zquantum.core.measurement.Parities: the parities of each term in the operator
+        orquestra.quantum.measurement.Parities: the parities of each term in the operator
     """
 
     # check input format
@@ -390,9 +390,9 @@ def expectation_values_to_real(
     """Remove the imaginary parts of the expectation values
 
     Args:
-        expectation_values (zquantum.core.measurement.ExpectationValues object)
+        expectation_values (orquestra.quantum.measurement.ExpectationValues object)
     Returns:
-        expectation_values (zquantum.core.measurement.ExpectationValues object)
+        expectation_values (orquestra.quantum.measurement.ExpectationValues object)
     """
     values = []
     for i, value in enumerate(expectation_values.values):

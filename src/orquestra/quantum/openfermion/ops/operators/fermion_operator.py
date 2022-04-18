@@ -14,7 +14,9 @@
 #   limitations under the License.
 """FermionOperator stores a sum of products of fermionic ladder operators."""
 
-from zquantum.core.openfermion.ops.operators.symbolic_operator import SymbolicOperator
+from orquestra.quantum.openfermion.ops.operators.symbolic_operator import (
+    SymbolicOperator,
+)
 
 
 class FermionOperator(SymbolicOperator):

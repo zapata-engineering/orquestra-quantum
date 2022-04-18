@@ -4,28 +4,32 @@ import unittest
 import numpy as np
 import pkg_resources
 import pytest
-from zquantum.core.circuits import Circuit, X, Y, Z
-from zquantum.core.measurement import ExpectationValues
-from zquantum.core.openfermion.hamiltonians import fermi_hubbard
-from zquantum.core.openfermion.linalg import (
+from orquestra.quantum.circuits import Circuit, X, Y, Z
+from orquestra.quantum.measurement import ExpectationValues
+from orquestra.quantum.openfermion.hamiltonians import fermi_hubbard
+from orquestra.quantum.openfermion.linalg import (
     get_sparse_operator,
     jw_get_ground_state_at_particle_number,
     qubit_operator_sparse,
 )
-from zquantum.core.openfermion.ops import FermionOperator, IsingOperator, QubitOperator
-from zquantum.core.openfermion.transforms import (
+from orquestra.quantum.openfermion.ops import (
+    FermionOperator,
+    IsingOperator,
+    QubitOperator,
+)
+from orquestra.quantum.openfermion.transforms import (
     get_fermion_operator,
     get_interaction_operator,
     jordan_wigner,
 )
-from zquantum.core.openfermion.zapata_utils._io import load_interaction_operator
-from zquantum.core.utils import RNDSEED
-from zquantum.core.wavefunction import Wavefunction
+from orquestra.quantum.openfermion.zapata_utils._io import load_interaction_operator
+from orquestra.quantum.utils import RNDSEED
+from orquestra.quantum.wavefunction import Wavefunction
 
 
 class TestQubitOperator(unittest.TestCase):
     def test_build_qubitoperator_from_coeffs_and_labels(self):
-        from zquantum.core.openfermion.zapata_utils._utils import (
+        from orquestra.quantum.openfermion.zapata_utils._utils import (
             get_qubitop_from_coeffs_and_labels,
         )
 
@@ -41,14 +45,14 @@ class TestQubitOperator(unittest.TestCase):
         self.assertEqual(test_op, build_op)
 
     def test_qubitop_matrix_converion(self):
-        from zquantum.core.openfermion.zapata_utils._utils import (
+        from orquestra.quantum.openfermion.zapata_utils._utils import (
             get_qubitop_from_matrix,
         )
 
         # Given
         m = 4
-        n = 2**m
-        TOL = 10**-15
+        n = 2 ** m
+        TOL = 10 ** -15
         random.seed(RNDSEED)
         A = np.array([[random.uniform(-1, 1) for x in range(n)] for y in range(n)])
 
@@ -63,7 +67,7 @@ class TestQubitOperator(unittest.TestCase):
                 self.assertEqual(abs(elem) < TOL, True)
 
     def test_generate_random_qubitop(self):
-        from zquantum.core.openfermion.zapata_utils._utils import (
+        from orquestra.quantum.openfermion.zapata_utils._utils import (
             generate_random_qubitop,
         )
 
@@ -98,7 +102,7 @@ class TestQubitOperator(unittest.TestCase):
             self.assertEqual(np.abs(coefficient), max_coeff)
 
     def test_evaluate_qubit_operator(self):
-        from zquantum.core.openfermion.zapata_utils._utils import (
+        from orquestra.quantum.openfermion.zapata_utils._utils import (
             evaluate_qubit_operator,
         )
 
@@ -111,7 +115,7 @@ class TestQubitOperator(unittest.TestCase):
         self.assertAlmostEqual(value_estimate.value, 0.5)
 
     def test_evaluate_qubit_operator_list(self):
-        from zquantum.core.openfermion.zapata_utils._utils import (
+        from orquestra.quantum.openfermion.zapata_utils._utils import (
             evaluate_qubit_operator_list,
         )
 
@@ -127,7 +131,9 @@ class TestQubitOperator(unittest.TestCase):
         self.assertAlmostEqual(value_estimate.value, 0.74)
 
     def test_reverse_qubit_order(self):
-        from zquantum.core.openfermion.zapata_utils._utils import reverse_qubit_order
+        from orquestra.quantum.openfermion.zapata_utils._utils import (
+            reverse_qubit_order,
+        )
 
         # Given
         op1 = QubitOperator("[Z0 Z1]")
@@ -145,7 +151,9 @@ class TestQubitOperator(unittest.TestCase):
         self.assertEqual(op2, reverse_qubit_order(op1, n_qubits=2))
 
     def test_get_expectation_value(self):
-        from zquantum.core.openfermion.zapata_utils._utils import get_expectation_value
+        from orquestra.quantum.openfermion.zapata_utils._utils import (
+            get_expectation_value,
+        )
 
         """Check <Z0> and <Z1> for the state |100>"""
         # Given
@@ -161,7 +169,9 @@ class TestQubitOperator(unittest.TestCase):
         self.assertAlmostEqual(1, exp_op2)
 
     def test_change_operator_type(self):
-        from zquantum.core.openfermion.zapata_utils._utils import change_operator_type
+        from orquestra.quantum.openfermion.zapata_utils._utils import (
+            change_operator_type,
+        )
 
         # Given
         operator1 = QubitOperator("Z0 Z1", 4.5)
@@ -183,7 +193,7 @@ class TestQubitOperator(unittest.TestCase):
         )
 
     def test_get_fermion_number_operator(self):
-        from zquantum.core.openfermion.zapata_utils._utils import (
+        from orquestra.quantum.openfermion.zapata_utils._utils import (
             get_fermion_number_operator,
         )
 
@@ -230,7 +240,7 @@ class TestQubitOperator(unittest.TestCase):
         self.assertEqual(number_operator, correct_operator)
 
     def test_create_circuits_from_qubit_operator(self):
-        from zquantum.core.openfermion.zapata_utils._utils import (
+        from orquestra.quantum.openfermion.zapata_utils._utils import (
             create_circuits_from_qubit_operator,
         )
 
@@ -251,7 +261,7 @@ class TestQubitOperator(unittest.TestCase):
 
 class TestOtherUtils(unittest.TestCase):
     def test_get_diagonal_component_polynomial_tensor(self):
-        from zquantum.core.openfermion.zapata_utils._utils import (
+        from orquestra.quantum.openfermion.zapata_utils._utils import (
             get_diagonal_component,
             get_polynomial_tensor,
         )
@@ -276,7 +286,9 @@ class TestOtherUtils(unittest.TestCase):
             self.assertFalse(is_diagonal)
 
     def test_get_diagonal_component_interaction_op(self):
-        from zquantum.core.openfermion.zapata_utils._utils import get_diagonal_component
+        from orquestra.quantum.openfermion.zapata_utils._utils import (
+            get_diagonal_component,
+        )
 
         fermion_op = FermionOperator("1^ 1", 0.5)
         fermion_op += FermionOperator("2^ 2", 0.5)
@@ -301,7 +313,7 @@ class TestOtherUtils(unittest.TestCase):
         self.assertFalse(is_diagonal)
 
     def test_get_ground_state_rdm_from_qubit_op(self):
-        from zquantum.core.openfermion.zapata_utils._utils import (
+        from orquestra.quantum.openfermion.zapata_utils._utils import (
             get_ground_state_rdm_from_qubit_op,
         )
 
@@ -334,14 +346,14 @@ class TestOtherUtils(unittest.TestCase):
         self.assertAlmostEqual(e, rdm.expectation(fhm_int))
 
     def test_remove_inactive_orbitals(self):
-        from zquantum.core.openfermion.zapata_utils._utils import (
+        from orquestra.quantum.openfermion.zapata_utils._utils import (
             hf_rdm,
             remove_inactive_orbitals,
         )
 
         fermion_ham = load_interaction_operator(
             pkg_resources.resource_filename(
-                "zquantum.core.testing", "hamiltonian_HeH_plus_STO-3G.json"
+                "orquestra.quantum.testing", "hamiltonian_HeH_plus_STO-3G.json"
             )
         )
         frozen_ham = remove_inactive_orbitals(fermion_ham, 1, 1)
@@ -359,7 +371,7 @@ class TestOtherUtils(unittest.TestCase):
         (
             load_interaction_operator(
                 pkg_resources.resource_filename(
-                    "zquantum.core.testing", "hamiltonian_H2_minimal_basis.json"
+                    "orquestra.quantum.testing", "hamiltonian_H2_minimal_basis.json"
                 )
             ),
             -0.8543376267387818,
@@ -368,7 +380,7 @@ class TestOtherUtils(unittest.TestCase):
         (
             load_interaction_operator(
                 pkg_resources.resource_filename(
-                    "zquantum.core.testing",
+                    "orquestra.quantum.testing",
                     "hamiltonian_H2_minus_ROHF_minimal_basis.json",
                 )
             ),
@@ -378,7 +390,7 @@ class TestOtherUtils(unittest.TestCase):
     ],
 )
 def test_hf_rdm_energy(hamiltonian, ref_energy, nalpha):
-    from zquantum.core.openfermion.zapata_utils._utils import hf_rdm
+    from orquestra.quantum.openfermion.zapata_utils._utils import hf_rdm
 
     rdm = hf_rdm(nalpha, 1, 2)
     assert np.isclose(ref_energy, rdm.expectation(hamiltonian))

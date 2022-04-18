@@ -3,9 +3,9 @@ import random
 from typing import Iterable, List, Optional
 
 import numpy as np
-from zquantum.core.circuits import Circuit, X, Y, Z
-from zquantum.core.measurement import ExpectationValues
-from zquantum.core.openfermion import (
+from orquestra.quantum.circuits import Circuit, X, Y, Z
+from orquestra.quantum.measurement import ExpectationValues
+from orquestra.quantum.openfermion import (
     FermionOperator,
     InteractionOperator,
     InteractionRDM,
@@ -13,17 +13,20 @@ from zquantum.core.openfermion import (
     QubitOperator,
     count_qubits,
 )
-from zquantum.core.openfermion import expectation as openfermion_expectation
-from zquantum.core.openfermion import (
+from orquestra.quantum.openfermion import expectation as openfermion_expectation
+from orquestra.quantum.openfermion import (
     get_interaction_operator,
     get_sparse_operator,
     normal_ordered,
 )
-from zquantum.core.openfermion.hamiltonians.special_operators import number_operator
-from zquantum.core.openfermion.linalg import jw_get_ground_state_at_particle_number
-from zquantum.core.openfermion.transforms import freeze_orbitals, get_fermion_operator
-from zquantum.core.utils import ValueEstimate, bin2dec, dec2bin
-from zquantum.core.wavefunction import Wavefunction
+from orquestra.quantum.openfermion.hamiltonians.special_operators import number_operator
+from orquestra.quantum.openfermion.linalg import jw_get_ground_state_at_particle_number
+from orquestra.quantum.openfermion.transforms import (
+    freeze_orbitals,
+    get_fermion_operator,
+)
+from orquestra.quantum.utils import ValueEstimate, bin2dec, dec2bin
+from orquestra.quantum.wavefunction import Wavefunction
 
 
 def get_qubitop_from_matrix(operator: List[List]) -> QubitOperator:
@@ -100,15 +103,15 @@ def get_qubitop_from_matrix(operator: List[List]) -> QubitOperator:
 
         # Compute the trace
         tr = 0.0
-        for j in range(0, 2**n):  # loop over the columns
+        for j in range(0, 2 ** n):  # loop over the columns
             tr = tr + operator[j][f(j)] * nz(j)
 
-        return tr / 2**n
+        return tr / 2 ** n
 
     # Expand the operator in Pauli basis
-    coeffs = list(np.zeros(4**n))
-    labels = list(np.zeros(4**n))
-    for i in range(0, 4**n):  # loop over all 2n-bit strings
+    coeffs = list(np.zeros(4 ** n))
+    labels = list(np.zeros(4 ** n))
+    for i in range(0, 4 ** n):  # loop over all 2n-bit strings
         current_string = dec2bin(i, 2 * n)  # see util.py
         current_label = decode(current_string)
         coeffs[i] = trace_product(current_label)

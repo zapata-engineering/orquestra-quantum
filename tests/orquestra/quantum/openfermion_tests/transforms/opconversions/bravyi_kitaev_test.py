@@ -18,18 +18,20 @@ import unittest
 
 import numpy
 import sympy
-from zquantum.core.openfermion.hamiltonians.special_operators import number_operator
-from zquantum.core.openfermion.linalg import eigenspectrum
-from zquantum.core.openfermion.ops.operators import FermionOperator, QubitOperator
-from zquantum.core.openfermion.testing.testing_utils import random_interaction_operator
-from zquantum.core.openfermion.transforms import get_interaction_operator
-from zquantum.core.openfermion.transforms.opconversions import (
+from orquestra.quantum.openfermion.hamiltonians.special_operators import number_operator
+from orquestra.quantum.openfermion.linalg import eigenspectrum
+from orquestra.quantum.openfermion.ops.operators import FermionOperator, QubitOperator
+from orquestra.quantum.openfermion.testing.testing_utils import (
+    random_interaction_operator,
+)
+from orquestra.quantum.openfermion.transforms import get_interaction_operator
+from orquestra.quantum.openfermion.transforms.opconversions import (
     bravyi_kitaev,
     get_fermion_operator,
     jordan_wigner,
     normal_ordered,
 )
-from zquantum.core.openfermion.utils.operator_utils import count_qubits
+from orquestra.quantum.openfermion.utils.operator_utils import count_qubits
 
 
 class BravyiKitaevTransformTest(unittest.TestCase):

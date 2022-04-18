@@ -18,8 +18,8 @@ import itertools
 import unittest
 
 import numpy
-from zquantum.core.openfermion.ops.operators import QubitOperator
-from zquantum.core.openfermion.testing.testing_utils import (
+from orquestra.quantum.openfermion.ops.operators import QubitOperator
+from orquestra.quantum.openfermion.testing.testing_utils import (
     EqualsTester,
     _ClassUnknownToSubjects,
     module_importable,
@@ -29,8 +29,8 @@ from zquantum.core.openfermion.testing.testing_utils import (
     random_qubit_operator,
     random_unitary_matrix,
 )
-from zquantum.core.openfermion.transforms.opconversions import get_fermion_operator
-from zquantum.core.openfermion.utils import count_qubits, is_hermitian
+from orquestra.quantum.openfermion.transforms.opconversions import get_fermion_operator
+from orquestra.quantum.openfermion.utils import count_qubits, is_hermitian
 
 
 def test_random_qubit_operator():

@@ -17,8 +17,8 @@
 import random
 from enum import Enum
 
-from zquantum.core.openfermion.hamiltonians.general_hubbard import number_operator
-from zquantum.core.openfermion.ops import FermionOperator
+from orquestra.quantum.openfermion.hamiltonians.general_hubbard import number_operator
+from orquestra.quantum.openfermion.ops import FermionOperator
 
 
 class SpinPairs(Enum):

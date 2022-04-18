@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 import sympy
-from zquantum.core.circuits import RX, RY, RZ, XX, XY, YY, Circuit, H, I, X, Y, Z
+from orquestra.quantum.circuits import RX, RY, RZ, XX, XY, YY, Circuit, H, I, X, Y, Z
 
 
 class TestCreatingUnitaryFromCircuit:

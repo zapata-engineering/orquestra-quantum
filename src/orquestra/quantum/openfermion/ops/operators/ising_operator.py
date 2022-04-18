@@ -17,7 +17,9 @@ Zs."""
 
 from collections import defaultdict
 
-from zquantum.core.openfermion.ops.operators.symbolic_operator import SymbolicOperator
+from orquestra.quantum.openfermion.ops.operators.symbolic_operator import (
+    SymbolicOperator,
+)
 
 
 class IsingOperator(SymbolicOperator):
