@@ -16,6 +16,7 @@
 from itertools import product
 
 import numpy
+
 from orquestra.quantum.openfermion.ops.representations import InteractionOperator
 
 

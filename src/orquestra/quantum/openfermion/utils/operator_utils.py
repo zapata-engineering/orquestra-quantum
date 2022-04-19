@@ -20,6 +20,7 @@ from builtins import map, zip
 import numpy
 import sympy
 from scipy.sparse import spmatrix
+
 from orquestra.quantum.openfermion.config import DATA_DIRECTORY, EQ_TOLERANCE
 from orquestra.quantum.openfermion.ops.operators import (
     FermionOperator,

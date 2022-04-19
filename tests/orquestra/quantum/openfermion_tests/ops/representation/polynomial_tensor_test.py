@@ -18,6 +18,7 @@ import copy
 import unittest
 
 import numpy
+
 from orquestra.quantum.openfermion.ops.representations import PolynomialTensor
 from orquestra.quantum.openfermion.transforms.opconversions import get_fermion_operator
 

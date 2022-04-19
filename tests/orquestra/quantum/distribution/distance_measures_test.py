@@ -2,6 +2,7 @@ import math
 from unittest import mock
 
 import pytest
+
 from orquestra.quantum.distribution import (
     MeasurementOutcomeDistribution,
     compute_clipped_negative_log_likelihood,

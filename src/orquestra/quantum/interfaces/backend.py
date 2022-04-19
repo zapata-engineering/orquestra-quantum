@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any, List, Optional, Sequence, Union
 
 import numpy as np
+
 from orquestra.quantum.openfermion import IsingOperator, QubitOperator, SymbolicOperator
 from orquestra.quantum.wavefunction import Wavefunction
 

@@ -2,6 +2,7 @@ import os
 import unittest
 
 import numpy as np
+
 from orquestra.quantum.openfermion import (
     FermionOperator,
     InteractionRDM,

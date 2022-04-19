@@ -5,6 +5,7 @@ from collections import Counter
 
 import numpy as np
 import pytest
+
 from orquestra.quantum.distribution import MeasurementOutcomeDistribution
 from orquestra.quantum.measurement import (
     ExpectationValues,

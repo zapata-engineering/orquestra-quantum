@@ -16,6 +16,7 @@
 import itertools
 
 import numpy
+
 from orquestra.quantum.openfermion.config import EQ_TOLERANCE
 from orquestra.quantum.openfermion.ops.representations.polynomial_tensor import (
     PolynomialTensor,

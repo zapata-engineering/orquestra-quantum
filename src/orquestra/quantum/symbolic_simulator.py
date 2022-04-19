@@ -1,6 +1,7 @@
 from typing import Any, Dict, Optional
 
 from sympy import Symbol
+
 from orquestra.quantum.circuits import Circuit, Operation
 from orquestra.quantum.circuits.layouts import CircuitConnectivity
 from orquestra.quantum.interfaces.backend import QuantumSimulator, StateVector

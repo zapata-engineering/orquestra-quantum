@@ -3,6 +3,7 @@ from math import sqrt
 import numpy as np
 import pytest
 from sympy import I, Matrix, Symbol, cos, exp, sin
+
 from orquestra.quantum.circuits._builtin_gates import RX, RY, U3, H, X
 from orquestra.quantum.circuits._circuit import Circuit
 from orquestra.quantum.symbolic_simulator import SymbolicSimulator

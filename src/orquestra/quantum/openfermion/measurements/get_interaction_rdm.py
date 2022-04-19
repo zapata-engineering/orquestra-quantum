@@ -16,6 +16,7 @@
 import itertools
 
 import numpy
+
 from orquestra.quantum.openfermion.ops.operators import FermionOperator
 from orquestra.quantum.openfermion.ops.representations import InteractionRDM
 from orquestra.quantum.openfermion.transforms.opconversions.conversions import (

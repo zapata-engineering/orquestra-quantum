@@ -19,6 +19,7 @@ import itertools
 
 import numpy
 from scipy.linalg import qr
+
 from orquestra.quantum.openfermion.ops.operators import QubitOperator
 from orquestra.quantum.openfermion.ops.representations import InteractionOperator
 

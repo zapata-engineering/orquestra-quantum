@@ -20,6 +20,7 @@ import itertools
 import operator
 
 import numpy
+
 from orquestra.quantum.openfermion.config import EQ_TOLERANCE
 
 COEFFICIENT_TYPES = (int, float, complex)

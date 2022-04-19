@@ -17,6 +17,7 @@ import logging
 import time
 
 import numpy
+
 from orquestra.quantum.openfermion.hamiltonians import jellium_model
 from orquestra.quantum.openfermion.linalg import (
     LinearQubitOperator,

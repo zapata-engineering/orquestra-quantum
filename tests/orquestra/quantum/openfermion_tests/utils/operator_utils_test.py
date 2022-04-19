@@ -20,6 +20,8 @@ import unittest
 
 import numpy
 import sympy
+from scipy.sparse import csc_matrix
+
 from orquestra.quantum.openfermion.config import DATA_DIRECTORY
 from orquestra.quantum.openfermion.hamiltonians import fermi_hubbard
 from orquestra.quantum.openfermion.ops.operators import (
@@ -48,7 +50,6 @@ from orquestra.quantum.openfermion.utils.operator_utils import (
     load_operator,
     save_operator,
 )
-from scipy.sparse import csc_matrix
 
 
 class OperatorUtilsTest(unittest.TestCase):

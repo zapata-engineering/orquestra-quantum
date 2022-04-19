@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+
 from orquestra.quantum.circuits import (
     RY,
     U3,

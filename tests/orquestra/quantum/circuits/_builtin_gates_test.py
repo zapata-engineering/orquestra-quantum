@@ -1,5 +1,6 @@
 """Test cases for _builtin_gates_module."""
 import pytest
+
 from orquestra.quantum.circuits import _builtin_gates
 
 

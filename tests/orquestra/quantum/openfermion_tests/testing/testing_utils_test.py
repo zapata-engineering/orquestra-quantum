@@ -18,6 +18,7 @@ import itertools
 import unittest
 
 import numpy
+
 from orquestra.quantum.openfermion.ops.operators import QubitOperator
 from orquestra.quantum.openfermion.testing.testing_utils import (
     EqualsTester,

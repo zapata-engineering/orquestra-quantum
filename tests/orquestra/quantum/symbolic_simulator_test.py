@@ -1,5 +1,6 @@
 import pytest
 import sympy
+
 from orquestra.quantum import circuits
 from orquestra.quantum.interfaces.backend_test import (
     QuantumSimulatorGatesTest,

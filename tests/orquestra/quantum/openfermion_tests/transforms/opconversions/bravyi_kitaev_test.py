@@ -18,6 +18,7 @@ import unittest
 
 import numpy
 import sympy
+
 from orquestra.quantum.openfermion.hamiltonians.special_operators import number_operator
 from orquestra.quantum.openfermion.linalg import eigenspectrum
 from orquestra.quantum.openfermion.ops.operators import FermionOperator, QubitOperator

@@ -4,6 +4,7 @@ from unittest.mock import Mock
 import numpy as np
 import pytest
 import sympy
+
 from orquestra.quantum.circuits import _builtin_gates
 from orquestra.quantum.circuits._gates import GateOperation, MatrixFactoryGate
 

@@ -1,6 +1,7 @@
 import random
 
 import numpy as np
+
 from orquestra.quantum.openfermion.ops import IsingOperator, QubitOperator
 from orquestra.quantum.wavefunction import Wavefunction
 

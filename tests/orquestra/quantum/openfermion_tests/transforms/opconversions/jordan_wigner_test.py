@@ -19,6 +19,7 @@ import unittest
 
 import numpy
 import sympy
+
 from orquestra.quantum.openfermion.chem import MolecularData
 from orquestra.quantum.openfermion.config import DATA_DIRECTORY
 from orquestra.quantum.openfermion.hamiltonians.special_operators import number_operator

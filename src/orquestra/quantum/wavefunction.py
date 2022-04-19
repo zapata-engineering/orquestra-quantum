@@ -4,6 +4,7 @@ from warnings import warn
 
 import numpy as np
 from sympy import Matrix, Symbol
+
 from orquestra.quantum.typing import ParameterizedVector
 
 

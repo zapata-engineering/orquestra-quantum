@@ -6,6 +6,7 @@ from typing import Callable, Dict, Iterable, Tuple, Union
 import numpy as np
 import sympy
 from typing_extensions import Protocol, runtime_checkable
+
 from orquestra.quantum.typing import ParameterizedVector
 
 from ._operations import Parameter, get_free_symbols, sub_symbols

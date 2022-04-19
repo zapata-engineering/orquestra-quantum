@@ -3,6 +3,7 @@ import io
 import numpy as np
 import pytest
 import sympy
+
 from orquestra.quantum.circuits import _builtin_gates, _circuit, _gates
 from orquestra.quantum.circuits._serde import (
     circuit_from_dict,
