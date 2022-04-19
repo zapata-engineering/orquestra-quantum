@@ -14,6 +14,7 @@
 #   limitations under the License.
 
 import sympy
+
 from orquestra.quantum.openfermion.ops.operators import FermionOperator
 from orquestra.quantum.openfermion.ops.representations import PolynomialTensor
 

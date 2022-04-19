@@ -17,6 +17,7 @@ import os
 import unittest
 
 import numpy
+
 from orquestra.quantum.openfermion.chem import MolecularData
 from orquestra.quantum.openfermion.config import DATA_DIRECTORY
 from orquestra.quantum.openfermion.linalg import get_ground_state, get_sparse_operator

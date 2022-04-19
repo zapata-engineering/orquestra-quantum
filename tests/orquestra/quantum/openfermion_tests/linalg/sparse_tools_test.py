@@ -21,6 +21,7 @@ import scipy
 from scipy.linalg import eigh, norm
 from scipy.sparse import csc_matrix
 from scipy.special import comb
+
 from orquestra.quantum.openfermion.chem import MolecularData
 from orquestra.quantum.openfermion.config import DATA_DIRECTORY
 from orquestra.quantum.openfermion.hamiltonians import fermi_hubbard

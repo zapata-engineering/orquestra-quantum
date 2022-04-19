@@ -14,11 +14,9 @@ Here is an example of how you would do that:
 """
 
 import numpy as np
+
 from ..circuits import RX, RY, RZ, Circuit, H
-from ..interfaces.estimation import (
-    EstimateExpectationValues,
-    EstimationTask,
-)
+from ..interfaces.estimation import EstimateExpectationValues, EstimationTask
 from ..openfermion import IsingOperator
 from ..symbolic_simulator import SymbolicSimulator
 

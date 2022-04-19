@@ -18,6 +18,7 @@ import itertools
 import unittest
 
 import numpy
+
 from orquestra.quantum.openfermion.hamiltonians.special_operators import number_operator
 from orquestra.quantum.openfermion.ops.operators import FermionOperator
 from orquestra.quantum.openfermion.testing.testing_utils import (

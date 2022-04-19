@@ -1,6 +1,7 @@
 """Test cases for symbolic_expressions module."""
 import pytest
 import sympy
+
 from orquestra.quantum.circuits.symbolic.sympy_expressions import (
     SYMPY_DIALECT,
     expression_from_sympy,

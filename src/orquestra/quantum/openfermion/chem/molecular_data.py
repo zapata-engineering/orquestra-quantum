@@ -20,6 +20,7 @@ import uuid
 
 import h5py
 import numpy
+
 from orquestra.quantum.openfermion.config import DATA_DIRECTORY, EQ_TOLERANCE
 
 r"""NOTE ON PQRS CONVENTION:
@@ -1063,8 +1064,9 @@ class MolecularData(object):
             **two_body_integrals_new**: two-electron integrals over active
             space.
         """
-        from orquestra.quantum.openfermion.ops.representations import \
-            get_active_space_integrals
+        from orquestra.quantum.openfermion.ops.representations import (
+            get_active_space_integrals,
+        )
 
         # Fix data type for a few edge cases
         occupied_indices = [] if occupied_indices is None else occupied_indices
@@ -1094,8 +1096,9 @@ class MolecularData(object):
             spin-up (alpha) modes and odd indices correspond to spin-down
             (beta) modes.
         """
-        from orquestra.quantum.openfermion.ops.representations import \
-            InteractionOperator
+        from orquestra.quantum.openfermion.ops.representations import (
+            InteractionOperator,
+        )
 
         # Get active space integrals.
         if occupied_indices is None and active_indices is None:
@@ -1134,8 +1137,7 @@ class MolecularData(object):
             MisissingCalculationError: If the CI calculation has not been
                 performed.
         """
-        from orquestra.quantum.openfermion.ops.representations import \
-            InteractionRDM
+        from orquestra.quantum.openfermion.ops.representations import InteractionRDM
 
         # Make sure requested RDM has been computed and load.
         if use_fci:

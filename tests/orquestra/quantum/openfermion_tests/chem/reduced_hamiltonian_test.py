@@ -15,6 +15,7 @@
 import os
 
 import numpy
+
 from orquestra.quantum.openfermion.chem import MolecularData
 from orquestra.quantum.openfermion.chem.reduced_hamiltonian import (
     make_reduced_hamiltonian,

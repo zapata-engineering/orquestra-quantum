@@ -16,6 +16,7 @@
 
 import numpy
 import pytest
+
 from orquestra.quantum.openfermion.ops.operators.qubit_operator import (
     _PAULI_OPERATOR_PRODUCTS,
     QubitOperator,

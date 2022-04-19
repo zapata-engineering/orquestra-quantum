@@ -2,12 +2,11 @@ from typing import Dict, List, Optional, Tuple, cast
 
 import numpy as np
 import sympy
-from ..openfermion import IsingOperator
 
 from ..interfaces.backend import QuantumBackend, QuantumSimulator
 from ..interfaces.estimation import EstimationTask
 from ..measurement import ExpectationValues, expectation_values_to_real
-from ..openfermion import change_operator_type
+from ..openfermion import IsingOperator, change_operator_type
 
 
 def allocate_shots_uniformly(

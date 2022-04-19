@@ -3,6 +3,7 @@ import random
 from typing import Iterable, List, Optional
 
 import numpy as np
+
 from orquestra.quantum.circuits import Circuit, X, Y, Z
 from orquestra.quantum.measurement import ExpectationValues
 from orquestra.quantum.openfermion import (

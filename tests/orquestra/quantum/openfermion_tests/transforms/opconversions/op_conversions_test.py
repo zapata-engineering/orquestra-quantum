@@ -17,6 +17,7 @@ import unittest
 
 import pytest
 import sympy
+
 from orquestra.quantum.openfermion import check_no_sympy, get_fermion_operator
 from orquestra.quantum.openfermion.ops.operators import FermionOperator, QubitOperator
 

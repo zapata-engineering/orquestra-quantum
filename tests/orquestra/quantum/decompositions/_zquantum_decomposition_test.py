@@ -3,6 +3,7 @@ from functools import reduce
 
 import numpy as np
 import pytest
+
 from orquestra.quantum.circuits import CNOT, RY, U3, Circuit, GateOperation, X, Y, Z
 from orquestra.quantum.decompositions import (
     U3GateToRotation,

@@ -20,6 +20,7 @@ import unittest
 import numpy
 import scipy
 from numpy.random import randn
+
 from orquestra.quantum.openfermion.chem import MolecularData
 from orquestra.quantum.openfermion.circuits.unitary_cc import (
     uccsd_generator,

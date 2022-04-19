@@ -21,6 +21,7 @@ import numpy.linalg
 import scipy
 import scipy.sparse
 import scipy.sparse.linalg
+
 from orquestra.quantum.openfermion.ops.operators import FermionOperator, QubitOperator
 from orquestra.quantum.openfermion.ops.representations import PolynomialTensor
 from orquestra.quantum.openfermion.transforms.opconversions import normal_ordered

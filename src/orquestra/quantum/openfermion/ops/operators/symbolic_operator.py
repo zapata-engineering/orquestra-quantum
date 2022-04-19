@@ -21,6 +21,7 @@ import re
 import warnings
 
 import sympy
+
 from orquestra.quantum.openfermion.config import EQ_TOLERANCE
 
 COEFFICIENT_TYPES = (int, float, complex, sympy.Expr)

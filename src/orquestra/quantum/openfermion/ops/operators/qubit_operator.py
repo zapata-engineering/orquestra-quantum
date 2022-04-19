@@ -15,6 +15,7 @@
 """QubitOperator stores a sum of Pauli operators acting on qubits."""
 
 import numpy
+
 from orquestra.quantum.openfermion.ops.operators.symbolic_operator import (
     SymbolicOperator,
 )

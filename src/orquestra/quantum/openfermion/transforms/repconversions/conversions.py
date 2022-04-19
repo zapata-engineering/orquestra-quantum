@@ -14,6 +14,7 @@
 #   limitations under the License.
 
 import numpy
+
 from orquestra.quantum.openfermion.chem import MolecularData
 from orquestra.quantum.openfermion.config import EQ_TOLERANCE
 from orquestra.quantum.openfermion.ops.operators import FermionOperator

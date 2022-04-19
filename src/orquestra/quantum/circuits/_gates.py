@@ -6,6 +6,7 @@ from typing import Callable, Dict, Iterable, Tuple, Union
 import numpy as np
 import sympy
 from typing_extensions import Protocol, runtime_checkable
+
 from orquestra.quantum.typing import ParameterizedVector
 
 from ._operations import Parameter, get_free_symbols, sub_symbols
@@ -126,7 +127,7 @@ class GateOperation:
 
     def apply(self, amplitude_vector: ParameterizedVector) -> ParameterizedVector:
         num_qubits = np.log2(len(amplitude_vector))
-        if 2 ** num_qubits != len(amplitude_vector):
+        if 2**num_qubits != len(amplitude_vector):
             raise ValueError(
                 "GateOperation can only be applied to multi-qubit state vector but "
                 f"vector of length {len(amplitude_vector)} was provided."
@@ -264,7 +265,7 @@ class ControlledGate(Gate):
     @property
     def matrix(self):
         return sympy.Matrix.diag(
-            sympy.eye(2 ** self.num_qubits - 2 ** self.wrapped_gate.num_qubits),
+            sympy.eye(2**self.num_qubits - 2**self.wrapped_gate.num_qubits),
             self.wrapped_gate.matrix,
         )
 
@@ -333,7 +334,7 @@ class Dagger(Gate):
 
 def _n_qubits(matrix):
     n_qubits = math.floor(math.log2(matrix.shape[0]))
-    if 2 ** n_qubits != matrix.shape[0] or 2 ** n_qubits != matrix.shape[1]:
+    if 2**n_qubits != matrix.shape[0] or 2**n_qubits != matrix.shape[1]:
         raise ValueError("Gate's matrix has to be square with dimension 2^N")
     return n_qubits
 

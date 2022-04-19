@@ -17,6 +17,7 @@ import random
 
 import numpy as np
 import pytest
+
 from orquestra.quantum.openfermion import is_hermitian
 from orquestra.quantum.openfermion.testing import random_interaction_operator_term
 

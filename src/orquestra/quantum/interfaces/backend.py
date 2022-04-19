@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any, List, Optional, Sequence, Union
 
 import numpy as np
+
 from orquestra.quantum.openfermion import IsingOperator, QubitOperator, SymbolicOperator
 from orquestra.quantum.wavefunction import Wavefunction
 
@@ -172,7 +173,7 @@ class QuantumSimulator(QuantumBackend):
         """
         state: StateVector
         if initial_state is None:
-            state = np.zeros(2 ** circuit.n_qubits)
+            state = np.zeros(2**circuit.n_qubits)
             state[0] = 1
         else:
             state = initial_state
@@ -231,4 +232,3 @@ class QuantumSimulator(QuantumBackend):
             # Get the expectation values
             measurements = self.run_circuit_and_measure(circuit, n_samples)
             return measurements.get_distribution()
-

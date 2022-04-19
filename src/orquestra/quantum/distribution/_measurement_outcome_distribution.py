@@ -29,11 +29,7 @@ class MeasurementOutcomeDistribution:
 
     def __init__(
         self,
-        input_dict: Union[
-            Dict[Tuple[int, ...], float],
-            Dict[str, float],
-            Dict[Union[str, Tuple[int, ...]], float],
-        ],
+        input_dict: Dict[Union[str, Tuple[int, ...]], float],
         normalize: bool = True,
     ):
         # First check if we are initializing from binary strings
@@ -80,13 +76,9 @@ class MeasurementOutcomeDistribution:
 
 
 def preprocess_distibution_dict(
-    input_dict: Union[
-        Dict[Tuple[int, ...], float],
-        Dict[str, float],
-        Dict[Union[str, Tuple[int, ...]], float],
-    ]
-) -> Dict[Tuple[int, ...], float]:
-    res_dict = {}
+    input_dict: Dict[Union[str, Tuple[int, ...]], float]
+) -> Dict[Union[str, Tuple[int, ...]], float]:
+    res_dict: Dict[Union[str, Tuple[int, ...]], float] = {}
     for key, value in input_dict.items():
         if isinstance(key, str):
             res_dict[tuple(map(int, key if "," not in key else key.split(",")))] = value
@@ -103,7 +95,7 @@ def preprocess_distibution_dict(
     return res_dict
 
 
-def _is_non_negative(input_dict: Dict[Tuple[int, ...], float]) -> bool:
+def _is_non_negative(input_dict: Dict[Union[str, Tuple[int, ...]], float]) -> bool:
     """Check if the input dictionary values are non-negative.
 
     Args:
@@ -115,7 +107,7 @@ def _is_non_negative(input_dict: Dict[Tuple[int, ...], float]) -> bool:
     return all(value >= 0 for value in input_dict.values())
 
 
-def _is_key_length_fixed(input_dict: Dict[Tuple[int, ...], float]) -> bool:
+def _is_key_length_fixed(input_dict: Dict[Union[str, Tuple[int, ...]], float]) -> bool:
     """Check if the input dictionary keys are same-length.
 
     Args:
@@ -129,7 +121,7 @@ def _is_key_length_fixed(input_dict: Dict[Tuple[int, ...], float]) -> bool:
 
 
 def _are_keys_non_negative_integer_tuples(
-    input_dict: Dict[Tuple[int, ...], float]
+    input_dict: Dict[Union[str, Tuple[int, ...]], float]
 ) -> bool:
     """Check if the input dictionary keys are tuples containing non-negative integers.
 
@@ -146,7 +138,7 @@ def _are_keys_non_negative_integer_tuples(
 
 
 def is_measurement_outcome_distribution(
-    input_dict: Dict[Tuple[int, ...], float]
+    input_dict: Dict[Union[str, Tuple[int, ...]], float]
 ) -> bool:
     """Check if the input dictionary is a non-negative integer sequence distribution, i.e.:
             - keys are same-length tuples of non-negative integers,
@@ -169,7 +161,7 @@ def is_measurement_outcome_distribution(
     )
 
 
-def is_normalized(input_dict: Dict[Tuple[int, ...], float]) -> bool:
+def is_normalized(input_dict: Dict[Union[str, Tuple[int, ...]], float]) -> bool:
     """Check if a measurement outcome distribution is normalized.
 
     Args:
@@ -186,7 +178,7 @@ def is_normalized(input_dict: Dict[Tuple[int, ...], float]) -> bool:
 
 
 def normalize_measurement_outcome_distribution(
-    measurement_outcome_distribution: Dict[Tuple[int, ...], float]
+    measurement_outcome_distribution: Dict[Union[str, Tuple[int, ...]], float]
 ) -> Dict:
     """Normalize a measurement outcome distribution.
 

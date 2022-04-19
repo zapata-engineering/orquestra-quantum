@@ -6,6 +6,7 @@ from typing import Iterable, List, Optional, Tuple, Union
 
 import numpy as np
 import sympy
+
 from orquestra.quantum import circuits
 from orquestra.quantum.circuits import CNOT, RX, RZ, H
 from orquestra.quantum.openfermion import QubitOperator

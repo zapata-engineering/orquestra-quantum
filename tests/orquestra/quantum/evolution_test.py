@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 import sympy
 from scipy.linalg import fractional_matrix_power
+
 from orquestra.quantum import circuits
 from orquestra.quantum.circuits import XX, YY, ZZ, Circuit
 from orquestra.quantum.evolution import (

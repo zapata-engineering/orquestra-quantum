@@ -7,6 +7,7 @@ from unittest import mock
 
 import numpy as np
 import pytest
+
 from orquestra.quantum.distribution._measurement_outcome_distribution import (
     MeasurementOutcomeDistribution,
     _are_keys_non_negative_integer_tuples,
@@ -153,9 +154,9 @@ class TestInitializations:
                 ),
             ),
             (
-                np.ones(2 ** 5) / 2 ** 5,
+                np.ones(2**5) / 2**5,
                 MeasurementOutcomeDistribution(
-                    {tup: 1 / 2 ** 5 for tup in product([0, 1], repeat=5)}
+                    {tup: 1 / 2**5 for tup in product([0, 1], repeat=5)}
                 ),
             ),
         ],

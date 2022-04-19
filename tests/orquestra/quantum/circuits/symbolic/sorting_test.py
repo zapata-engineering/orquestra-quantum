@@ -1,5 +1,6 @@
 import pytest
 import sympy
+
 from orquestra.quantum.circuits import natural_key, natural_key_revlex
 from orquestra.quantum.circuits.symbolic import natural_key_fixed_names_order
 

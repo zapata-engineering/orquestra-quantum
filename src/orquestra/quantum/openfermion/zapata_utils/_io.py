@@ -2,6 +2,7 @@ from typing import Any, Callable, Dict, List
 
 import numpy as np
 import rapidjson as json
+
 from orquestra.quantum.openfermion import (
     InteractionOperator,
     InteractionRDM,

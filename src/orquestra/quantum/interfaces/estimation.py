@@ -3,10 +3,10 @@ from typing import List, Optional
 
 import numpy as np
 from typing_extensions import Protocol
-from ..openfermion import SymbolicOperator
 
 from ..circuits import Circuit
 from ..measurement import ExpectationValues
+from ..openfermion import SymbolicOperator
 from .backend import QuantumBackend
 
 

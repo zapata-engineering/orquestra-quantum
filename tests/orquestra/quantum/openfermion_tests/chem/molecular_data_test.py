@@ -19,6 +19,7 @@ import unittest
 import numpy as np
 import numpy.random
 import scipy.linalg
+
 from orquestra.quantum.openfermion.chem.molecular_data import (
     MissingCalculationError,
     MolecularData,

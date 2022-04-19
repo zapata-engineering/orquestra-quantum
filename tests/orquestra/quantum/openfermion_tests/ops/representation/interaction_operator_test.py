@@ -17,6 +17,7 @@ import itertools
 import unittest
 
 import numpy
+
 from orquestra.quantum.openfermion.ops.representations import (
     InteractionOperator,
     get_active_space_integrals,

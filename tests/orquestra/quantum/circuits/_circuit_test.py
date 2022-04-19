@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 import sympy
+
 from orquestra.quantum.circuits import GateOperation, MultiPhaseOperation, split_circuit
 from orquestra.quantum.circuits._builtin_gates import (
     CNOT,
