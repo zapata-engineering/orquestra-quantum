@@ -17,6 +17,7 @@ from typing import (
 )
 
 import numpy as np
+
 from orquestra.quantum.openfermion.ops import IsingOperator
 from orquestra.quantum.typing import AnyPath, LoadSource
 from orquestra.quantum.utils import ensure_open
@@ -333,7 +334,7 @@ def get_parities_from_measurements(
         ising_operator (openfermion.ops.IsingOperator): the operator
 
     Returns:
-        orquestra.quantum.measurement.Parities: the parities of each term in the operator
+        orquestra.quantum.measurement.Parities: parities of each term in the operator
     """
 
     # check input format

@@ -155,7 +155,8 @@ def build_circuit_layers_and_connectivity(
         y_dimension (int): number of qubits per column of the array
         layer_type (str): string designating type of layer to be created
     Returns:
-        (orquestra.quantum.circuit.CircuitConnectivity, orquestra.quantum.circuit.CircuitLayers)
+        (orquestra.quantum.circuit.CircuitConnectivity,
+            orquestra.quantum.circuit.CircuitLayers)
     """
     if layer_type == "sycamore":
         return _build_circuit_layers_and_connectivity_sycamore(x_dimension, y_dimension)
@@ -172,7 +173,8 @@ def _build_circuit_layers_and_connectivity_sycamore(x_dimension, y_dimension):
         x_dimension (int): number of qubits per row of the array
         y_dimension (int): number of qubits per column of the array
     Returns:
-        (orquestra.quantum.circuit.CircuitConnectivity, orquestra.quantum.circuit.CircuitLayers)
+        (orquestra.quantum.circuit.CircuitConnectivity,
+            orquestra.quantum.circuit.CircuitLayers)
     """
     connectivity = []
 
@@ -251,7 +253,8 @@ def _build_circuit_layers_and_connectivity_nearest_neighbors(n_qubits):
     Args:
         n_qubits (int): number of qubits in the qubit array
     Returns:
-        (orquestra.quantum.circuit.CircuitConnectivity, orquestra.quantum.circuit.CircuitLayers)
+        (orquestra.quantum.circuit.CircuitConnectivity,
+            orquestra.quantum.circuit.CircuitLayers)
     """
     even_layer = []
     odd_layer = []
