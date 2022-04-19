@@ -6,7 +6,6 @@ import pytest
 
 from orquestra.quantum.circuits import CNOT, Circuit, H, X
 from orquestra.quantum.distribution import MeasurementOutcomeDistribution
-from orquestra.quantum.measurement import Measurements
 from orquestra.quantum.symbolic_simulator import SymbolicSimulator
 from orquestra.quantum.trackers import MeasurementTrackingBackend
 

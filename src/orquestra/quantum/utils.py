@@ -1,22 +1,17 @@
 """General-purpose utilities."""
 import collections
-import copy
-import importlib
-import inspect
 import json
 import os
 import sys
 import warnings
 from contextlib import contextmanager
-from functools import partial
-from types import FunctionType
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Union
 
 import lea
 import numpy as np
 import sympy
 
-from .typing import AnyPath, DumpTarget, LoadSource, Specs
+from .typing import AnyPath, DumpTarget, LoadSource
 
 SCHEMA_VERSION = "zapata-v1"
 RNDSEED = 12345
@@ -392,110 +387,6 @@ def save_generic_dict(dictionary: Dict, filename: AnyPath):
         f.write(json.dumps(dictionary_stored, indent=2))
 
 
-def get_func_from_specs(specs: Dict):
-    """
-    Return function based on given specs.
-    Args:
-        specs (dict): dictionary containing the following keys:
-            module_name: specifies from which module an function comes.
-            function_name: specifies the name of the function.
-
-    Returns:
-        callable: function defined by specs
-
-    """
-    warnings.warn(
-        "orquestra.quantum.utils.get_func_from_specs will be deprecated. Please use "
-        "orquestra.quantum.utils.create_object instead",
-        DeprecationWarning,
-    )
-    return create_object(specs)
-
-
-def create_object(specs: Dict, **kwargs):
-    """
-    Creates an object based on given specs.
-    Specs include information about module and function necessary to create the object,
-    as well as any additional input parameters for it.
-
-    Args:
-        specs (dict): dictionary containing the following keys:
-            module_name: specifies from which module an object comes.
-            function_name: specifies the name of the function used to create object.
-
-    Returns:
-        object: object of any type
-    """
-    specs = copy.copy(specs)
-    module_name = specs.pop("module_name")
-    module = importlib.import_module(module_name)
-    creator_name = specs.pop("function_name")
-    creator = getattr(module, creator_name)
-
-    for key in specs.keys():
-        if key in kwargs.keys():
-            raise ValueError("Cannot have same parameter assigned to multiple values")
-
-    if isinstance(creator, FunctionType):
-        if kwargs != {} or specs != {}:
-            function_parameter_names = inspect.signature(creator).parameters.keys()
-            function_args = {
-                key: value
-                for key, value in {**specs, **kwargs}.items()
-                if key in function_parameter_names
-            }
-            return partial(creator, **function_args)
-        else:
-            return creator
-    else:
-        return creator(**specs, **kwargs)
-
-
-def load_noise_model(file: LoadSource):
-    """Load a noise model from file
-
-    Args:
-        file (str or file-like object): the name of the file, or a file-like object.
-
-    Returns:
-        noise model
-    """
-
-    if isinstance(file, str):
-        with open(file, "r") as f:
-            specs = json.load(f)
-    else:
-        specs = json.load(file)  # type: ignore
-    noise_model_data = specs.pop("data", None)
-    func = create_object(specs)
-    return func(noise_model_data)
-
-
-def save_noise_model(
-    noise_model_data: dict, module_name: str, function_name: str, filename
-):
-    """Save a noise model to file
-
-    Args:
-        noise_model_data: the serialized version of the noise model
-        module_name: the module name with the function to load the noise model
-        function_name: the function to load the noise model data into a noise model
-        filename (str or file-like object): the name of the file, or a file-like object.
-
-    Returns:
-        noise model
-    """
-
-    data = {
-        "module_name": module_name,
-        "function_name": function_name,
-        "data": noise_model_data,
-    }
-
-    with open(filename, "w") as f:
-        f.write(json.dumps(data, indent=2))
-
-
 def create_symbols_map(
     symbols: List[sympy.Symbol], params: np.ndarray
 ) -> Dict[sympy.Symbol, float]:
@@ -606,12 +497,6 @@ def scale_and_discretize(values: Iterable[float], total: int) -> List[int]:
     assert sum(result) == total, "The scaled list does not sum to the desired total."
 
     return result
-
-
-def load_from_specs(specs: Specs):
-    if isinstance(specs, str):
-        specs = json.loads(specs)
-    return create_object(specs)  # type: ignore
 
 
 def get_ordered_list_of_bitstrings(num_qubits: int) -> List[str]:

@@ -1,7 +1,6 @@
 import json
 import os
 import random
-from functools import partial
 
 import numpy as np
 import pytest
@@ -17,22 +16,18 @@ from orquestra.quantum.utils import (
     convert_array_to_dict,
     convert_dict_to_array,
     convert_tuples_to_bitstrings,
-    create_object,
     create_symbols_map,
     dec2bin,
-    get_func_from_specs,
     get_ordered_list_of_bitstrings,
     is_identity,
     is_unitary,
     load_list,
     load_nmeas_estimate,
-    load_noise_model,
     load_value_estimate,
     sample_from_probability_distribution,
     save_generic_dict,
     save_list,
     save_nmeas_estimate,
-    save_noise_model,
     save_timing,
     save_value_estimate,
     scale_and_discretize,
@@ -190,70 +185,6 @@ class TestUtils:
         assert data["schema"] == SCHEMA_VERSION + "-number-list"
         remove_file_if_exists("list.json")
 
-    @pytest.mark.skip("not sure how to deal with mock_objects")
-    def test_create_object(self):
-        # Given
-        function_name = "MockQuantumBackend"
-        specs = {
-            "module_name": "orquestra.quantum.interfaces.mocks",
-            "function_name": function_name,
-        }
-
-        # When
-        mock_backend = create_object(specs)
-
-        # Then
-        assert type(mock_backend).__name__ == function_name
-
-    @pytest.mark.skip("not sure how to deal with mock_objects")
-    def test_create_object_func_with_kwargs_in_specs(self):
-        # Given
-        function_name = "mock_cost_function"
-        data = np.array([1.0, 2.0])
-        target_value = 5.0
-        specs = {
-            "module_name": "orquestra.quantum.interfaces.mock_objects",
-            "function_name": function_name,
-            "parameters": data,
-        }
-        # When
-        function = create_object(specs)
-
-        # Then
-        assert isinstance(function, partial)
-        assert function() == target_value
-
-    @pytest.mark.skip("not sure how to deal with mock_objects")
-    def test_create_object_func_with_kwargs(self):
-        # Given
-        function_name = "mock_cost_function"
-        data = np.array([1.0, 2.0])
-        target_value = 5.0
-        specs = {
-            "module_name": "orquestra.quantum.interfaces.mock_objects",
-            "function_name": function_name,
-        }
-        # When
-        function = create_object(specs, parameters=data)
-
-        # Then
-        assert isinstance(function, partial)
-        assert function() == target_value
-
-    @pytest.mark.skip("not sure how to deal with mock_objects")
-    def test_create_object_func_fails_with_multiple_assignments(self):
-        # Given
-        function_name = "mock_cost_function"
-        data = np.array([1.0, 2.0])
-        specs = {
-            "module_name": "orquestra.quantum.interfaces.mock_objects",
-            "function_name": function_name,
-            "parameters": data,
-        }
-        # When
-        with pytest.raises(ValueError):
-            _ = create_object(specs, parameters=data)
-
     def test_save_generic_dict(self):
         data = {"flavor": "chocolate", "weight": 42}
         save_generic_dict(data, "dict.json")
@@ -262,63 +193,6 @@ class TestUtils:
         for key, value in data.items():
             assert loaded_data[key] == value
         remove_file_if_exists("dict.json")
-
-    @pytest.mark.skip("not sure how to deal with mock_objects")
-    def test_get_func_from_specs(self):
-        # Given
-        function_name = "mock_cost_function"
-        data = np.array([1.0, 2.0])
-        target_value = 5.0
-        specs = {
-            "module_name": "orquestra.quantum.interfaces.mock_objects",
-            "function_name": function_name,
-        }
-        # When
-        function = get_func_from_specs(specs)
-
-        # Then
-        assert function.__name__ == function_name
-        assert function(data) == target_value
-
-    def test_noise_model_with_additional_args(self):
-        # Given
-        filename = "noise_model.json"
-        with open(filename, "w") as f:
-            f.write(
-                json.dumps(
-                    {
-                        "module_name": "orquestra.quantum.testing.mocks",
-                        "function_name": "mock_create_noise_model",
-                        "data": {"testing": "data"},
-                        "schema": "THIS IS FOR TESTING ONLY",
-                    }
-                )
-            )
-
-        # When
-        _ = load_noise_model(filename)
-
-        # Then
-        remove_file_if_exists(filename)
-
-    def test_noise_model_io(self):
-        # Given
-        module_name = "orquestra.quantum.testing.mocks"
-        function_name = "mock_create_noise_model"
-        noise_model_data = {"testing": "data"}
-
-        # When
-        save_noise_model(
-            noise_model_data,
-            module_name,
-            function_name,
-            "noise_model.json",
-        )
-        noise_model = load_noise_model("noise_model.json")
-
-        # Then
-        assert noise_model is None
-        remove_file_if_exists("noise_model.json")
 
     def test_create_symbols_map_with_correct_input(self):
         # Given
