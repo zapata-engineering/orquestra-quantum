@@ -35,7 +35,7 @@ class TestSymbolicSimulator(QuantumSimulatorTests):
         },
     ]
     correct_bindings = [
-        dict(zip(gate.free_symbols, [sympy.pi] * len(gate.free_symbols)))
+        dict(zip(gate.free_symbols, [sympy.pi] * len(tuple(gate.free_symbols))))
         for gate in gates_list
     ]
 
