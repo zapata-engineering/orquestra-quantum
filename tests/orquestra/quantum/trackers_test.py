@@ -217,25 +217,6 @@ class TestMeasurementTrackingBackend:
             # Cleanup
             remove(backend.raw_data_file_name)
 
-    def test_serialization_of_bitstring_distributions(self, backend):
-        try:
-            # When
-            backend.get_bitstring_distribution(Circuit([X(0), X(0)]), n_samples=10)
-            with open(backend.raw_data_file_name) as f:
-                data = load(f)
-
-            # Then
-            assert data["raw-data"][0]["device"] == "SymbolicSimulator"
-            assert data["raw-data"][0]["number_of_shots"] == 10
-            """Assert solutions are in the recorded data"""
-            assert (
-                "BitstringDistribution(input={(0,): 1.0})"
-                == data["raw-data"][0]["distribution"]
-            )
-        finally:
-            # Cleanup
-            remove(backend.raw_data_file_name)
-
     def test_serialization_of_measurement_outcome_distributions(self, backend):
         try:
             # When

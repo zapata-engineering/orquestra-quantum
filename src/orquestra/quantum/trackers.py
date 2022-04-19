@@ -1,7 +1,6 @@
 import json
 from typing import Dict, List, Optional, Sequence
 
-from .bitstring_distribution import BitstringDistribution
 from .circuits import Circuit, to_dict
 from .distribution import MeasurementOutcomeDistribution
 from .interfaces.backend import QuantumBackend
@@ -86,34 +85,6 @@ class MeasurementTrackingBackend(QuantumBackend):
                 list(map(int, list(bitstring))) for bitstring in measurement.bitstrings
             ]
         self.raw_data.append(raw_data_dict)
-
-    def get_bitstring_distribution(
-        self, circuit: Circuit, n_samples: int
-    ) -> BitstringDistribution:
-        """Calculates a bitstring distribution.
-
-        This function is a wrapper around `get_measurement_outcome_distribution`
-        needed for backward-compatibility.
-
-        Args:
-            circuit: quantum circuit to be executed.
-
-        Returns:
-            Probability distribution of getting specific bistrings.
-        """
-        distribution = self.inner_backend.get_bitstring_distribution(circuit, n_samples)
-        self.raw_data.append(
-            {
-                "data_type": "bitstring distribution",
-                "device": self.type,
-                "circuit": to_dict(circuit),
-                "distribution": repr(distribution),
-                "number_of_gates": len(circuit.operations),
-                "number_of_shots": n_samples,
-            }
-        )
-        self.save_raw_data()
-        return distribution
 
     def get_measurement_outcome_distribution(
         self, circuit: Circuit, n_samples: int

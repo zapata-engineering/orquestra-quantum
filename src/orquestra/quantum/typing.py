@@ -7,13 +7,6 @@ import numpy as np
 import sympy
 from typing_extensions import Protocol, runtime_checkable
 
-from .history.recorder import (
-    ArtifactRecorder,
-    HistoryEntry,
-    HistoryEntryWithArtifacts,
-    SimpleRecorder,
-)
-
 
 @runtime_checkable
 class Readable(Protocol):
@@ -40,10 +33,6 @@ LoadSource = Union[Readable, AnyPath]
 DumpTarget = Union[Writeable, AnyPath]
 
 Specs = Union[str, Dict]
-
-AnyRecorder = Union[SimpleRecorder, ArtifactRecorder]
-AnyHistory = Union[List[HistoryEntry], List[HistoryEntryWithArtifacts]]
-RecorderFactory = Callable[[Callable], AnyRecorder]
 
 
 Parameter = Union[sympy.Symbol, Number]
