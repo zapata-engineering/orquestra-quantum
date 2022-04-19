@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "wheel",  "setuptools_scm>=6.0", "pygit2"]
+requires = ["setuptools", "wheel",  "setuptools_scm>=6.0"]
 
 # Including this section is same as 'use_scm_version=True' in setup.py
 # See https://github.com/pypa/setuptools_scm for guidance
@@ -14,14 +14,14 @@ namespace_packages = true
 # Without this mypy complains about the same module being imported under different
 # names. Note that this also requires setting `mypy_path`.
 explicit_package_bases = true
-# We usually keep our source code under `src/<namespace>/<library>/...` or
-# `src/python/<namespace>/<library>...`. This option tells mypy to look under that
-# directory path. If your repo has a different layout you can add the appropriate paths
+# We usually keep our source code under `src/<namespace>/<library>/...`.
+# This option tells mypy to look under that directory path. 
+# If your repo has a different layout you can add the appropriate paths
 # by setting MYPYPATH env variable.
-mypy_path = "src:src/python"
+mypy_path = "src"
 exclude = [
-    "^src/python/zquantum/core/openfermion/$",
-    "^tests/zquantum/core/openfermion_tests/$"
+    "^src/orquestra/quantum/openfermion/$",
+    "^tests/orquestra/quantum/openfermion_tests/$"
 ]
 
 [[tool.mypy.overrides]]
@@ -30,15 +30,11 @@ module = [
     'sympy.*',
     'lea',
     'rapidjson',
-    'pkg_resources',
-    'networkx',
-    'overrides'
 ]
 ignore_missing_imports = true
 
 [tool.coverage.run]
-# main.py should be checked separately in an integration test.
-omit = ["*/main.py", "*/__init__.py"]
+omit = ["*/__init__.py"]
 
 [tool.coverage.report]
 exclude_lines = [
