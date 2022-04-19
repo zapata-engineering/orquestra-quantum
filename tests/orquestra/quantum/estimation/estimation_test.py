@@ -15,7 +15,7 @@ from orquestra.quantum.estimation import (
 )
 from orquestra.quantum.interfaces.backend import QuantumBackend
 from orquestra.quantum.interfaces.estimation import EstimationTask
-from orquestra.quantum.measurement import ExpectationValues, Measurements
+from orquestra.quantum.measurements import ExpectationValues, Measurements
 from orquestra.quantum.openfermion import IsingOperator, QubitOperator
 from orquestra.quantum.symbolic_simulator import SymbolicSimulator
 

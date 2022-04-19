@@ -3,7 +3,7 @@ from unittest import mock
 
 import pytest
 
-from orquestra.quantum.distribution import (
+from orquestra.quantum.distributions import (
     MeasurementOutcomeDistribution,
     compute_clipped_negative_log_likelihood,
     compute_jensen_shannon_divergence,

@@ -5,7 +5,7 @@ import numpy as np
 from typing_extensions import Protocol
 
 from ..circuits import Circuit
-from ..measurement import ExpectationValues
+from ..measurements import ExpectationValues
 from ..openfermion import SymbolicOperator
 from .backend import QuantumBackend
 

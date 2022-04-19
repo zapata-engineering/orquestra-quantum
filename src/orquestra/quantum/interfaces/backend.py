@@ -9,11 +9,11 @@ from orquestra.quantum.wavefunction import Wavefunction
 from ..circuits import Circuit, GateOperation, Operation
 from ..circuits._circuit import split_circuit
 from ..circuits.layouts import CircuitConnectivity
-from ..distribution import (
+from ..distributions import (
     MeasurementOutcomeDistribution,
     create_bitstring_distribution_from_probability_distribution,
 )
-from ..measurement import ExpectationValues, Measurements, expectation_values_to_real
+from ..measurements import ExpectationValues, Measurements, expectation_values_to_real
 from ..openfermion import change_operator_type, get_expectation_value
 
 # Note that in particular Wavefunction is a StateVector. However, for performance

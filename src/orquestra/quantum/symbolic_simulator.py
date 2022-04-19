@@ -5,7 +5,7 @@ from sympy import Symbol
 from orquestra.quantum.circuits import Circuit, Operation
 from orquestra.quantum.circuits.layouts import CircuitConnectivity
 from orquestra.quantum.interfaces.backend import QuantumSimulator, StateVector
-from orquestra.quantum.measurement import Measurements, sample_from_wavefunction
+from orquestra.quantum.measurements import Measurements, sample_from_wavefunction
 
 
 class SymbolicSimulator(QuantumSimulator):

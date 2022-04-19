@@ -23,7 +23,7 @@ from orquestra.quantum.typing import AnyPath, LoadSource
 from orquestra.quantum.utils import ensure_open
 from orquestra.quantum.wavefunction import Wavefunction
 
-from .distribution import MeasurementOutcomeDistribution
+from .distributions import MeasurementOutcomeDistribution
 from .utils import (
     SCHEMA_VERSION,
     convert_array_to_dict,

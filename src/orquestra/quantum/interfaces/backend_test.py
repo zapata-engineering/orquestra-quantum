@@ -43,9 +43,9 @@ from orquestra.quantum.openfermion import QubitOperator
 from orquestra.quantum.wavefunction import Wavefunction
 
 from ..circuits import CNOT, Circuit, H, X, builtin_gate_by_name
-from ..distribution import MeasurementOutcomeDistribution
+from ..distributions import MeasurementOutcomeDistribution
 from ..estimation import estimate_expectation_values_by_averaging
-from ..measurement import ExpectationValues, Measurements
+from ..measurements import ExpectationValues, Measurements
 from ..testing.test_cases_for_backend_tests import (
     one_qubit_non_parametric_gates_amplitudes_test_set,
     one_qubit_non_parametric_gates_exp_vals_test_set,

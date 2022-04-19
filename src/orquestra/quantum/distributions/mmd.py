@@ -28,7 +28,7 @@ from typing import TYPE_CHECKING, Dict, Sequence
 import numpy as np
 
 if TYPE_CHECKING:
-    from orquestra.quantum.distribution import MeasurementOutcomeDistribution
+    from orquestra.quantum.distributions import MeasurementOutcomeDistribution
 
 
 def compute_rbf_kernel(x_i: np.ndarray, y_j: np.ndarray, sigma: float) -> np.ndarray:

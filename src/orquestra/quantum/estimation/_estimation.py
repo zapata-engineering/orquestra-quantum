@@ -5,7 +5,7 @@ import sympy
 
 from ..interfaces.backend import QuantumBackend, QuantumSimulator
 from ..interfaces.estimation import EstimationTask
-from ..measurement import ExpectationValues, expectation_values_to_real
+from ..measurements import ExpectationValues, expectation_values_to_real
 from ..openfermion import IsingOperator, change_operator_type
 
 

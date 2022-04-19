@@ -8,7 +8,7 @@ from unittest import mock
 import numpy as np
 import pytest
 
-from orquestra.quantum.distribution._measurement_outcome_distribution import (
+from orquestra.quantum.distributions._measurement_outcome_distribution import (
     MeasurementOutcomeDistribution,
     _are_keys_non_negative_integer_tuples,
     _is_key_length_fixed,

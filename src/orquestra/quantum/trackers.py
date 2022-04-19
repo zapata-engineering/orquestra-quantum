@@ -2,9 +2,9 @@ import json
 from typing import Dict, List, Optional, Sequence
 
 from .circuits import Circuit, to_dict
-from .distribution import MeasurementOutcomeDistribution
+from .distributions import MeasurementOutcomeDistribution
 from .interfaces.backend import QuantumBackend
-from .measurement import Measurements
+from .measurements import Measurements
 from .utils import SCHEMA_VERSION
 
 
