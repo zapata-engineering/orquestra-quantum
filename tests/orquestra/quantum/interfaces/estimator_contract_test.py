@@ -1,10 +1,10 @@
 from typing import List
 
-from zquantum.core.estimation import calculate_exact_expectation_values
-from zquantum.core.interfaces.backend import QuantumSimulator
-from zquantum.core.interfaces.estimation import EstimationTask
-from zquantum.core.interfaces.estimator_contract import ESTIMATOR_CONTRACTS
-from zquantum.core.measurement import ExpectationValues
+from orquestra.quantum.estimation import calculate_exact_expectation_values
+from orquestra.quantum.interfaces.backend import QuantumSimulator
+from orquestra.quantum.interfaces.estimation import EstimationTask
+from orquestra.quantum.interfaces.estimator_contract import ESTIMATOR_CONTRACTS
+from orquestra.quantum.measurement import ExpectationValues
 
 # This function will be used as a mock estimator
 _good_estimator = calculate_exact_expectation_values

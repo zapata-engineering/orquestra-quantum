@@ -5,7 +5,7 @@ Note that this file won't be executed on its own by pytest.
 You need to define your own test cases that import the ones defined here.
 Here is an example of how you would do that:
 
-    from zquantum.core.interfaces.estimator_contract import ESTIMATOR_CONTRACTS
+    from orquestra.quantum.interfaces.estimator_contract import ESTIMATOR_CONTRACTS
 
     @pytest.mark.parametrize("contract", ESTIMATOR_CONTRACTS)
     def test_estimator_contract(contract):
@@ -14,13 +14,13 @@ Here is an example of how you would do that:
 """
 
 import numpy as np
-from zquantum.core.circuits import RX, RY, RZ, Circuit, H
-from zquantum.core.interfaces.estimation import (
+from ..circuits import RX, RY, RZ, Circuit, H
+from ..interfaces.estimation import (
     EstimateExpectationValues,
     EstimationTask,
 )
-from zquantum.core.openfermion import IsingOperator
-from zquantum.core.symbolic_simulator import SymbolicSimulator
+from ..openfermion import IsingOperator
+from ..symbolic_simulator import SymbolicSimulator
 
 _backend = SymbolicSimulator(seed=1997)
 
