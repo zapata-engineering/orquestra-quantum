@@ -1,3 +1,6 @@
+################################################################################
+# © Copyright 2021 Zapata Computing Inc.
+################################################################################
 from zquantum.core.circuits import Circuit, X
 from zquantum.vqe.utils import build_hartree_fock_circuit, exponentiate_fermion_operator
 
