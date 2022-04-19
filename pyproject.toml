@@ -48,3 +48,6 @@ exclude_lines = [
 
 [tool.pytest.ini_options]
 log_level="INFO"
+
+[tool.black]
+exclude = '(src/orquestra/quantum/openfermion|tests/orquestra/quantum/openfermion_tests)'
