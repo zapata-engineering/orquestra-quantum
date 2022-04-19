@@ -3,7 +3,8 @@ from functools import partial
 import numpy as np
 import pytest
 import sympy
-from orquestra.quantum.circuits import RY, RZ, Circuit, H, X
+
+from orquestra.quantum.circuits import RX, RY, RZ, Circuit, H, X
 from orquestra.quantum.estimation import (
     allocate_shots_uniformly,
     calculate_exact_expectation_values,
@@ -12,13 +13,10 @@ from orquestra.quantum.estimation import (
     evaluate_non_measured_estimation_tasks,
     split_estimation_tasks_to_measure,
 )
-from orquestra.quantum.interfaces.estimation import EstimationTask
 from orquestra.quantum.interfaces.backend import QuantumBackend
+from orquestra.quantum.interfaces.estimation import EstimationTask
 from orquestra.quantum.measurement import ExpectationValues, Measurements
-from orquestra.quantum.openfermion import (
-    IsingOperator,
-    QubitOperator,
-)
+from orquestra.quantum.openfermion import IsingOperator, QubitOperator
 from orquestra.quantum.symbolic_simulator import SymbolicSimulator
 
 
@@ -39,6 +37,33 @@ class MockQuantumBackend(QuantumBackend):
 
 
 class TestEstimatorUtils:
+    @pytest.fixture()
+    def frame_operators(self):
+        operators = [
+            2.0 * IsingOperator((1, "Z")) * IsingOperator((2, "Z")),
+            1.0 * IsingOperator((3, "Z")) * IsingOperator((0, "Z")),
+            -1.0 * IsingOperator((2, "Z")),
+        ]
+
+        return operators
+
+    @pytest.fixture()
+    def circuits(self):
+        circuits = [Circuit() for _ in range(5)]
+
+        circuits[1] += RX(1.2)(0)
+        circuits[1] += RY(1.5)(1)
+        circuits[1] += RX(-0.0002)(0)
+        circuits[1] += RY(0)(1)
+
+        for circuit in circuits[2:]:
+            circuit += RX(sympy.Symbol("theta_0"))(0)
+            circuit += RY(sympy.Symbol("theta_1"))(1)
+            circuit += RX(sympy.Symbol("theta_2"))(0)
+            circuit += RY(sympy.Symbol("theta_3"))(1)
+
+        return circuits
+
     @pytest.mark.parametrize(
         "n_samples, target_n_samples_list",
         [
@@ -74,23 +99,6 @@ class TestEstimatorUtils:
         estimation_tasks = []
         with pytest.raises(ValueError):
             allocate_shots_uniformly(estimation_tasks, number_of_shots=n_samples)
-
-    @pytest.mark.parametrize(
-        "total_n_shots, prior_expectation_values",
-        [
-            (-1, ExpectationValues(np.array([0, 0, 0]))),
-        ],
-    )
-    def test_allocate_shots_proportionally_invalid_inputs(
-        self,
-        total_n_shots,
-        prior_expectation_values,
-    ):
-        estimation_tasks = []
-        with pytest.raises(ValueError):
-            _ = allocate_shots_proportionally(
-                estimation_tasks, total_n_shots, prior_expectation_values
-            )
 
     def test_evaluate_estimation_circuits_no_symbols(
         self,

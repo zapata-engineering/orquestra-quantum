@@ -37,6 +37,7 @@ from typing import List
 
 import numpy as np
 import pytest
+
 from orquestra.quantum.interfaces.estimation import EstimationTask
 from orquestra.quantum.openfermion import QubitOperator
 from orquestra.quantum.wavefunction import Wavefunction
@@ -183,24 +184,6 @@ class QuantumBackendTests:
         assert len(measurements_set[1].bitstrings) == n_samples_per_circuit[1]
 
         assert backend.number_of_circuits_run == 2
-
-    def test_get_bitstring_distribution(self, backend):
-        # Given
-        backend.number_of_circuits_run = 0
-        backend.number_of_jobs_run = 0
-        circuit = Circuit([H(0), CNOT(0, 1), CNOT(1, 2)])
-        n_samples = 1000
-
-        # When
-        distribution = backend.get_bitstring_distribution(circuit, n_samples=n_samples)
-
-        # Then
-        assert isinstance(distribution, MeasurementOutcomeDistribution)
-        assert distribution.get_number_of_subsystems() == 3
-        assert distribution.distribution_dict[(0, 0, 0)] > 1 / 3
-        assert distribution.distribution_dict[(1, 1, 1)] > 1 / 3
-        assert backend.number_of_circuits_run == 1
-        assert backend.number_of_jobs_run == 1
 
 
 class QuantumBackendGatesTests:
