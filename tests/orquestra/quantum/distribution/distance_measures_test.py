@@ -25,7 +25,7 @@ def test_clipped_negative_log_likelihood_is_computed_correctly():
 
 def test_uses_epsilon_instead_of_zero_in_target_distribution():
     log_spy = mock.Mock(wraps=math.log)
-    with mock.patch("orquestra.quantum.distribution.math.log", log_spy):
+    with mock.patch("orquestra.quantum.distributions.math.log", log_spy):
         target_distr = MeasurementOutcomeDistribution(
             {"000": 0.5, "111": 0.4, "010": 0.0}
         )

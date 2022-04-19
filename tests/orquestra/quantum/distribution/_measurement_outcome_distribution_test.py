@@ -283,7 +283,7 @@ class TestSavingDistributions:
     def mock_open(self):
         mock_open = mock.mock_open()
         with mock.patch(
-            "orquestra.quantum.distribution._measurement_outcome_distribution.open",
+            "orquestra.quantum.distributions._measurement_outcome_distribution.open",
             mock_open,
         ):
             yield mock_open
