@@ -32,7 +32,7 @@ from orquestra.quantum.openfermion.zapata_utils._io import (
     save_qubit_operator,
     save_qubit_operator_set,
 )
-from orquestra.quantum.utils import SCHEMA_VERSION, convert_dict_to_array
+from orquestra.quantum.utils import convert_dict_to_array
 
 
 class TestQubitOperator(unittest.TestCase):
@@ -165,7 +165,7 @@ class TestQubitOperator(unittest.TestCase):
     def test_convert_interaction_rdm_to_dict(self):
         rdm_dict = convert_interaction_rdm_to_dict(self.interaction_rdm)
 
-        self.assertEqual(rdm_dict["schema"], SCHEMA_VERSION + "-interaction_rdm")
+        self.assertEqual(rdm_dict["schema"], "interaction_rdm")
         self.assertTrue(
             np.allclose(
                 convert_dict_to_array(rdm_dict["one_body_tensor"]),

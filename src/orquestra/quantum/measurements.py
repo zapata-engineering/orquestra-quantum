@@ -18,14 +18,12 @@ from typing import (
 
 import numpy as np
 
-from orquestra.quantum.openfermion.ops import IsingOperator
 from orquestra.quantum.typing import AnyPath, LoadSource
 from orquestra.quantum.utils import ensure_open
 from orquestra.quantum.wavefunction import Wavefunction
 
 from .distributions import MeasurementOutcomeDistribution
 from .utils import (
-    SCHEMA_VERSION,
     convert_array_to_dict,
     convert_dict_to_array,
     convert_tuples_to_bitstrings,
@@ -43,7 +41,7 @@ def save_expectation_values(
         file (str or file-like object): the name of the file, or a file-like object
     """
     dictionary = expectation_values.to_dict()
-    dictionary["schema"] = SCHEMA_VERSION + "-expectation_values"
+    dictionary["schema"] = "expectation_values"
 
     with open(filename, "w") as f:
         f.write(json.dumps(dictionary, indent=2))
@@ -90,7 +88,7 @@ def save_wavefunction(wavefunction: Wavefunction, filename: AnyPath) -> None:
         filename (str): the name of the file
     """
 
-    data: Dict[str, Any] = {"schema": SCHEMA_VERSION + "-wavefunction"}
+    data: Dict[str, Any] = {"schema": "wavefunction"}
     data["amplitudes"] = convert_array_to_dict(wavefunction.amplitudes)
     with open(filename, "w") as f:
         f.write(json.dumps(data, indent=2))
@@ -133,7 +131,7 @@ class ExpectationValues:
         """Convert to a dictionary"""
 
         data: Dict[str, Any] = {
-            "schema": SCHEMA_VERSION + "-expectation_values",
+            "schema": "expectation_values",
             "frames": [],
         }  # what is "frames" for?
 
@@ -260,7 +258,7 @@ def save_parities(parities: Parities, filename: AnyPath) -> None:
         file (str or file-like object): the name of the file, or a file-like object
     """
     data = parities.to_dict()
-    data["schema"] = SCHEMA_VERSION + "-parities"
+    data["schema"] = "parities"
 
     with open(filename, "w") as f:
         f.write(json.dumps(data, indent=2))
@@ -325,7 +323,7 @@ def get_expectation_values_from_parities(parities: Parities) -> ExpectationValue
 
 
 def get_parities_from_measurements(
-    measurements: List[Tuple[int]], ising_operator: IsingOperator
+    measurements: List[Tuple[int]], ising_operator
 ) -> Parities:
     """Get expectation values from bitstrings.
 
@@ -338,6 +336,8 @@ def get_parities_from_measurements(
     """
 
     # check input format
+    from orquestra.quantum.openfermion.ops import IsingOperator
+
     if not isinstance(ising_operator, IsingOperator):
         raise TypeError("Input operator not openfermion.IsingOperator")
 
@@ -670,7 +670,7 @@ class Measurements:
             filename (string): filename to save the data to
         """
         data = {
-            "schema": SCHEMA_VERSION + "-measurements",
+            "schema": "measurements",
             "counts": self.get_counts(),
             # This step is required if bistrings contain np.int8 instead of regular int.
             "bitstrings": [
@@ -722,7 +722,7 @@ class Measurements:
         return MeasurementOutcomeDistribution(distribution)
 
     def get_expectation_values(
-        self, ising_operator: IsingOperator, use_bessel_correction: bool = False
+        self, ising_operator, use_bessel_correction: bool = False
     ) -> ExpectationValues:
         """Get the expectation values of an operator from the measurements.
 
@@ -740,6 +740,8 @@ class Measurements:
         # performed in the Z basis, so we need the operator to be Ising (containing only
         # Z terms). A general Qubit Operator could have X or Y terms which don’t get
         # directly measured.
+        from orquestra.quantum.openfermion.ops import IsingOperator
+
         if not isinstance(ising_operator, IsingOperator):
             raise TypeError("Input operator is not openfermion.IsingOperator")
 
