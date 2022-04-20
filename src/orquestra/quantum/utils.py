@@ -7,7 +7,6 @@ import warnings
 from contextlib import contextmanager
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Union
 
-import lea
 import numpy as np
 import sympy
 
@@ -186,10 +185,18 @@ def sample_from_probability_distribution(
         and values are how many times those things appeared in the sampling
     """
     if isinstance(probability_distribution, dict):
-        prob_pmf = lea.pmf(probability_distribution)
-        sampled_dict: collections.Counter = collections.Counter(
-            prob_pmf.random(n_samples)
+        # Need to do this preprocessing to handle different types of dict keys
+        keys_as_array = np.empty(len(probability_distribution), dtype=object)
+        keys_as_array[:] = list(probability_distribution.keys())
+
+        result = np.random.choice(
+            keys_as_array,
+            n_samples,
+            replace=True,
+            p=list(probability_distribution.values()),
         )
+        sampled_dict: collections.Counter = collections.Counter(result)
+
         return sampled_dict
     else:
         raise RuntimeError(
