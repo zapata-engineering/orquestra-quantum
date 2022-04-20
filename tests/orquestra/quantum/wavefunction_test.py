@@ -173,7 +173,7 @@ class TestFunctions:
         assert symbolic_wf == test_wf
 
         test_wf = Wavefunction(numeric_wf._amplitude_vector)
-        np.testing.assert_array_equal(numeric_wf, test_wf)
+        assert numeric_wf == test_wf
 
 
 class TestRepresentations:
