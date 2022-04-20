@@ -126,7 +126,7 @@ class Wavefunction:
         if not isinstance(other, Wavefunction):
             return False
 
-        return self._amplitude_vector == other._amplitude_vector
+        return np.array_equal(self.amplitudes, other.amplitudes)
 
     @staticmethod
     def zero_state(n_qubits: int) -> "Wavefunction":
