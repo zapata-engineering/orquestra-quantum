@@ -344,7 +344,6 @@ class TestMeasurements:
     @pytest.fixture
     def measurements_data(self, counts, bitstrings):
         return {
-            "schema": "measurements",
             "counts": counts,
             "bitstrings": bitstrings,
         }

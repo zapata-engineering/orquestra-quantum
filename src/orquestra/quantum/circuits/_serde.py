@@ -10,9 +10,6 @@ from orquestra.quantum.typing import DumpTarget, LoadSource
 from ..utils import ensure_open
 from . import _builtin_gates, _circuit, _gates
 
-CIRCUIT_SCHEMA = "circuit-v2"
-CIRCUITSET_SCHEMA = "circuitset-v2"
-
 
 def serialize_expr(expr: sympy.Expr):
     return str(expr)
@@ -81,14 +78,12 @@ def _circuit_to_dict(circuit: _circuit.Circuit):
     """
     Returns:
         A mapping with keys:
-            - "schema"
             - "n_qubits"
             - "symbolic_params"
             - "gates"
     """
     custom_gate_definitions = circuit.collect_custom_gate_definitions()
     return {
-        "schema": CIRCUIT_SCHEMA,
         "n_qubits": circuit.n_qubits,
         **(
             {
@@ -112,11 +107,9 @@ def _circuitset_to_dict(circuitset: List[_circuit.Circuit]) -> Mapping:
     """
     Returns:
         A mapping with keys:
-            - "schema"
             - "circuits" - list of circuits in this circuitset
     """
     return {
-        "schema": CIRCUITSET_SCHEMA,
         "circuits": _map_eager(_circuit_to_dict, circuitset),
     }
 
@@ -173,10 +166,6 @@ def _dagger_gate_to_dict(gate: _gates.Dagger):
 
 
 def circuit_from_dict(dict_):
-    schema = dict_.get("schema")
-    if schema != CIRCUIT_SCHEMA:
-        raise ValueError(f"Invalid circuit schema: {schema}")
-
     defs = [
         custom_gate_def_from_dict(def_dict)
         for def_dict in dict_.get("custom_gate_definitions", [])
@@ -274,10 +263,6 @@ def _custom_gate_instance_from_dict(dict_, custom_gate_defs) -> _gates.Gate:
 
 
 def circuitset_from_dict(dict_) -> List[_circuit.Circuit]:
-    schema = dict_.get("schema")
-    if schema != CIRCUITSET_SCHEMA:
-        raise ValueError(f"Invalid circuit schema: {schema}")
-
     return _map_eager(circuit_from_dict, dict_["circuits"])
 
 
