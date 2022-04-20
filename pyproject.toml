@@ -28,7 +28,6 @@ exclude = [
 module = [
     'scipy.*',
     'sympy.*',
-    'lea',
     'rapidjson',
 ]
 ignore_missing_imports = true
