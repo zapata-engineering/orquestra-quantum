@@ -157,17 +157,6 @@ class TestCircuitsetSerialization:
         serialized = to_dict(circuitset)
         assert circuitset_from_dict(serialized) == circuitset
 
-    @pytest.mark.parametrize(
-        "dict_",
-        [
-            {},
-            to_dict(_circuit.Circuit()),
-        ],
-    )
-    def test_raises_error_with_invalid_dict(self, dict_):
-        with pytest.raises(ValueError):
-            circuitset_from_dict(dict_)
-
 
 class TestCustomGateDefinitionSerialization:
     @pytest.mark.parametrize(

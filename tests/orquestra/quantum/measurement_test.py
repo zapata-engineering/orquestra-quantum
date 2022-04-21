@@ -32,7 +32,6 @@ from orquestra.quantum.openfermion.ops import IsingOperator
 from orquestra.quantum.testing import create_random_wavefunction
 from orquestra.quantum.utils import (
     RNDSEED,
-    SCHEMA_VERSION,
     convert_bitstrings_to_tuples,
     convert_tuples_to_bitstrings,
     get_ordered_list_of_bitstrings,
@@ -345,7 +344,6 @@ class TestMeasurements:
     @pytest.fixture
     def measurements_data(self, counts, bitstrings):
         return {
-            "schema": SCHEMA_VERSION + "-measurements",
             "counts": counts,
             "bitstrings": bitstrings,
         }

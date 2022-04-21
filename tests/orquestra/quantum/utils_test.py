@@ -9,7 +9,6 @@ from scipy.stats import unitary_group
 
 from orquestra.quantum.utils import (
     RNDSEED,
-    SCHEMA_VERSION,
     ValueEstimate,
     bin2dec,
     compare_unitary,
@@ -174,16 +173,6 @@ class TestUtils:
         loaded_list = load_list("list.json")
         # Then
         assert initial_list == loaded_list
-        # And
-        # After manually loading json
-        if isinstance("list.json", str):
-            with open("list.json", "r") as f:
-                data = json.load(f)
-        else:
-            data = json.load("list.json")
-        # Check that
-        assert data["schema"] == SCHEMA_VERSION + "-number-list"
-        remove_file_if_exists("list.json")
 
     def test_save_generic_dict(self):
         data = {"flavor": "chocolate", "weight": 42}
@@ -224,7 +213,6 @@ class TestUtils:
         with open("timing.json") as f:
             timing = json.load(f)
         assert timing["walltime"] == walltime
-        assert "schema" in timing
         remove_file_if_exists("timing.json")
 
     def test_save_nmeas_estimate(self):
