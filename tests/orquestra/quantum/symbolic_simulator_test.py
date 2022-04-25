@@ -2,6 +2,11 @@ import numpy as np
 import pytest
 import sympy
 
+from orquestra.quantum.api.backend import QuantumSimulator
+from orquestra.quantum.api.backend_test import (
+    QuantumSimulatorGatesTest,
+    QuantumSimulatorTests,
+)
 from orquestra.quantum.circuits import (
     CNOT,
     RX,
@@ -12,11 +17,6 @@ from orquestra.quantum.circuits import (
     GateOperation,
     MultiPhaseOperation,
     Operation,
-)
-from orquestra.quantum.interfaces.backend import QuantumSimulator
-from orquestra.quantum.interfaces.backend_test import (
-    QuantumSimulatorGatesTest,
-    QuantumSimulatorTests,
 )
 from orquestra.quantum.symbolic_simulator import SymbolicSimulator
 

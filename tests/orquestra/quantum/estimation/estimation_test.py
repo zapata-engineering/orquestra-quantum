@@ -4,6 +4,8 @@ import numpy as np
 import pytest
 import sympy
 
+from orquestra.quantum.api.backend import QuantumBackend
+from orquestra.quantum.api.estimation import EstimationTask
 from orquestra.quantum.circuits import RX, RY, RZ, Circuit, H, X
 from orquestra.quantum.estimation import (
     allocate_shots_uniformly,
@@ -13,8 +15,6 @@ from orquestra.quantum.estimation import (
     evaluate_non_measured_estimation_tasks,
     split_estimation_tasks_to_measure,
 )
-from orquestra.quantum.interfaces.backend import QuantumBackend
-from orquestra.quantum.interfaces.estimation import EstimationTask
 from orquestra.quantum.measurements import ExpectationValues, Measurements
 from orquestra.quantum.openfermion import IsingOperator, QubitOperator
 from orquestra.quantum.symbolic_simulator import SymbolicSimulator

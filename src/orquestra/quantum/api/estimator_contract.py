@@ -5,7 +5,7 @@ Note that this file won't be executed on its own by pytest.
 You need to define your own test cases that import the ones defined here.
 Here is an example of how you would do that:
 
-    from orquestra.quantum.interfaces.estimator_contract import ESTIMATOR_CONTRACTS
+    from orquestra.quantum.api.estimator_contract import ESTIMATOR_CONTRACTS
 
     @pytest.mark.parametrize("contract", ESTIMATOR_CONTRACTS)
     def test_estimator_contract(contract):
@@ -15,8 +15,8 @@ Here is an example of how you would do that:
 
 import numpy as np
 
+from ..api.estimation import EstimateExpectationValues, EstimationTask
 from ..circuits import RX, RY, RZ, Circuit, H
-from ..interfaces.estimation import EstimateExpectationValues, EstimationTask
 from ..openfermion import IsingOperator
 from ..symbolic_simulator import SymbolicSimulator
 

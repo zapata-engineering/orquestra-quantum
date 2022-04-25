@@ -38,7 +38,7 @@ from typing import List
 import numpy as np
 import pytest
 
-from orquestra.quantum.interfaces.estimation import EstimationTask
+from orquestra.quantum.api.estimation import EstimationTask
 from orquestra.quantum.openfermion import QubitOperator
 from orquestra.quantum.wavefunction import Wavefunction
 

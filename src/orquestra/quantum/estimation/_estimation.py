@@ -3,8 +3,8 @@ from typing import Dict, List, Optional, Tuple, cast
 import numpy as np
 import sympy
 
-from ..interfaces.backend import QuantumBackend, QuantumSimulator
-from ..interfaces.estimation import EstimationTask
+from ..api.backend import QuantumBackend, QuantumSimulator
+from ..api.estimation import EstimationTask
 from ..measurements import ExpectationValues, expectation_values_to_real
 from ..openfermion import IsingOperator, change_operator_type
 

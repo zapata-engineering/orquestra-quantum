@@ -2,9 +2,9 @@ from typing import Any, Dict, Optional
 
 from sympy import Symbol
 
+from orquestra.quantum.api.backend import QuantumSimulator, StateVector
 from orquestra.quantum.circuits import Circuit, Operation
 from orquestra.quantum.circuits.layouts import CircuitConnectivity
-from orquestra.quantum.interfaces.backend import QuantumSimulator, StateVector
 from orquestra.quantum.measurements import Measurements, sample_from_wavefunction
 
 
