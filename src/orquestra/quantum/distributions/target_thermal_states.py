@@ -1,11 +1,12 @@
 ################################################################################
 # © Copyright 2021-2022 Zapata Computing Inc.
 ################################################################################
-import typing
+from typing import Dict, List, Tuple, Union
 
 import numpy as np
-from zquantum.core.bitstring_distribution import BitstringDistribution
-from zquantum.core.utils import (
+
+from orquestra.quantum.distributions import MeasurementOutcomeDistribution
+from orquestra.quantum.utils import (
     bin2dec,
     convert_tuples_to_bitstrings,
     dec2bin,
@@ -13,7 +14,7 @@ from zquantum.core.utils import (
 )
 
 
-def convert_integer_to_ising_bitstring(number: int, length: int) -> typing.List[int]:
+def convert_integer_to_ising_bitstring(number: int, length: int) -> List[int]:
     """Converts an integer into a +/-1s bitstring (also called Ising bitstring).
     Args:
         number: positive number to be converted into its corresponding
@@ -30,7 +31,7 @@ def convert_integer_to_ising_bitstring(number: int, length: int) -> typing.List[
     return ising_bitstring
 
 
-def convert_ising_bitstring_to_integer(ising_bitstring: typing.List[int]) -> int:
+def convert_ising_bitstring_to_integer(ising_bitstring: List[int]) -> int:
     """Converts a +/-1s bitstring (also called Ising bitstring) into an integer.
     Args:
         ising_bitstring: 1D array of +/-1.
@@ -44,7 +45,7 @@ def convert_ising_bitstring_to_integer(ising_bitstring: typing.List[int]) -> int
 
 def _get_random_ising_hamiltonian_parameters(
     n_spins: int,
-) -> typing.Tuple[np.ndarray, np.ndarray]:
+) -> Tuple[np.ndarray, np.ndarray]:
     """Generates random h, J, and where h and J are arrays of random coefficients
     sampled from a normal distribution with zero mean and sqrt(n_spins) sd.
     For reproducibilty, fix random generator seed in the higher level from which
@@ -73,11 +74,11 @@ def _get_random_ising_hamiltonian_parameters(
     return external_fields, two_body_couplings
 
 
-def get_thermal_target_bitstring_distribution(
+def get_thermal_target_measurement_outcome_distribution(
     n_spins: int,
     temperature: float,
-    hamiltonian_parameters: typing.Tuple[np.ndarray, np.ndarray],
-) -> BitstringDistribution:
+    hamiltonian_parameters: Tuple[np.ndarray, np.ndarray],
+) -> MeasurementOutcomeDistribution:
     """Generates thermal states target distribution, saved in a dict where keys are
     bitstrings and values are corresponding probabilities according to the Boltzmann
     distribution formula.
@@ -116,19 +117,19 @@ def get_thermal_target_bitstring_distribution(
         )[0]
         distribution[binary_bitstring] = boltzmann_factor
 
-    normalized_distribution = {
+    normalized_distribution: Dict[Union[str, Tuple[int, ...]], float] = {
         key: value / partition_function for key, value in distribution.items()
     }
 
-    return BitstringDistribution(normalized_distribution)
+    return MeasurementOutcomeDistribution(normalized_distribution)
 
 
 def get_thermal_sampled_distribution(
     n_samples: int,
     n_spins: int,
     temperature: float,
-    hamiltonian_parameters: typing.Tuple[np.ndarray, np.ndarray],
-) -> BitstringDistribution:
+    hamiltonian_parameters: Tuple[np.ndarray, np.ndarray],
+) -> MeasurementOutcomeDistribution:
     """Generates thermal states sample distribution
     Args:
         n_samples: the number of samples from the original distribution
@@ -138,7 +139,7 @@ def get_thermal_sampled_distribution(
        histogram_samples: keys are binary string representations and values
         are corresponding probabilities.
     """
-    distribution = get_thermal_target_bitstring_distribution(
+    distribution = get_thermal_target_measurement_outcome_distribution(
         n_spins, temperature, hamiltonian_parameters
     ).distribution_dict
     temp_sample_distribution_dict = sample_from_probability_distribution(
@@ -146,25 +147,25 @@ def get_thermal_sampled_distribution(
     )
     histogram_samples = np.zeros(2**n_spins)
     for samples, counts in temp_sample_distribution_dict.items():
-        integer_list: typing.List[int] = []
+        integer_list: List[int] = []
         for elem in samples:
             integer_list.append(int(elem))
         idx = convert_ising_bitstring_to_integer(integer_list)
         histogram_samples[idx] += counts / n_samples
 
-    sample_distribution_dict: typing.Dict[str, float] = {}
+    sample_distribution_dict: Dict[Union[str, Tuple[int, ...]], float] = {}
     for spin in range(int(2**n_spins)):
         binary_bitstring = convert_tuples_to_bitstrings(
             [dec2bin(spin, n_spins)]  # type: ignore
         )[0]
         sample_distribution_dict[binary_bitstring] = histogram_samples[spin]
 
-    return BitstringDistribution(sample_distribution_dict)
+    return MeasurementOutcomeDistribution(sample_distribution_dict)
 
 
 def get_cardinality_distribution(
-    n_samples: int, n_spins: int, sampled_distribution: BitstringDistribution
-) -> typing.List[int]:
+    n_samples: int, n_spins: int, sampled_distribution: MeasurementOutcomeDistribution
+) -> List[int]:
     """Generates a list with all the occurrences associated to different cardinalities
         in a sampled distribution.
 
@@ -172,7 +173,7 @@ def get_cardinality_distribution(
         n_samples: the number of samples used to build the sampled distribution
             (used for normalization purposes)
         n_spins: positive number of spins in the Ising system
-        sampled_distribution: bitstring distribution built of samples drawn
+        sampled_distribution: measurement outcome distribution built of samples drawn
             for a target distribution
 
     Returns:
@@ -180,9 +181,9 @@ def get_cardinality_distribution(
 
     """
     histogram_samples = np.zeros(2**n_spins)
-    cardinality_list: typing.List[int] = []
+    cardinality_list: List[int] = []
     for samples, counts in sampled_distribution.distribution_dict.items():
-        integer_list: typing.List[int] = []
+        integer_list: List[int] = []
         for elem in samples:
             integer_list.append(int(elem))
         idx = convert_ising_bitstring_to_integer(integer_list)

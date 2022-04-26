@@ -4,10 +4,10 @@
 import itertools
 import math
 import random
-from typing import List
 
 import numpy as np
-from zquantum.core.bitstring_distribution import BitstringDistribution
+
+from orquestra.quantum.distributions import MeasurementOutcomeDistribution
 
 
 def get_bars_and_stripes_target_distribution(
@@ -45,7 +45,7 @@ def get_bars_and_stripes_target_distribution(
 
         distribution_dict[bitstring] = 1.0
 
-    return BitstringDistribution(distribution_dict)
+    return MeasurementOutcomeDistribution(distribution_dict)
 
 
 # Generate BAS with specified rows and columns in zigzag pattern

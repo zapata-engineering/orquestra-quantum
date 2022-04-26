@@ -5,16 +5,17 @@ import random
 import unittest
 
 import numpy as np
-from zquantum.core.distribution import compute_mmd
-from zquantum.core.utils import convert_tuples_to_bitstrings, dec2bin
-from zquantum.qcbm.target_thermal_states import (
+
+from orquestra.quantum.distributions import compute_mmd
+from orquestra.quantum.distributions.target_thermal_states import (
     _get_random_ising_hamiltonian_parameters,
     convert_integer_to_ising_bitstring,
     convert_ising_bitstring_to_integer,
     get_cardinality_distribution,
     get_thermal_sampled_distribution,
-    get_thermal_target_bitstring_distribution,
+    get_thermal_target_measurement_outcome_distribution,
 )
+from orquestra.quantum.utils import dec2bin
 
 SEED = 14943
 
@@ -118,7 +119,7 @@ class TestThermalTarget(unittest.TestCase):
         hamiltonian_parameters = [external_fields, two_body_couplings]
 
         # When
-        target_distribution = get_thermal_target_bitstring_distribution(
+        target_distribution = get_thermal_target_measurement_outcome_distribution(
             n_spins, temperature, hamiltonian_parameters
         )
 
@@ -177,7 +178,7 @@ class TestThermalTarget(unittest.TestCase):
         two_body_couplings = np.random.rand(n_spins, n_spins)
         hamiltonian_parameters = [external_fields, two_body_couplings]
 
-        actual = get_thermal_target_bitstring_distribution(
+        actual = get_thermal_target_measurement_outcome_distribution(
             n_spins, temperature, hamiltonian_parameters
         )
         model = get_thermal_sampled_distribution(

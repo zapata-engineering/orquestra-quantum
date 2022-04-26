@@ -14,6 +14,7 @@
 #   limitations under the License.
 """Tests for bravyi_kitaev.py."""
 
+import itertools
 import unittest
 
 import numpy
@@ -300,19 +301,16 @@ class BravyiKitaevInterOpTest(unittest.TestCase):
 
     def test_double_excitation_op_success(self):
         # Case D: Double-excitation operator
-        for i in range(self.test_range):
-            for j in range(self.test_range):
-                for k in range(self.test_range):
-                    for l in range(self.test_range):
-                        if len({i, j, k, l}) == 4:
-                            print(i, j, k, l)
-                            ham = self.four_op(i, j, k, l) + self.four_op(k, l, i, j)
-                            n_qubits = count_qubits(ham)
+        for i, j, k, l in itertools.product(range(self.test_range), repeat=4):
+            if len({i, j, k, l}) == 4:
+                print(i, j, k, l)
+                ham = self.four_op(i, j, k, l) + self.four_op(k, l, i, j)
+                n_qubits = count_qubits(ham)
 
-                            opf_ham = bravyi_kitaev(ham, n_qubits)
-                            custom = bravyi_kitaev(get_interaction_operator(ham))
+                opf_ham = bravyi_kitaev(ham, n_qubits)
+                custom = bravyi_kitaev(get_interaction_operator(ham))
 
-                            assert custom == opf_ham
+                assert custom == opf_ham
 
     def test_consistency_for_complex_numbers(self):
         """Test consistency with JW for FermionOperators."""

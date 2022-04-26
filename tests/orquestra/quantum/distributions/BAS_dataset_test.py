@@ -3,9 +3,8 @@
 ################################################################################
 import unittest
 
-import numpy as np
-from zquantum.core.bitstring_distribution import BitstringDistribution
-from zquantum.qcbm.target import (
+from orquestra.quantum.distributions import MeasurementOutcomeDistribution
+from orquestra.quantum.distributions.BAS_dataset import (
     bars_and_stripes_zigzag,
     get_bars_and_stripes_target_distribution,
     get_num_bars_and_stripes_patterns,
@@ -40,7 +39,7 @@ class TestTarget(unittest.TestCase):
 
                     # Then
                     self.assertIsInstance(
-                        bars_and_stripes_distribution, BitstringDistribution
+                        bars_and_stripes_distribution, MeasurementOutcomeDistribution
                     )
                     expected_num_patters = max(
                         int(self.number_of_patterns[i] * fraction), 1
