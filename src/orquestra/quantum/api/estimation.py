@@ -4,7 +4,7 @@ from typing import List, Optional
 import numpy as np
 from typing_extensions import Protocol
 
-from ..circuits import Circuit
+from orquestra.quantum.circuits import Circuit
 from ..measurements import ExpectationValues
 from ..openfermion import SymbolicOperator
 from .backend import QuantumBackend

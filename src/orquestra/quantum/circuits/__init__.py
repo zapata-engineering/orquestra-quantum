@@ -1,4 +1,4 @@
-"""Public API for the ZQuantum circuits.
+"""Public API for the orquestra circuits.
 
 Allows:
 

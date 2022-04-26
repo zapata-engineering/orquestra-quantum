@@ -7,7 +7,7 @@ import pytest
 from orquestra.quantum.circuits import CNOT, RY, U3, Circuit, GateOperation, X, Y, Z
 from orquestra.quantum.decompositions import (
     U3GateToRotation,
-    decompose_zquantum_circuit,
+    decompose_orquestra_circuit,
 )
 
 DECOMPOSITION_RULES = [U3GateToRotation()]
@@ -55,7 +55,7 @@ class TestDecompositionOfU3Gates:
         self, gate_to_be_decomposed, target_qubits
     ):
         circuit = Circuit([gate_to_be_decomposed(*target_qubits)])
-        decomposed_circuit = decompose_zquantum_circuit(circuit, DECOMPOSITION_RULES)
+        decomposed_circuit = decompose_orquestra_circuit(circuit, DECOMPOSITION_RULES)
 
         assert _is_scaled_identity(
             circuit.to_unitary() @ np.linalg.inv(decomposed_circuit.to_unitary()),
@@ -67,7 +67,7 @@ class TestDecompositionOfU3Gates:
     )
     def test_leaves_gates_not_matching_predicate_unaffected(self, operations):
         circuit = Circuit(operations)
-        decomposed_circuit = decompose_zquantum_circuit(circuit, DECOMPOSITION_RULES)
+        decomposed_circuit = decompose_orquestra_circuit(circuit, DECOMPOSITION_RULES)
 
         assert circuit.operations == decomposed_circuit.operations
 
@@ -77,7 +77,7 @@ class TestDecompositionOfU3Gates:
         self, gate_to_be_decomposed, target_qubits
     ):
         circuit = Circuit([gate_to_be_decomposed(*target_qubits)])
-        decomposed_circuit = decompose_zquantum_circuit(circuit, DECOMPOSITION_RULES)
+        decomposed_circuit = decompose_orquestra_circuit(circuit, DECOMPOSITION_RULES)
 
         assert all(
             isinstance(op, GateOperation) and op.gate.name in ("RZ", "RY")
@@ -96,7 +96,7 @@ class TestDecompositionOfCU3Gates:
         self, gate_to_be_decomposed, target_qubits
     ):
         circuit = Circuit([gate_to_be_decomposed(*target_qubits)])
-        decomposed_circuit = decompose_zquantum_circuit(circuit, DECOMPOSITION_RULES)
+        decomposed_circuit = decompose_orquestra_circuit(circuit, DECOMPOSITION_RULES)
 
         def numpy_caster(x):
             return np.array(x).astype(np.complex128)
@@ -123,7 +123,7 @@ class TestDecompositionOfCU3Gates:
         self, gate_to_be_decomposed, target_qubits
     ):
         circuit = Circuit([gate_to_be_decomposed(*target_qubits)])
-        decomposed_circuit = decompose_zquantum_circuit(circuit, DECOMPOSITION_RULES)
+        decomposed_circuit = decompose_orquestra_circuit(circuit, DECOMPOSITION_RULES)
 
         assert all(
             isinstance(op, GateOperation)

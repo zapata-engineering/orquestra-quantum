@@ -21,7 +21,7 @@ class TestCreatingUnitaryFromCircuit:
         "circuit, unitary_index",
         [
             # Identity gates in some test cases below are used so that comparable
-            # Cirq circuits have the same number of qubits as Zquantum ones.
+            # Cirq circuits have the same number of qubits as orquestra ones.
             (Circuit([RX(np.pi / 5)(0)]), 0),
             (Circuit([RY(np.pi / 2)(0), RX(np.pi / 5)(0)]), 1),
             (
@@ -46,14 +46,14 @@ class TestCreatingUnitaryFromCircuit:
     def test_without_free_params_gives_the_same_result_as_cirq(
         self, circuit, unitary_index, cirq_unitaries
     ):
-        zquantum_unitary = circuit.to_unitary()
+        orquestra_unitary = circuit.to_unitary()
 
         assert isinstance(
-            zquantum_unitary, np.ndarray
+            orquestra_unitary, np.ndarray
         ), "Unitary constructed from non-parameterized circuit is not a numpy array."
 
         np.testing.assert_array_almost_equal(
-            zquantum_unitary, cirq_unitaries[unitary_index]
+            orquestra_unitary, cirq_unitaries[unitary_index]
         )
 
     def test_commutes_with_parameter_substitution(self):

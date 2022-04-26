@@ -29,7 +29,7 @@ def _operation_uses_custom_gate(operation):
 
 
 class Circuit:
-    """ZQuantum representation of a quantum circuit.
+    """orquestra representation of a quantum circuit.
 
     See `help(orquestra.quantum.circuits)` for usage guide.
     """

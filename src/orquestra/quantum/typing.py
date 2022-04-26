@@ -1,4 +1,4 @@
-"""Types commonly encountered in zquantum repositories."""
+"""Types commonly encountered in orquestra repositories."""
 from numbers import Number
 from os import PathLike
 from typing import Any, Callable, Dict, List, Sequence, Union

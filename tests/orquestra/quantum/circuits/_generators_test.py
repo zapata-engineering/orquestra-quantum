@@ -40,14 +40,14 @@ class TestCreateLayerOfGates:
             for i in range(n_qubits):
                 target_circuit += RY(*params[i])(i)
 
-            u_zquantum = target_circuit.to_unitary()
+            u_orquestra = target_circuit.to_unitary()
 
             # When
             circuit = create_layer_of_gates(n_qubits, gate, params)
             unitary = circuit.to_unitary()
 
             # Then
-            assert compare_unitary(unitary, u_zquantum, tol=1e-10)
+            assert compare_unitary(unitary, u_orquestra, tol=1e-10)
 
     def test_create_layer_of_gates_wrong_num_params(self):
         params = np.ones(3).reshape(-1, 1)

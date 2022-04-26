@@ -1,4 +1,4 @@
-"""Data structures for ZQuantum gates."""
+"""Data structures for orquestra gates."""
 import math
 from dataclasses import dataclass, replace
 from typing import Callable, Dict, Iterable, Tuple, Union

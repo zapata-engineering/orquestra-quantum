@@ -39,10 +39,10 @@ import numpy as np
 import pytest
 
 from orquestra.quantum.api.estimation import EstimationTask
+from orquestra.quantum.circuits import CNOT, Circuit, H, X, builtin_gate_by_name
 from orquestra.quantum.openfermion import QubitOperator
 from orquestra.quantum.wavefunction import Wavefunction
 
-from ..circuits import CNOT, Circuit, H, X, builtin_gate_by_name
 from ..distributions import MeasurementOutcomeDistribution
 from ..estimation import estimate_expectation_values_by_averaging
 from ..measurements import ExpectationValues, Measurements

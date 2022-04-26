@@ -14,18 +14,18 @@ from orquestra.quantum.evolution import (
 from orquestra.quantum.openfermion import QubitOperator
 from orquestra.quantum.utils import compare_unitary
 
-OPENFERMION_TERM_TO_ZQUANTUM_GATE = {
+OPENFERMION_TERM_TO_ORQUESTRA_GATE = {
     ((0, "X"), (1, "X")): XX,
     ((0, "Y"), (1, "Y")): YY,
     ((0, "Z"), (1, "Z")): ZZ,
 }
 
 
-def _zquantum_exponentiate_qubit_hamiltonian_term(term, time, trotter_order):
+def _orquestra_exponentiate_qubit_hamiltonian_term(term, time, trotter_order):
     base_exponent = 2 * time / trotter_order / np.pi
     coefficient = list(term.terms.values())[0]
 
-    base_gate = OPENFERMION_TERM_TO_ZQUANTUM_GATE[list(term.terms.keys())[0]]
+    base_gate = OPENFERMION_TERM_TO_ORQUESTRA_GATE[list(term.terms.keys())[0]]
     # This introduces a phase to the gate, but that's fine
     # since `compare_unitary` accounts for that
     mat = base_gate(np.pi)(0, 1).lifted_matrix(2)
@@ -34,10 +34,10 @@ def _zquantum_exponentiate_qubit_hamiltonian_term(term, time, trotter_order):
     return zquant_mat
 
 
-def _zquantum_exponentiate_hamiltonian(hamiltonian, time, trotter_order):
+def _orquestra_exponentiate_hamiltonian(hamiltonian, time, trotter_order):
     ops = []
     for term in hamiltonian.get_operators():
-        mat = _zquantum_exponentiate_qubit_hamiltonian_term(term, time, trotter_order)
+        mat = _orquestra_exponentiate_qubit_hamiltonian_term(term, time, trotter_order)
         ops.append(
             circuits.CustomGateDefinition(
                 gate_name="custom_a",
@@ -99,11 +99,11 @@ class TestTimeEvolutionOfPauliSum:
     def test_evolution_with_numerical_time_produces_correct_result(
         self, hamiltonian, time, order
     ):
-        expected_zquantum_circuit = _zquantum_exponentiate_hamiltonian(
+        expected_orquestra_circuit = _orquestra_exponentiate_hamiltonian(
             hamiltonian, time, order
         )
 
-        reference_unitary = expected_zquantum_circuit.to_unitary()
+        reference_unitary = expected_orquestra_circuit.to_unitary()
         unitary = time_evolution(hamiltonian, time, trotter_order=order).to_unitary()
 
         assert compare_unitary(unitary, reference_unitary, tol=1e-10)
@@ -116,11 +116,11 @@ class TestTimeEvolutionOfPauliSum:
         time_symbol = sympy.Symbol("t")
         symbols_map = {time_symbol: time_value}
 
-        expected_zquantum_circuit = _zquantum_exponentiate_hamiltonian(
+        expected_orquestra_circuit = _orquestra_exponentiate_hamiltonian(
             hamiltonian, time_value, order
         )
 
-        reference_unitary = expected_zquantum_circuit.to_unitary()
+        reference_unitary = expected_orquestra_circuit.to_unitary()
 
         unitary = (
             time_evolution(hamiltonian, time_symbol, trotter_order=order)

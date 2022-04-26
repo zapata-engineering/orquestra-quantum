@@ -43,7 +43,7 @@ class U3GateToRotation(DecompositionRule[GateOperation]):
         return reversed(gate_operation_decomposition)
 
 
-def decompose_zquantum_circuit(
+def decompose_orquestra_circuit(
     circuit: Circuit, decomposition_rules: Sequence[DecompositionRule[GateOperation]]
 ):
     return Circuit(decompose_operations(circuit.operations, decomposition_rules))

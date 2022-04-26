@@ -16,7 +16,7 @@ Here is an example of how you would do that:
 import numpy as np
 
 from ..api.estimation import EstimateExpectationValues, EstimationTask
-from ..circuits import RX, RY, RZ, Circuit, H
+from orquestra.quantum.circuits import RX, RY, RZ, Circuit, H
 from ..openfermion import IsingOperator
 from ..symbolic_simulator import SymbolicSimulator
 

@@ -6,9 +6,9 @@ import numpy as np
 from orquestra.quantum.openfermion import IsingOperator, QubitOperator, SymbolicOperator
 from orquestra.quantum.wavefunction import Wavefunction
 
-from ..circuits import Circuit, GateOperation, Operation
-from ..circuits._circuit import split_circuit
-from ..circuits.layouts import CircuitConnectivity
+from orquestra.quantum.circuits import Circuit, GateOperation, Operation
+from orquestra.quantum.circuits._circuit import split_circuit
+from orquestra.quantum.circuits.layouts import CircuitConnectivity
 from ..distributions import (
     MeasurementOutcomeDistribution,
     create_bitstring_distribution_from_probability_distribution,
