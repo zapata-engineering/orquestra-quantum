@@ -9,28 +9,6 @@ from ..measurements import ExpectationValues, expectation_values_to_real
 from ..openfermion import IsingOperator, change_operator_type
 
 
-def allocate_shots_uniformly(
-    estimation_tasks: List[EstimationTask], number_of_shots: int
-) -> List[EstimationTask]:
-    """
-    Allocates the same number of shots to each task.
-
-    Args:
-        number_of_shots: number of shots to be assigned to each EstimationTask
-    """
-    if number_of_shots <= 0:
-        raise ValueError("number_of_shots must be positive.")
-
-    return [
-        EstimationTask(
-            operator=estimation_task.operator,
-            circuit=estimation_task.circuit,
-            number_of_shots=number_of_shots,
-        )
-        for estimation_task in estimation_tasks
-    ]
-
-
 def evaluate_estimation_circuits(
     estimation_tasks: List[EstimationTask],
     symbols_maps: List[Dict[sympy.Symbol, float]],
