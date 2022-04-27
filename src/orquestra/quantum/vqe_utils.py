@@ -82,7 +82,8 @@ def build_hartree_fock_circuit(
         spin_ordering: the spin ordering convention to use. Defaults to "interleaved".
 
     Returns:
-        orquestra.quantum.circuit.Circuit: a circuit that prepares the Hartree-Fock state.
+        orquestra.quantum.circuit.Circuit: a circuit that prepares
+            the Hartree-Fock state.
     """
     if spin_ordering != "interleaved":
         raise RuntimeError(
