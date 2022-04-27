@@ -1,5 +1,4 @@
 from ._estimation import (
-    allocate_shots_uniformly,
     calculate_exact_expectation_values,
     estimate_expectation_values_by_averaging,
     evaluate_estimation_circuits,

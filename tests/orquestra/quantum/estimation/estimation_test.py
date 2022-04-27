@@ -8,7 +8,6 @@ from orquestra.quantum.api.backend import QuantumBackend
 from orquestra.quantum.api.estimation import EstimationTask
 from orquestra.quantum.circuits import RX, RY, RZ, Circuit, H, X
 from orquestra.quantum.estimation import (
-    allocate_shots_uniformly,
     calculate_exact_expectation_values,
     estimate_expectation_values_by_averaging,
     evaluate_estimation_circuits,
@@ -63,59 +62,6 @@ class TestEstimatorUtils:
             circuit += RY(sympy.Symbol("theta_3"))(1)
 
         return circuits
-
-    @pytest.mark.parametrize(
-        "n_samples, target_n_samples_list",
-        [
-            (100, [100, 100, 100]),
-            (17, [17, 17, 17]),
-        ],
-    )
-    def test_allocate_shots_uniformly(
-        self,
-        frame_operators,
-        n_samples,
-        target_n_samples_list,
-    ):
-        allocate_shots = partial(allocate_shots_uniformly, number_of_shots=n_samples)
-        circuit = Circuit()
-        estimation_tasks = [
-            EstimationTask(operator, circuit, 1) for operator in frame_operators
-        ]
-
-        new_estimation_tasks = allocate_shots(estimation_tasks)
-
-        for task, target_n_samples in zip(new_estimation_tasks, target_n_samples_list):
-            assert task.number_of_shots == target_n_samples
-
-    @pytest.mark.parametrize(
-        "n_samples",
-        [-1],
-    )
-    def test_allocate_shots_uniformly_invalid_inputs(
-        self,
-        n_samples,
-    ):
-        estimation_tasks = []
-        with pytest.raises(ValueError):
-            allocate_shots_uniformly(estimation_tasks, number_of_shots=n_samples)
-
-    def test_evaluate_estimation_circuits_no_symbols(
-        self,
-        circuits,
-    ):
-        evaluate_circuits = partial(
-            evaluate_estimation_circuits, symbols_maps=[[] for _ in circuits]
-        )
-        operator = QubitOperator()
-        estimation_tasks = [
-            EstimationTask(operator, circuit, 1) for circuit in circuits
-        ]
-
-        new_estimation_tasks = evaluate_circuits(estimation_tasks)
-
-        for old_task, new_task in zip(estimation_tasks, new_estimation_tasks):
-            assert old_task.circuit == new_task.circuit
 
     def test_evaluate_estimation_circuits_all_symbols(
         self,
