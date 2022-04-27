@@ -29,6 +29,7 @@ module = [
     'scipy.*',
     'sympy.*',
     'rapidjson',
+    'pkg_resources',
 ]
 ignore_missing_imports = true
 
