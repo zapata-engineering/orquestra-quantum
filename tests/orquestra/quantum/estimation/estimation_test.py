@@ -1,10 +1,12 @@
+################################################################################
+# © Copyright 2021-2022 Zapata Computing Inc.
+################################################################################
 from functools import partial
 
 import numpy as np
 import pytest
 import sympy
 
-from orquestra.quantum.api.backend import QuantumBackend
 from orquestra.quantum.api.estimation import EstimationTask
 from orquestra.quantum.circuits import RX, RY, RZ, Circuit, H, X
 from orquestra.quantum.estimation import (
@@ -15,24 +17,9 @@ from orquestra.quantum.estimation import (
     split_estimation_tasks_to_measure,
 )
 from orquestra.quantum.measurements import ExpectationValues, Measurements
+from orquestra.quantum.mock_objects import MockQuantumBackend
 from orquestra.quantum.openfermion import IsingOperator, QubitOperator
 from orquestra.quantum.symbolic_simulator import SymbolicSimulator
-
-
-class MockQuantumBackend(QuantumBackend):
-
-    supports_batching = False
-
-    def __init__(self):
-        super().__init__()
-        self._simulator = SymbolicSimulator()
-
-    def run_circuit_and_measure(
-        self, circuit: Circuit, n_samples: int, **kwargs
-    ) -> Measurements:
-        super(MockQuantumBackend, self).run_circuit_and_measure(circuit, n_samples)
-
-        return self._simulator.run_circuit_and_measure(circuit, n_samples)
 
 
 class TestEstimatorUtils:
