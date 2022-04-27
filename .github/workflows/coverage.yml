@@ -4,10 +4,9 @@
 name: TestCoverage
 
 on:
-  # Triggers the workflow on push to main/dev
+  # Triggers the workflow on push to main
   push:
     branches:
-      - dev
       - main
   # Triggers the workflow on any PR
   pull_request:
