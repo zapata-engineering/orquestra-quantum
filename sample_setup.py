@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+################################################################################
+# © Copyright 2021-2022 Zapata Computing Inc.
+################################################################################
 
 import site
 import sys
@@ -10,7 +13,7 @@ try:
     from subtrees.z_quantum_actions.setup_extras import extras
 except ImportError:
     print("Unable to import extras", file=sys.stderr)
-    extras = {"develop": []}
+    extras = {"dev": []}
 
 # Workaound for https://github.com/pypa/pip/issues/7953
 site.ENABLE_USER_SITE = "--user" in sys.argv[1:]

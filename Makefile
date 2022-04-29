@@ -1,3 +1,6 @@
+################################################################################
+# © Copyright 2021-2022 Zapata Computing Inc.
+################################################################################
 TOP_DIR := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 include $(TOP_DIR)/variables.mk
 
@@ -42,14 +45,13 @@ install-default: clean
 	$(PYTHON) -m pip install --upgrade pip && \
 		$(PYTHON) -m pip install .
 
-# Renamed to develop to distinguish from dev branch
-develop-default: clean
-	$(PYTHON) -m pip install -e .[develop]
+dev-default: clean
+	$(PYTHON) -m pip install -e .[dev]
 
 github_actions-default:
 	python3 -m venv ${VENV} && \
 		${VENV}/bin/python3 -m pip install --upgrade pip && \
-		${VENV}/bin/python3 -m pip install -e '.[develop]'
+		${VENV}/bin/python3 -m pip install -e '.[dev]'
 
 flake8-default: clean
 	$(PYTHON) -m flake8 --ignore=E203,E266,F401,W503 --max-line-length=88 src tests
@@ -81,6 +83,9 @@ style-default: flake8 mypy black isort
 
 muster-default: style coverage
 	@echo This project passes muster!
+
+build-system-deps-default:
+	:
 
 # This is what converts the -default targets into base target names.
 # Do not remove!!!
