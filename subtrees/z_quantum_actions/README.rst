@@ -20,7 +20,7 @@ Files for Python development:
    * pytest.ini: A sample pytest.ini, can be symlinked
    * MANIFEST.in: Standard set of non-Python files that should be included in distributions. To be symlinked in top level
    * sample_setup.py: a sample setup.py file
-   * setup_extras.py: extra imports for setup.py develop mode
+   * setup_extras.py: extra imports for setup.py dev mode
    * variables.mk: Makefile global variables
 
 
@@ -128,9 +128,6 @@ include, just add your override. For example ::
 Configuring setup.py
 --------------------------
 
-.. Note:: We have labeled the development target as *develop* to avoid confusion
-   with the *dev* branch name.
-
 * Backup your original setup.py
 * Copy current sample_setup.py to your repo's setup.py in your target repo.
 
@@ -140,14 +137,14 @@ Inside of setup.py we need to make sure the extras are in place::
         from subtrees.z_quantum_actions.setup_extras import extras
     except ImportError:
         print("Unable to import extras", file=sys.stderr)
-        extras = {"develop": []}
+        extras = {"dev": []}
 
 If you have other additions to extras you need to extend the standardized ones
 provided by this repo. Inside your *setup()* do ::
 
     extras_require={
-        "develop": [
-            *extras["develop"],
+        "dev": [
+            *extras["dev"],
             "my_requirement~=1.2",
         ],
     }
