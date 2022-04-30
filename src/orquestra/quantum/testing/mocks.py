@@ -4,10 +4,6 @@ from orquestra.quantum.measurements import Measurements
 from orquestra.quantum.symbolic_simulator import SymbolicSimulator
 
 
-def mock_create_noise_model(noise_model_data):
-    return None
-
-
 class MockQuantumBackend(QuantumBackend):
 
     supports_batching = False

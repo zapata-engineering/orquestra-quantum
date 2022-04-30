@@ -17,9 +17,9 @@ from orquestra.quantum.estimation import (
     split_estimation_tasks_to_measure,
 )
 from orquestra.quantum.measurements import ExpectationValues, Measurements
-from orquestra.quantum.mock_objects import MockQuantumBackend
 from orquestra.quantum.openfermion import IsingOperator, QubitOperator
 from orquestra.quantum.symbolic_simulator import SymbolicSimulator
+from orquestra.quantum.testing import MockQuantumBackend
 
 
 class TestEstimatorUtils:
