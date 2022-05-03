@@ -259,15 +259,6 @@ class ValueEstimate(float):
     def __new__(cls, value, precision=None):
         return super().__new__(cls, value)
 
-    @property
-    def value(self):
-        warnings.warn(
-            "The value attribute is deprecated. Use ValueEstimate object directly "
-            "instead.",
-            DeprecationWarning,
-        )
-        return float(self)
-
     def __eq__(self, other):
         super_eq = super().__eq__(other)
         if super_eq is NotImplemented:
@@ -288,10 +279,10 @@ class ValueEstimate(float):
         """Convert to a dictionary"""
 
         data = {}
-        if type(self.value).__module__ == np.__name__:
+        if type(self).__module__ == np.__name__:
             data["value"] = self.value.item()
         else:
-            data["value"] = self.value
+            data["value"] = self
 
         if type(self.precision).__module__ == np.__name__:
             data["precision"] = self.precision.item()

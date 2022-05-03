@@ -113,7 +113,7 @@ class TestQubitOperator(unittest.TestCase):
         # When
         value_estimate = evaluate_qubit_operator(qubit_op, expectation_values)
         # Then
-        self.assertAlmostEqual(value_estimate.value, 0.5)
+        self.assertAlmostEqual(value_estimate, 0.5)
 
     def test_evaluate_qubit_operator_list(self):
         from orquestra.quantum.openfermion.zapata_utils._utils import (
@@ -129,7 +129,7 @@ class TestQubitOperator(unittest.TestCase):
         # When
         value_estimate = evaluate_qubit_operator_list(qubit_op_list, expectation_values)
         # Then
-        self.assertAlmostEqual(value_estimate.value, 0.74)
+        self.assertAlmostEqual(value_estimate, 0.74)
 
     def test_reverse_qubit_order(self):
         from orquestra.quantum.openfermion.zapata_utils._utils import (
