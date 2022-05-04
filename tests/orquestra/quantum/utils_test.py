@@ -119,7 +119,7 @@ class TestUtils:
         value_estimate_object_loaded = load_value_estimate("value_estimate.json")
 
         # Then
-        assert value_estimate_object.value == value_estimate_object_loaded.value
+        assert value_estimate_object == value_estimate_object_loaded
         assert value_estimate_object.precision == value_estimate_object_loaded.precision
 
         # Given
@@ -128,7 +128,7 @@ class TestUtils:
         save_value_estimate(value_estimate_object, "value_estimate.json")
         value_estimate_object_loaded = load_value_estimate("value_estimate.json")
         # Then
-        assert value_estimate_object.value == value_estimate_object_loaded.value
+        assert value_estimate_object == value_estimate_object_loaded
         assert value_estimate_object.precision == value_estimate_object_loaded.precision
 
         # Given
@@ -141,7 +141,7 @@ class TestUtils:
         value_estimate_object_loaded = load_value_estimate("value_estimate.json")
 
         # Then
-        assert value_estimate_object.value == value_estimate_object_loaded.value
+        assert value_estimate_object == value_estimate_object_loaded
         assert value_estimate_object.precision == value_estimate_object_loaded.precision
 
         remove_file_if_exists("value_estimate.json")
