@@ -1,3 +1,6 @@
+################################################################################
+# © Copyright 2022 Zapata Computing Inc.
+################################################################################
 from typing import List
 
 from orquestra.quantum.api.backend import QuantumSimulator

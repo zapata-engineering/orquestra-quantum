@@ -1,3 +1,6 @@
+################################################################################
+# © Copyright 2022 Zapata Computing Inc.
+################################################################################
 from ._io import (  # noqa: F403
     convert_dict_to_interaction_op,
     convert_dict_to_interaction_rdm,

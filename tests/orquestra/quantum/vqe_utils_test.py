@@ -1,5 +1,5 @@
 ################################################################################
-# © Copyright 2021 Zapata Computing Inc.
+#© Copyright 2022 Zapata Computing Inc.
 ################################################################################
 from orquestra.quantum.circuits import Circuit, X
 from orquestra.quantum.vqe_utils import build_hartree_fock_circuit

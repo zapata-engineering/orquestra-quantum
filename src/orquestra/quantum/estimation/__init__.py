@@ -1,3 +1,6 @@
+################################################################################
+# © Copyright 2021-2022 Zapata Computing Inc.
+################################################################################
 from ._estimation import (
     calculate_exact_expectation_values,
     estimate_expectation_values_by_averaging,
