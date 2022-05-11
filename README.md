@@ -2,7 +2,7 @@
 
 ## What is it?
 
-`orquestra-quantum` is a library with core functionalities for quantum computing developed for [Zapata's](https://www.zapatacomputing.com) [Orquestra](https://www.zapatacomputing.com/orquestra/) platform.
+`orquestra-quantum` is a library with core functionalities for quantum computing developed by [Zapata](https://www.zapatacomputing.com) for our [Orquestra](https://www.zapatacomputing.com/orquestra/) platform.
 
 `orquestra-quantum` provides:
 
@@ -39,10 +39,10 @@ To install the development version, run `pip install -e '.[dev]'` from the main 
 
 We use [Google-style](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html) docstring format. If you'd like to specify types please use [PEP 484](https://www.python.org/dev/peps/pep-0484/) type hints instead adding them to docstrings.
 
-There are codestyle-related [Github Actions](.github/workflows/style.yml) running for PRs, all of which should be made to `main`. 
+There are codestyle-related [Github Actions](.github/workflows/style.yml) running for PRs. 
 
 - If you'd like to report a bug/issue please create a new issue in this repository.
-- If you'd like to contribute, please create a pull request.
+- If you'd like to contribute, please create a pull request to `main`.
 
 ### Running tests
 
