@@ -24,7 +24,7 @@ from orquestra.quantum.symbolic_simulator import SymbolicSimulator
     source_import=sdk.GitImport(repo_url="git@github.com:my_username/my_repository.git", git_ref="main"),
     dependency_imports=[sdk.GitImport(repo_url="git@github.com:zapatacomputing/orquestra-quantum.git", git_ref="main")]
 )
-def test_orquestra_quantum():
+def orquestra_quantum_example_task()
     circ = Circuit([H(0)])
     sim = SymbolicSimulator()
     nsamples = 100
@@ -33,8 +33,8 @@ def test_orquestra_quantum():
 
 
 @sdk.workflow()
-def test_orquestra_quantum():
-    counts = test_orquestra_quantum()
+def orquestra_quantum_example_workflow()
+    counts = orquestra_quantum_example_task()
     return [counts]
 ```
 
@@ -46,11 +46,12 @@ Here's an example of how to use methods from `orquestra-quantum` to run a circui
 from orquestra.quantum.circuits import H, Circuit
 from orquestra.quantum.symbolic_simulator import SymbolicSimulator
 
-circ = Circuit([H(0)])
-sim = SymbolicSimulator()
-nsamples = 100
-measurements = sim.run_circuit_and_measure(circ, nsamples)
-measurements.get_counts()
+def orquestra_quantum_example_function()
+    circ = Circuit([H(0)])
+    sim = SymbolicSimulator()
+    nsamples = 100
+    measurements = sim.run_circuit_and_measure(circ, nsamples)
+    return measurements.get_counts()
 ```
 
 Even though it's intended to be used with Orquestra, `orquestra-quantum` can be also used as a standalone Python module.
