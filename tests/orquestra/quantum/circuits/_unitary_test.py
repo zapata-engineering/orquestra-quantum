@@ -13,7 +13,7 @@ class TestCreatingUnitaryFromCircuit:
     def cirq_unitaries(self):
         """
         Note: We decided to go with file-based approach after extracting cirq
-        from z-quantum-core and not being able to use `export_to_cirq` anymore.
+        from orquestra-quantum and not being able to use `export_to_cirq` anymore.
         """
         path_to_array = (
             "/".join(__file__.split("/")[:-1]) + "/hardcoded_cirq_unitaries.npy"
