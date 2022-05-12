@@ -357,13 +357,12 @@ def load_list(file: LoadSource) -> List:
     return data["list"]
 
 
-def save_list(array: List, filename: AnyPath, artifact_name: str = ""):
+def save_list(array: List, filename: AnyPath):
     """Save expectation values to a file.
 
     Args:
         array (list): the list to be saved
         file (str or file-like object): the name of the file, or a file-like object
-        artifact_name (str): optional argument to specify the schema name
     """
     dictionary: Dict[str, Any] = {}
     dictionary["list"] = array

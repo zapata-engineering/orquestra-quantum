@@ -266,7 +266,7 @@ def save_measurement_outcome_distributions(
 
 
 def load_measurement_outcome_distribution(file: str) -> MeasurementOutcomeDistribution:
-    """Load a measurement outcome distribution from a json file using a schema.
+    """Load a measurement outcome distribution from a json file.
 
     Arguments:
         file (str): the name of the file
@@ -292,7 +292,7 @@ def load_measurement_outcome_distribution(file: str) -> MeasurementOutcomeDistri
 def load_measurement_outcome_distributions(
     file: str,
 ) -> List[MeasurementOutcomeDistribution]:
-    """Load a list of measurement_outcome_distribution from a json file using a schema.
+    """Load a list of measurement_outcome_distribution from a json file.
 
     Arguments:
         file: the name of the file.
