@@ -38,12 +38,12 @@ def uccsd_generator(single_amplitudes, double_amplitudes, anti_hermitian=True):
             storing a list of indices followed by single excitation amplitudes
             i.e. [[[i,j],t_ij], ...] OR [NxN] array storing single excitation
             amplitudes corresponding to
-            t[i,j] * (a_i^\dagger a_j - H.C.)
+            t[i,j] * (a_i^† a_j - H.C.)
         double_amplitudes(list or ndarray): list of lists with each sublist
             storing a list of indices followed by double excitation amplitudes
             i.e. [[[i,j,k,l],t_ijkl], ...] OR [NxNxNxN] array storing double
             excitation amplitudes corresponding to
-            t[i,j,k,l] * (a_i^\dagger a_j a_k^\dagger a_l - H.C.)
+            t[i,j,k,l] * (a_i^† a_j a_k^† a_l - H.C.)
         anti_hermitian(Bool): Flag to generate only normal CCSD operator
             rather than unitary variant, primarily for testing
 
@@ -84,10 +84,10 @@ def uccsd_convert_amplitude_format(single_amplitudes, double_amplitudes):
 
     Args:
         single_amplitudes(ndarray): [NxN] array storing single excitation
-            amplitudes corresponding to t[i,j] * (a_i^\dagger a_j - H.C.)
+            amplitudes corresponding to t[i,j] * (a_i^† a_j - H.C.)
         double_amplitudes(ndarray): [NxNxNxN] array storing double
             excitation amplitudes corresponding to
-            t[i,j,k,l] * (a_i^\dagger a_j a_k^\dagger a_l - H.C.)
+            t[i,j,k,l] * (a_i^† a_j a_k^† a_l - H.C.)
 
     Returns:
         single_amplitudes_list(list): list of lists with each sublist storing
@@ -146,10 +146,10 @@ def uccsd_singlet_get_packed_amplitudes(
 
     Args:
         single_amplitudes(ndarray): [NxN] array storing single excitation
-            amplitudes corresponding to t[i,j] * (a_i^\dagger a_j - H.C.)
+            amplitudes corresponding to t[i,j] * (a_i^† a_j - H.C.)
         double_amplitudes(ndarray): [NxNxNxN] array storing double
             excitation amplitudes corresponding to
-            t[i,j,k,l] * (a_i^\dagger a_j a_k^\dagger a_l - H.C.)
+            t[i,j,k,l] * (a_i^† a_j a_k^† a_l - H.C.)
         n_qubits(int): Number of spin-orbitals used to represent the system,
             which also corresponds to number of qubits in a non-compact map.
         n_electrons(int): Number of electrons in the physical system.
