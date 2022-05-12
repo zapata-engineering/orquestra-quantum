@@ -172,7 +172,7 @@ class TestUtils:
         # Given
         initial_list = [0.1, 0.3, -0.3]
         # When
-        save_list(initial_list, "list.json", "number")
+        save_list(initial_list, "list.json")
         loaded_list = load_list("list.json")
         # Then
         assert initial_list == loaded_list
