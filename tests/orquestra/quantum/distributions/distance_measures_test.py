@@ -2,6 +2,7 @@
 # © Copyright 2022 Zapata Computing Inc.
 ################################################################################
 import math
+import warnings
 from unittest import mock
 
 import pytest
@@ -156,8 +157,10 @@ def test_distribution_distance_cannot_be_evaluated_if_supports_are_incompatible(
 def test_distribution_distance_cant_be_computed_if_only_one_distribution_is_normalized(
     normalize_target, normalize_measured, distance_measure
 ):
-    target = MeasurementOutcomeDistribution({"0": 10, "1": 5}, normalize_target)
-    measured = MeasurementOutcomeDistribution({"0": 10, "1": 5}, normalize_measured)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", UserWarning)
+        target = MeasurementOutcomeDistribution({"0": 10, "1": 5}, normalize_target)
+        measured = MeasurementOutcomeDistribution({"0": 10, "1": 5}, normalize_measured)
 
     with pytest.raises(RuntimeError):
         evaluate_distribution_distance(target, measured, distance_measure)

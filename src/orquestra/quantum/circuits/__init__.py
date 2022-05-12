@@ -58,7 +58,7 @@ Defining new gates
 ------------------
 
 To use a gate that isn't already covered by built-in ones you can define a custom gate
-or extend the set of the built-in ones and file a PR to z-quantum-core.
+or extend the set of the built-in ones and file a PR to orquestra-quantum.
 
 Using custom gates::
     custom_a = circuits.CustomGateDefinition(
