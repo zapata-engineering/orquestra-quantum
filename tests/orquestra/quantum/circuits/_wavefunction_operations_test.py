@@ -1,6 +1,8 @@
 ################################################################################
 # © Copyright 2021-2022 Zapata Computing Inc.
 ################################################################################
+import warnings
+
 import numpy as np
 import pytest
 import sympy
@@ -21,10 +23,12 @@ class TestMultiPhaseOperation:
         ],
     )
     def test_with_all_parameters_set_to_0_behaves_like_identity(self, wavefunction):
-        params = tuple(np.zeros_like(wavefunction))
-        operation = MultiPhaseOperation(params)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", np.ComplexWarning)
+            params = tuple(np.zeros_like(wavefunction))
+            operation = MultiPhaseOperation(params)
 
-        np.testing.assert_array_equal(operation.apply(wavefunction), wavefunction)
+            np.testing.assert_array_equal(operation.apply(wavefunction), wavefunction)
 
     @pytest.mark.parametrize(
         "wavefunction,params",

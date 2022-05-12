@@ -14,6 +14,8 @@
 #   limitations under the License.
 """Tests for qubit_operator.py."""
 
+import warnings
+
 import numpy
 import pytest
 
@@ -241,7 +243,9 @@ def check_sum(operators, operator):
 def test_get_operator_groups_zero():
     """Tests get_operator_groups() with one group."""
     operator = generate_operator(0, 20)
-    operator_groups = list(operator.get_operator_groups(0))
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", RuntimeWarning)
+        operator_groups = list(operator.get_operator_groups(0))
 
     # Using 1 group instead.
     assert check_length(operator_groups, [20])

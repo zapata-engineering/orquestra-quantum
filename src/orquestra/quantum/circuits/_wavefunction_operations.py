@@ -1,6 +1,7 @@
 ################################################################################
 # © Copyright 2021-2022 Zapata Computing Inc.
 ################################################################################
+import warnings
 from dataclasses import dataclass
 from functools import singledispatch
 from numbers import Complex
@@ -80,9 +81,9 @@ class MultiPhaseOperation:
         - an `H` gate has no free symbols
         - a `RX(np.pi)` gate has no free symbols
         - a `RX(sympy.Symbol("theta"))` gate has a single free symbol `theta`
-        - a `RX(sympy.sympify("theta * alpha"))` gate has two free symbols, `alpha` and
+        - a `RX(sympy.simplify("theta * alpha"))` gate has two free symbols, `alpha` and
             `theta`
-        - a `RX(sympy.sympify("theta * alpha")).bind({sympy.Symbol("theta"): 0.42})`
+        - a `RX(sympy.simplify("theta * alpha")).bind({sympy.Symbol("theta"): 0.42})`
             gate has one free symbol, `alpha`
         """
         return get_free_symbols(self.params)
