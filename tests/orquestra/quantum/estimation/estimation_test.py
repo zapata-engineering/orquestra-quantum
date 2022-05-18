@@ -26,9 +26,9 @@ class TestEstimatorUtils:
     @pytest.fixture()
     def frame_operators(self):
         operators = [
-            2.0 * IsingOperator((1, "Z")) * IsingOperator((2, "Z")),
-            1.0 * IsingOperator((3, "Z")) * IsingOperator((0, "Z")),
-            -1.0 * IsingOperator((2, "Z")),
+            IsingOperator("2 [Z1 Z2]"),
+            IsingOperator("[Z0 Z3]"),
+            IsingOperator("-1 [Z2]"),
         ]
 
         return operators
@@ -471,15 +471,15 @@ class TestBasicEstimationMethods:
     @pytest.fixture()
     def estimation_tasks(self):
         task_1 = EstimationTask(
-            IsingOperator("Z0"), circuit=Circuit([X(0)]), number_of_shots=10
+            IsingOperator("[Z0]"), circuit=Circuit([X(0)]), number_of_shots=10
         )
         task_2 = EstimationTask(
-            IsingOperator("Z0"),
+            IsingOperator("[Z0]"),
             circuit=Circuit([RY(np.pi / 2)(0)]),
             number_of_shots=20,
         )
         task_3 = EstimationTask(
-            IsingOperator((), coefficient=2.0),
+            IsingOperator("[]", coefficient=2.0),
             circuit=Circuit([RY(np.pi / 4)(0)]),
             number_of_shots=30,
         )
