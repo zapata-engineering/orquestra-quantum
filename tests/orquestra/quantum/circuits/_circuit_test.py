@@ -226,3 +226,21 @@ def test_splitting_circuits_partitions_it_into_expected_chunks():
     ]
 
     assert list(split_circuit(circuit, _predicate)) == expected_partition
+
+
+class TestCircuitInverse:
+    def test_inverting_and_multiplying_circuit_yields_correct_result(self):
+        circuit = Circuit(operations=EXAMPLE_OPERATIONS)
+        circuit_inverse = circuit.inverse()
+        circuit_inverse_times_circuit = [
+            op_inv * op for op, op_inv in zip(circuit.operations, reversed(circuit_inverse.operations))
+        ]
+        assert circuit_inverse_times_circuit == [sympy.eye(2)] * len(circuit.operations)
+
+    def test_inverting_an_empty_circuit_yields_an_empty_circuit(self):
+        circuit = Circuit()
+        circuit_inverse = circuit.inverse()
+        assert circuit_inverse == circuit
+
+
+
