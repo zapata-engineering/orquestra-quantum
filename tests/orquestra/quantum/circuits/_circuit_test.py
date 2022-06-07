@@ -233,7 +233,9 @@ class TestCircuitInverse:
         circuit = Circuit(operations=EXAMPLE_OPERATIONS)
         circuit_inverse = circuit.inverse()
         circuit_inverse_times_circuit = [
-            op_inv * op for op, op_inv in zip(circuit.operations, reversed(circuit_inverse.operations))
+            op_inv * op for op, op_inv
+            in zip(circuit.operations,
+                   reversed(circuit_inverse.operations))
         ]
         assert circuit_inverse_times_circuit == [sympy.eye(2)] * len(circuit.operations)
 
@@ -242,5 +244,7 @@ class TestCircuitInverse:
         circuit_inverse = circuit.inverse()
         assert circuit_inverse == circuit
 
-
-
+    def test_inverting_a_circuit_without_dagger_fails(self):
+        circuit = Circuit(operations=EXAMPLE_OPERATIONS)
+        with pytest.raises(AttributeError):
+            circuit.inverse()

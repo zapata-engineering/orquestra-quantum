@@ -156,8 +156,9 @@ class Circuit:
                 n_qubits=self.n_qubits,
             )
         except AttributeError:
-            raise NotImplementedError(
-                "Inverse is not implemented for this circuit type."
+            raise AttributeError(
+                "Inverse is not implemented for this circuit type,"
+                " since there are operators in it without the `dagger` method."
             )
 
 
