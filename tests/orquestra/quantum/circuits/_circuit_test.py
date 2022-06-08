@@ -28,7 +28,7 @@ from orquestra.quantum.circuits._builtin_gates import (
 )
 from orquestra.quantum.circuits._circuit import Circuit
 
-from src.orquestra.quantum.circuits import GateOperation, Gate
+from src.orquestra.quantum.circuits import GateOperation, Gate, CustomGateDefinition
 
 RNG = np.random.default_rng(42)
 
@@ -247,8 +247,17 @@ class TestCircuitInverse:
         assert circuit_inverse == circuit
 
     def test_inverting_a_circuit_without_dagger_fails(self):
-        gate = Gate("X", n_qubits=1)
-        gate = GateOperation(gate, qubits=[0])
+        custom_a = CustomGateDefinition(
+            gate_name="custom_a",  # names need to be unique
+            matrix=sympy.Matrix(
+                [
+                    [-1, 0],
+                    [0, 1],
+                ]
+            ),
+            params_ordering=(),
+        )
+        gate = GateOperation(custom_a, (0, ))
         circuit = Circuit(operations=[gate])
         with pytest.raises(AttributeError):
             circuit.inverse()
