@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 import sympy
 
-from orquestra.quantum.circuits import GateOperation, MultiPhaseOperation, split_circuit
+from orquestra.quantum.circuits import GateOperation, MultiPhaseOperation, split_circuit, CustomGateDefinition, Circuit
 from orquestra.quantum.circuits._builtin_gates import (
     CNOT,
     CPHASE,
@@ -26,9 +26,6 @@ from orquestra.quantum.circuits._builtin_gates import (
     Y,
     Z,
 )
-from orquestra.quantum.circuits._circuit import Circuit
-
-from src.orquestra.quantum.circuits import GateOperation, Gate, CustomGateDefinition
 
 RNG = np.random.default_rng(42)
 
