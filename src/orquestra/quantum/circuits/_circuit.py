@@ -152,14 +152,14 @@ class Circuit:
         produce the identity circuit.): """
         try:
             return type(self)(
-                operations=[op.dagger() for op in reversed(self.operations)],
+                operations=[op.gate.dagger() for op in reversed(self.operations)],
                 n_qubits=self.n_qubits,
             )
-        except AttributeError:
+        except AttributeError as e:
             raise AttributeError(
                 "Inverse is not implemented for this circuit type,"
                 " since there are operators in it without the `dagger` method."
-            )
+            ) from e
 
 
 @singledispatch

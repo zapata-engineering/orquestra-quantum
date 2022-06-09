@@ -5,7 +5,13 @@ import numpy as np
 import pytest
 import sympy
 
-from orquestra.quantum.circuits import GateOperation, MultiPhaseOperation, split_circuit, CustomGateDefinition, Circuit
+from orquestra.quantum.circuits import (
+    GateOperation,
+    MultiPhaseOperation,
+    split_circuit,
+    CustomGateDefinition,
+    Circuit
+)
 from orquestra.quantum.circuits._builtin_gates import (
     CNOT,
     CPHASE,
@@ -229,14 +235,18 @@ def test_splitting_circuits_partitions_it_into_expected_chunks():
 
 class TestCircuitInverse:
     def test_inverting_and_multiplying_circuit_yields_correct_result(self):
-        circuit = Circuit(operations=EXAMPLE_OPERATIONS)
+        operations = [
+            CZ(0, 1),
+            CNOT(0, 1),
+        ]
+        circuit = Circuit(operations=operations)
         circuit_inverse = circuit.inverse()
         circuit_inverse_times_circuit = [
-            op_inv * op for op, op_inv
+            op_inv.gate.matrix @ op.gate.matrix for op, op_inv
             in zip(circuit.operations,
                    reversed(circuit_inverse.operations))
         ]
-        assert circuit_inverse_times_circuit == [sympy.eye(2)] * len(circuit.operations)
+        assert circuit_inverse_times_circuit == [sympy.eye(4)] * len(circuit.operations)
 
     def test_inverting_an_empty_circuit_yields_an_empty_circuit(self):
         circuit = Circuit()
@@ -245,7 +255,7 @@ class TestCircuitInverse:
 
     def test_inverting_a_circuit_without_dagger_fails(self):
         custom_a = CustomGateDefinition(
-            gate_name="custom_a",  # names need to be unique
+            gate_name="custom_a",
             matrix=sympy.Matrix(
                 [
                     [-1, 0],
