@@ -9,7 +9,7 @@ import pytest
 import sympy
 
 from orquestra.quantum.circuits import _builtin_gates, _gates
-from orquestra.quantum.circuits._gates import GateOperation, MatrixFactoryGate
+from orquestra.quantum.circuits._gates import GateOperation, MatrixFactoryGate, Power
 
 GATES_REPRESENTATIVES = [
     _builtin_gates.X,
@@ -124,6 +124,10 @@ class TestMatrixFactoryGate:
         )
         assert gate.dagger is gate
 
+    def test_power_of_dagger_is_dagger_wrapped_by_power(self):
+        gate = MatrixFactoryGate("V", example_one_qubit_matrix_factory, (1, 0), 1)
+        assert gate.dagger.power(0.5) == Power(gate.dagger, 0.5)
+
     def test_binding_gates_in_dagger_is_propagated_to_wrapped_gate(self):
         theta = sympy.Symbol("theta")
         gate = MatrixFactoryGate("V", example_one_qubit_matrix_factory, (theta, 0), 1)
@@ -218,13 +222,6 @@ class TestControlledGate:
     def test_constructing_controlled_gate_with_zero_control_raises_error(self, gate):
         with pytest.raises(ValueError):
             gate.controlled(0)
-
-
-@pytest.mark.parametrize("gate", GATES_REPRESENTATIVES)
-class TestDagger:
-    def test_power_of_dagger(self, gate):
-        if len(gate.free_symbols) == 0:
-            gate.dagger.power(0.5)
 
 
 @pytest.mark.parametrize("gate", GATES_REPRESENTATIVES)
