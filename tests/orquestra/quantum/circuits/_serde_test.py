@@ -128,6 +128,12 @@ EXAMPLE_CIRCUITS = [
             _builtin_gates.RY(PARAMETER_VECTOR[0] * PARAMETER_VECTOR[1])(1),
         ]
     ),
+    _circuit.Circuit(
+        [
+            _builtin_gates.Z.power(0.25)(0),
+            _builtin_gates.SWAP.power(0.5)(0, 1),
+        ]
+    ),
 ]
 
 
