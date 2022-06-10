@@ -149,7 +149,7 @@ class Circuit:
 
     def inverse(self) -> "Circuit":
         """Create a circuit that, when applied to the current circuit, will
-        produce the identity circuit.): """
+        produce the identity circuit."""
         try:
             return type(self)(
                 operations=[op.gate.dagger() for op in reversed(self.operations)],

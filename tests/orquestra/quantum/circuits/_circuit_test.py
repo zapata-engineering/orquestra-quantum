@@ -6,11 +6,11 @@ import pytest
 import sympy
 
 from orquestra.quantum.circuits import (
+    Circuit,
+    CustomGateDefinition,
     GateOperation,
     MultiPhaseOperation,
     split_circuit,
-    CustomGateDefinition,
-    Circuit
 )
 from orquestra.quantum.circuits._builtin_gates import (
     CNOT,
@@ -242,9 +242,10 @@ class TestCircuitInverse:
         circuit = Circuit(operations=operations)
         circuit_inverse = circuit.inverse()
         circuit_inverse_times_circuit = [
-            op_inv.gate.matrix @ op.gate.matrix for op, op_inv
-            in zip(circuit.operations,
-                   reversed(circuit_inverse.operations))
+            op_inv.gate.matrix @ op.gate.matrix
+            for op, op_inv in zip(
+                circuit.operations, reversed(circuit_inverse.operations)
+            )
         ]
         assert circuit_inverse_times_circuit == [sympy.eye(4)] * len(circuit.operations)
 
@@ -264,7 +265,7 @@ class TestCircuitInverse:
             ),
             params_ordering=(),
         )
-        gate = GateOperation(custom_a, (0, ))
+        gate = GateOperation(custom_a, (0,))
         circuit = Circuit(operations=[gate])
         with pytest.raises(AttributeError):
             circuit.inverse()
