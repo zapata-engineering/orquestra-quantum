@@ -172,7 +172,7 @@ class TestControlledGate:
         n = gate.matrix.shape[0]
         assert gate.matrix.shape[1] == n
         assert controlled_gate.matrix[0:-n, 0:-n] == sympy.eye(
-            2 ** controlled_gate.num_qubits - n
+            2**controlled_gate.num_qubits - n
         )
         assert controlled_gate.matrix[-n:, -n:] == gate.matrix
 
@@ -255,7 +255,7 @@ class TestPowerGate:
         self, gate, exponent
     ):
         if len(gate.free_symbols) == 0:
-            wrapped_gate_matrix_exponentiated = gate.matrix ** exponent
+            wrapped_gate_matrix_exponentiated = gate.matrix**exponent
             assert gate.power(exponent).matrix == wrapped_gate_matrix_exponentiated
 
     def test_dagger_of_power_gate_power_gate_of_dagger(self, gate, exponent):
@@ -267,7 +267,7 @@ class TestPowerGate:
         if len(gate.free_symbols) == 0:
             power_gate = gate.power(exponent)
             powered_power_gate = power_gate.power(exponent)
-            assert powered_power_gate.matrix == power_gate.matrix ** exponent
+            assert powered_power_gate.matrix == power_gate.matrix**exponent
 
     def test_parameter_binding_not_implemented_for_power_gates(self, gate, exponent):
         if len(gate.free_symbols) == 0:
@@ -314,6 +314,6 @@ class TestGateOperation:
         assert op.free_symbols == gate.free_symbols
 
     def test_cannot_be_applied_to_vector_of_not_power_of_two_length(self, gate):
-        state_vector = np.array([0.1 for _ in range(2 ** gate.num_qubits + 1)])
+        state_vector = np.array([0.1 for _ in range(2**gate.num_qubits + 1)])
         with pytest.raises(ValueError):
             GateOperation(gate, tuple(range(gate.num_qubits))).apply(state_vector)
