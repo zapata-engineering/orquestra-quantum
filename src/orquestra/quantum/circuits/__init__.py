@@ -53,6 +53,10 @@ Examples:
         to_dict(circuit)
         circuit5 = circuit_from_dict(dict5)
 
+    Inverting a circuit::
+        circuit_inverted = circuit.invert()
+
+
 
 Defining new gates
 ------------------
