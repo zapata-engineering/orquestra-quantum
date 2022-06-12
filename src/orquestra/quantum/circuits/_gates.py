@@ -95,6 +95,11 @@ class Gate(Protocol):
         """
         raise NotImplementedError()
 
+    def exp(self) -> "Gate":
+        """Gate representing the exponential of the given gate.
+        """
+        raise NotImplementedError()
+
     def bind(self, symbols_map: Dict[sympy.Symbol, Parameter]) -> "Gate":
         raise NotImplementedError()
 
@@ -214,6 +219,10 @@ class MatrixFactoryGate:
     def dagger(self) -> Union["MatrixFactoryGate", Gate]:
         return self if self.is_hermitian else Dagger(self)
 
+    @property
+    def exp(self) -> Union["MatrixFactoryGate", Gate]:
+        return Exponential(self) if self.is_hermitian else Exponential(self) #TODO check the conditions
+
     def power(self, exponent: float) -> "Gate":
         return Power(self, exponent)
 
@@ -298,6 +307,13 @@ class ControlledGate(Gate):
             num_control_qubits=self.num_control_qubits,
         )
 
+    @property
+    def exp(self) -> "ControlledGate":
+        return ControlledGate(
+            wrapped_gate=self.wrapped_gate.exp,
+            num_control_qubits=self.num_control_qubits,
+        )
+
     def power(self, exponent: float) -> "Gate":
         return ControlledGate(
             wrapped_gate=self.wrapped_gate.power(exponent),
@@ -349,6 +365,54 @@ class Dagger(Gate):
     def dagger(self) -> "Gate":
         return self.wrapped_gate
 
+    @property
+    def exp(self) -> "Gate":
+        return Exponential(self)
+
+    def power(self, exponent: float) -> "Gate":
+        return Power(self, exponent)
+
+
+EXPONENTIAL_GATE_NAME = "Exponential"
+
+
+@dataclass(frozen=True)
+class Exponential(Gate):
+    wrapped_gate: Gate
+
+    @property
+    def matrix(self) -> sympy.Matrix:
+        return self.wrapped_gate.matrix.exp()
+
+    @property
+    def params(self) -> Tuple[Parameter, ...]:
+        return self.wrapped_gate.params
+
+    @property
+    def num_qubits(self) -> int:
+        return self.wrapped_gate.num_qubits
+
+    @property
+    def name(self):
+        return EXPONENTIAL_GATE_NAME
+
+    def controlled(self, num_control_qubits: int) -> Gate:
+        return self.wrapped_gate.controlled(num_control_qubits).exp
+
+    def bind(self, symbols_map) -> "Gate":
+        return self.wrapped_gate.bind(symbols_map).exp
+
+    def replace_params(self, new_params: Tuple[Parameter, ...]) -> "Gate":
+        return self.wrapped_gate.replace_params(new_params).exp
+
+    @property
+    def dagger(self) -> "Gate":
+        return self.wrapped_gate.dagger.exp
+
+    @property
+    def exp(self) -> "Gate":
+        return Exponential(self)
+
     def power(self, exponent: float) -> "Gate":
         return Power(self, exponent)
 
@@ -391,6 +455,10 @@ class Power(Gate):
     @property
     def dagger(self) -> "Gate":
         return self.wrapped_gate.dagger.power(self.exponent)
+
+    @property
+    def exp(self) -> "Gate":
+        return Exponential(self)
 
     def power(self, exponent: float) -> "Gate":
         return Power(self, exponent)
