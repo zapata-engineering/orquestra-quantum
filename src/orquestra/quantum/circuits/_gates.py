@@ -382,7 +382,8 @@ class Exponential(Gate):
 
     def __post_init__(self):
         if len(self.wrapped_gate.free_symbols) > 0:
-            raise ValueError("On gates with free symbols the exponential cannot be performed")
+            raise ValueError("On gates with free symbols the exponential cannot " \
+                "be performed")
 
     @property
     def matrix(self) -> sympy.Matrix:

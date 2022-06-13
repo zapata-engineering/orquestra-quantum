@@ -9,7 +9,12 @@ import pytest
 import sympy
 
 from orquestra.quantum.circuits import _builtin_gates, _gates
-from orquestra.quantum.circuits._gates import GateOperation, MatrixFactoryGate, Power, Exponential
+from orquestra.quantum.circuits._gates import (
+    GateOperation,
+    MatrixFactoryGate,
+    Power,
+    Exponential
+)
 
 GATES_REPRESENTATIVES = [
     _builtin_gates.X,
@@ -331,11 +336,11 @@ class TestGateExponential:
             assert gate.exp.matrix == wrapped_gate_matrix_exponential
 
     def test_dagger_of_gate_exponential_gate_exponential_of_dagger(self, gate):
-        if len(gate.free_symbols) == 0  and gate.name != "T":
+        if len(gate.free_symbols) == 0 and gate.name != "T":
             assert gate.exp.dagger == gate.dagger.exp
 
     def test_power_of_gate_exponential_gate_exponential_of_power(self, gate):
-        if len(gate.free_symbols) == 0  and gate.name != "T":
+        if len(gate.free_symbols) == 0 and gate.name != "T":
             assert gate.exp.power(2.0) != gate.power(2.0).exp
 
     def test_parameter_binding_not_implemented_for_gate_exponential(self, gate):
