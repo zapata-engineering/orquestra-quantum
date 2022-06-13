@@ -95,9 +95,9 @@ class Gate(Protocol):
         """
         raise NotImplementedError()
 
+    @property
     def exp(self) -> "Gate":
-        """Gate representing the exponential of the given gate.
-        """
+        """Gate representing the exponential of the given gate."""
         raise NotImplementedError()
 
     def bind(self, symbols_map: Dict[sympy.Symbol, Parameter]) -> "Gate":
@@ -220,7 +220,7 @@ class MatrixFactoryGate:
         return self if self.is_hermitian else Dagger(self)
 
     @property
-    def exp(self) -> Gate:
+    def exp(self) -> "Gate":
         return Exponential(self)
 
     def power(self, exponent: float) -> "Gate":
@@ -308,7 +308,7 @@ class ControlledGate(Gate):
         )
 
     @property
-    def exp(self) -> "ControlledGate":
+    def exp(self) -> "Gate":
         return ControlledGate(
             wrapped_gate=self.wrapped_gate.exp,
             num_control_qubits=self.num_control_qubits,
@@ -382,8 +382,9 @@ class Exponential(Gate):
 
     def __post_init__(self):
         if len(self.wrapped_gate.free_symbols) > 0:
-            raise ValueError("On gates with free symbols the exponential cannot "
-                             "be performed")
+            raise ValueError(
+                "On gates with free symbols the exponential cannot be performed"
+            )
 
     @property
     def matrix(self) -> sympy.Matrix:

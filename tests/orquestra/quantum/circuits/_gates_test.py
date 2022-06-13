@@ -10,10 +10,10 @@ import sympy
 
 from orquestra.quantum.circuits import _builtin_gates, _gates
 from orquestra.quantum.circuits._gates import (
+    Exponential,
     GateOperation,
     MatrixFactoryGate,
     Power,
-    Exponential
 )
 
 GATES_REPRESENTATIVES = [
@@ -355,9 +355,10 @@ class TestGateExponential:
             gate_exponential = gate.exp
             new_params = tuple(3 * param for param in gate_exponential.params)
 
-            assert gate_exponential.replace_params(new_params) == gate.replace_params(
-                new_params
-            ).exp
+            assert (
+                gate_exponential.replace_params(new_params)
+                == gate.replace_params(new_params).exp
+            )
 
 
 @pytest.mark.parametrize("gate", GATES_REPRESENTATIVES)
