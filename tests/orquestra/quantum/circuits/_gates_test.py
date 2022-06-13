@@ -9,7 +9,7 @@ import pytest
 import sympy
 
 from orquestra.quantum.circuits import _builtin_gates, _gates
-from orquestra.quantum.circuits._gates import GateOperation, MatrixFactoryGate, Power
+from orquestra.quantum.circuits._gates import GateOperation, MatrixFactoryGate, Power, Exponential
 
 GATES_REPRESENTATIVES = [
     _builtin_gates.X,
@@ -111,6 +111,10 @@ class TestMatrixFactoryGate:
         gate = MatrixFactoryGate("V", example_one_qubit_matrix_factory, (1, 2), 1)
         assert gate.dagger.matrix == gate.matrix.adjoint()
 
+    def test_matrix_exponential_is_exponential_of_original_gates_matrix(self):
+        gate = MatrixFactoryGate("V", example_one_qubit_matrix_factory, (1, 2), 1)
+        assert gate.exp.matrix == gate.matrix.exp()
+
     def test_dagger_has_the_same_params_and_num_qubits_as_wrapped_gate(self):
         gate = MatrixFactoryGate(
             "U", example_two_qubit_matrix_factory, (0.5, 0.1, sympy.Symbol("a")), 2
@@ -127,6 +131,10 @@ class TestMatrixFactoryGate:
     def test_power_of_dagger_is_dagger_wrapped_by_power(self):
         gate = MatrixFactoryGate("V", example_one_qubit_matrix_factory, (1, 0), 1)
         assert gate.dagger.power(0.5) == Power(gate.dagger, 0.5)
+
+    def test_exponential_of_dagger_is_dagger_wrapped_by_exponential(self):
+        gate = MatrixFactoryGate("V", example_one_qubit_matrix_factory, (1, 0), 1)
+        assert gate.dagger.exp == Exponential(gate.dagger)
 
     def test_binding_gates_in_dagger_is_propagated_to_wrapped_gate(self):
         theta = sympy.Symbol("theta")
@@ -198,6 +206,11 @@ class TestControlledGate:
         controlled_gate = gate.controlled(4)
 
         assert controlled_gate.dagger == gate.dagger.controlled(4)
+
+    def test_exp_of_controlled_gate_is_controlled_gate_wrapping_exp(self, gate):
+        if len(gate.free_symbols) == 0:
+            controlled_gate = gate.controlled(2)
+            assert controlled_gate.exp == gate.exp.controlled(2)
 
     def test_power_of_controlled_gate_is_controlled_gate_wrapping_power(self, gate):
         if len(gate.free_symbols) == 0:
@@ -286,6 +299,60 @@ class TestPowerGate:
             assert power_gate.replace_params(new_params) == gate.replace_params(
                 new_params
             ).power(exponent)
+
+
+@pytest.mark.parametrize("gate", GATES_REPRESENTATIVES[:10])
+class TestGateExponential:
+    def test_constructing_a_gate_exponential_with_free_symbols_raises_error(self, gate):
+        if len(gate.free_symbols) > 0:
+            with pytest.raises(ValueError):
+                gate.exp
+
+    def test_gate_exponential_naming_scheme(self, gate):
+        if len(gate.free_symbols) == 0:
+            gate_exponential = gate.exp
+            assert gate_exponential.name == _gates.EXPONENTIAL_GATE_NAME
+
+    def test_has_same_parameters_as_wrapped_gate(self, gate):
+        if len(gate.free_symbols) == 0:
+            assert gate.exp.params == gate.params
+
+    def test_has_same_free_symbols_as_wrapped_gate(self, gate):
+        if len(gate.free_symbols) == 0:
+            assert gate.exp.free_symbols == gate.free_symbols
+
+    def test_has_same_number_of_qubits_as_wrapped_gate(self, gate):
+        if len(gate.free_symbols) == 0:
+            assert gate.exp.num_qubits == gate.num_qubits
+
+    def test_matrix_exponential_equal_to_wrapped_gate_matrix_exponential(self, gate):
+        if len(gate.free_symbols) == 0 and gate.name != "T":
+            wrapped_gate_matrix_exponential = gate.matrix.exp()
+            assert gate.exp.matrix == wrapped_gate_matrix_exponential
+
+    def test_dagger_of_gate_exponential_gate_exponential_of_dagger(self, gate):
+        if len(gate.free_symbols) == 0  and gate.name != "T":
+            assert gate.exp.dagger == gate.dagger.exp
+
+    def test_power_of_gate_exponential_gate_exponential_of_power(self, gate):
+        if len(gate.free_symbols) == 0  and gate.name != "T":
+            assert gate.exp.power(2.0) != gate.power(2.0).exp
+
+    def test_parameter_binding_not_implemented_for_gate_exponential(self, gate):
+        if len(gate.free_symbols) == 0:
+            gate_exponential = gate.exp
+            symbols_map = {sympy.Symbol("theta"): 0.5, sympy.Symbol("x"): 3}
+            with pytest.raises(NotImplementedError):
+                gate_exponential.bind(symbols_map)
+
+    def test_constructing_gate_exponential_and_replacing_parameters_commute(self, gate):
+        if len(gate.free_symbols) == 0:
+            gate_exponential = gate.exp
+            new_params = tuple(3 * param for param in gate_exponential.params)
+
+            assert gate_exponential.replace_params(new_params) == gate.replace_params(
+                new_params
+            ).exp
 
 
 @pytest.mark.parametrize("gate", GATES_REPRESENTATIVES)

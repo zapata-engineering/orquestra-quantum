@@ -112,10 +112,21 @@ EXAMPLE_CIRCUITS = [
     ),
     _circuit.Circuit(
         [
+            _builtin_gates.Y.exp(1),
+        ]
+    ),
+    _circuit.Circuit(
+        [
             _builtin_gates.RX(-np.pi).dagger(2),
             _builtin_gates.RY(-np.pi / 2).dagger(1),
             _builtin_gates.RZ(0).dagger(0),
             _builtin_gates.PHASE(np.pi / 5).dagger(2),
+        ]
+    ),
+    _circuit.Circuit(
+        [
+            _builtin_gates.RX(-np.pi).exp(2),
+            _builtin_gates.RY(-np.pi / 2).exp(1),
         ]
     ),
     _circuit.Circuit(
