@@ -141,6 +141,7 @@ from ._gates import (
     ControlledGate,
     CustomGateDefinition,
     Dagger,
+    Exponential,
     Gate,
     GateOperation,
     MatrixFactoryGate,

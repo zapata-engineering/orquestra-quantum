@@ -221,7 +221,7 @@ class MatrixFactoryGate:
 
     @property
     def exp(self) -> Union["MatrixFactoryGate", Gate]:
-        return Exponential(self) if self.is_hermitian else Exponential(self) #TODO check the conditions
+        return Exponential(self)
 
     def power(self, exponent: float) -> "Gate":
         return Power(self, exponent)
@@ -400,7 +400,9 @@ class Exponential(Gate):
         return self.wrapped_gate.controlled(num_control_qubits).exp
 
     def bind(self, symbols_map) -> "Gate":
-        return self.wrapped_gate.bind(symbols_map).exp
+        raise NotImplementedError(
+            "Exponentiated gates do not possess free symbols to bind"
+        )
 
     def replace_params(self, new_params: Tuple[Parameter, ...]) -> "Gate":
         return self.wrapped_gate.replace_params(new_params).exp
