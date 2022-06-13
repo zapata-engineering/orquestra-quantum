@@ -220,7 +220,7 @@ class MatrixFactoryGate:
         return self if self.is_hermitian else Dagger(self)
 
     @property
-    def exp(self) -> Union["MatrixFactoryGate", Gate]:
+    def exp(self) -> Gate:
         return Exponential(self)
 
     def power(self, exponent: float) -> "Gate":
@@ -380,6 +380,10 @@ EXPONENTIAL_GATE_NAME = "Exponential"
 class Exponential(Gate):
     wrapped_gate: Gate
 
+    def __post_init__(self):
+        if len(self.wrapped_gate.free_symbols) > 0:
+            raise ValueError("On gates with free symbols the exponential cannot be performed")
+
     @property
     def matrix(self) -> sympy.Matrix:
         return self.wrapped_gate.matrix.exp()
@@ -401,7 +405,7 @@ class Exponential(Gate):
 
     def bind(self, symbols_map) -> "Gate":
         raise NotImplementedError(
-            "Exponentiated gates do not possess free symbols to bind"
+            "Gates exponential do not possess free symbols to bind"
         )
 
     def replace_params(self, new_params: Tuple[Parameter, ...]) -> "Gate":
