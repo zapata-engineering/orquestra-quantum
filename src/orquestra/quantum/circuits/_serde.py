@@ -166,6 +166,14 @@ def _dagger_gate_to_dict(gate: _gates.Dagger):
 
 
 @to_dict.register
+def _exponential_gate_to_dict(gate: _gates.Exponential):
+    return {
+        "name": gate.name,
+        "wrapped_gate": to_dict(gate.wrapped_gate),
+    }
+
+
+@to_dict.register
 def _power_gate_to_dict(gate: _gates.Power):
     return {
         "name": gate.name,
@@ -240,6 +248,10 @@ def _special_gate_from_dict(dict_, custom_gate_defs) -> _gates.Gate:
     elif dict_["name"] == _gates.DAGGER_GATE_NAME:
         wrapped_gate = _gate_from_dict(dict_["wrapped_gate"], custom_gate_defs)
         return _gates.Dagger(wrapped_gate)
+
+    elif dict_["name"] == _gates.EXPONENTIAL_GATE_NAME:
+        wrapped_gate = _gate_from_dict(dict_["wrapped_gate"], custom_gate_defs)
+        return _gates.Exponential(wrapped_gate)
 
     elif _gates.POWER_GATE_SYMBOL in dict_["name"]:
         wrapped_gate = _gate_from_dict(dict_["wrapped_gate"], custom_gate_defs)
