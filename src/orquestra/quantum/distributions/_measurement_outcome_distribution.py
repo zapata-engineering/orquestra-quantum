@@ -7,6 +7,7 @@ import sys
 import warnings
 from itertools import product
 from typing import Any, Callable, Dict, List, Tuple, Union
+import copy
 
 import numpy as np
 
@@ -400,6 +401,7 @@ def evaluate_distribution_distance(
     return distance_measure_function(
         target_distribution, measured_distribution, **kwargs
     )
+
 
 def subdistribution(counts, active_qubits):
     new_counts = {}
