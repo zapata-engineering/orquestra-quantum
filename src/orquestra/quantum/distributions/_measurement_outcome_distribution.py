@@ -400,3 +400,22 @@ def evaluate_distribution_distance(
     return distance_measure_function(
         target_distribution, measured_distribution, **kwargs
     )
+
+def subdistribution(counts, active_qubits):
+    new_counts = {}
+
+    # check for no out of range indexes
+    if max(active_qubits) + 1 > len(list(counts.keys())[0]):
+        raise ValueError(
+            "Active qubit indices is bigger than the number of qubits in the counts"
+        )
+
+    # check for duplicate indexes
+    if len(active_qubits) != len(set(active_qubits)):
+        raise ValueError("There exist duplicate indices in the active qubit list")
+
+    for key in copy.deepcopy(list(counts.keys())):
+        new_key = "".join(key[i] for i in active_qubits)
+        new_counts[new_key] = counts.pop(key) + new_counts.get(new_key, 0)
+
+    return new_counts

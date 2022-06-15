@@ -866,3 +866,19 @@ class TestMeasurements:
         for sample in correct_samples:
             bitstring = tuple([int(measurement_value) for measurement_value in sample])
             assert correct_samples[sample] <= bitstring_counts[bitstring]
+
+@pytest.mark.parametrize(
+    ("counts", "active_qubits", "new_count"),
+    [
+        (
+            {"001": 100, "010": 101, "011": 7},
+            [0, 1, 2],
+            {"001": 100, "010": 101, "011": 7},
+        ),
+        ({"001": 100, "010": 101, "011": 7}, [0, 1, 3], ValueError),
+    ],
+)
+def test_if_subdistribution_works(
+    counts, active_qubits,
+):
+    assert subdistribution(counts, active_qubits) == new_count
