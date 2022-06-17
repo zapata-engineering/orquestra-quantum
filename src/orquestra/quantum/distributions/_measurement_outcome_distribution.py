@@ -409,7 +409,7 @@ def subdistribution(counts, active_qubits):
     # check for no out of range indexes
     if max(active_qubits) + 1 > len(list(counts.keys())[0]):
         raise ValueError(
-            "Active qubit indices is bigger than the number of qubits in the counts"
+            "The highest index of active qubits is bigger than the number of qubits in the distribution."
         )
 
     # check for duplicate indexes
