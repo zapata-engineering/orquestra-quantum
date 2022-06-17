@@ -865,7 +865,7 @@ class TestMeasurements:
 
 
 @pytest.mark.parametrize(
-    ("counts", "active_qubits", "new_count"),
+    "counts,active_qubits,new_counts",
     [
         (
             {"001": 100, "010": 101, "011": 7},
