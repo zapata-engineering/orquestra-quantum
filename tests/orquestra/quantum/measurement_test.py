@@ -894,11 +894,9 @@ def test_if_subdistribution_works(counts, active_qubits, new_counts):
 
 
 @pytest.mark.parametrize(
-    "counts,active_qubits",[
-        (
-            {"001": 100, "010": 101, "011": 7},
-            [0, 1, 1],
-        ),
+    "counts,active_qubits",
+    [
+        ({"001": 100, "010": 101, "011": 7}, [0, 1, 1],),
         ({"001": 100, "010": 101, "011": 7}, [0, 2, 3],),
         ({"001": 100, "010": 101, "011": 7}, [],),
     ],

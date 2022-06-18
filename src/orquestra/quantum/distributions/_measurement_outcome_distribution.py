@@ -82,9 +82,7 @@ class MeasurementOutcomeDistribution:
 
         # check for no out of range indexes
         if max(active_qubits) + 1 > len(list(counts.keys())[0]):
-            raise ValueError(
-                "The highest index of active qubits is bigger than the number of qubits in the distribution."
-            )
+            raise ValueError("Active qubit indeces contains out of bound index.")
 
         # check for duplicate indexes
         if len(active_qubits) != len(set(active_qubits)):
