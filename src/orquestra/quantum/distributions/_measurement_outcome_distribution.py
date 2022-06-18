@@ -77,6 +77,25 @@ class MeasurementOutcomeDistribution:
             list(self.distribution_dict.keys())[0]
         )  # already checked in __init__ that all keys have the same length
 
+    def subdistribution(counts, active_qubits):
+        new_counts = {}
+
+        # check for no out of range indexes
+        if max(active_qubits) + 1 > len(list(counts.keys())[0]):
+            raise ValueError(
+                "The highest index of active qubits is bigger than the number of qubits in the distribution."
+            )
+
+        # check for duplicate indexes
+        if len(active_qubits) != len(set(active_qubits)):
+            raise ValueError("There exist duplicate indices in the active qubit list")
+
+        for key in copy.deepcopy(list(counts.keys())):
+            new_key = "".join(key[i] for i in active_qubits)
+            new_counts[new_key] = counts.pop(key) + new_counts.get(new_key, 0)
+
+        return new_counts
+
 
 def preprocess_distibution_dict(
     input_dict: Dict[Union[str, Tuple[int, ...]], float]
@@ -401,23 +420,3 @@ def evaluate_distribution_distance(
     return distance_measure_function(
         target_distribution, measured_distribution, **kwargs
     )
-
-
-def subdistribution(counts, active_qubits):
-    new_counts = {}
-
-    # check for no out of range indexes
-    if max(active_qubits) + 1 > len(list(counts.keys())[0]):
-        raise ValueError(
-            "The highest index of active qubits is bigger than the number of qubits in the distribution."
-        )
-
-    # check for duplicate indexes
-    if len(active_qubits) != len(set(active_qubits)):
-        raise ValueError("There exist duplicate indices in the active qubit list")
-
-    for key in copy.deepcopy(list(counts.keys())):
-        new_key = "".join(key[i] for i in active_qubits)
-        new_counts[new_key] = counts.pop(key) + new_counts.get(new_key, 0)
-
-    return new_counts

@@ -872,10 +872,37 @@ class TestMeasurements:
             [0, 1, 2],
             {"001": 100, "010": 101, "011": 7},
         ),
-        ({"001": 100, "010": 101, "011": 7}, [0, 1, 3], ValueError),
+        ({"001": 100, "010": 101, "011": 7}, [0, 2], {"01": 107, "00": 101},),
+        (
+            {"001": 100, "010": 101, "011": 7},
+            [1, 0, 2],
+            {"001": 100, "100": 101, "101": 7},
+        ),
+        ({"001": 100, "010": 101, "011": 7}, [1, 0], {"00": 100, "10": 108},),
+        (
+            {"001": 100, "010": 101, "011": 7},
+            [2, 1, 0],
+            {"100": 100, "010": 101, "110": 7},
+        ),
     ],
 )
-def test_if_subdistribution_works(
-    counts, active_qubits,
-):
-    assert subdistribution(counts, active_qubits) == new_count
+def test_if_subdistribution_works(counts, active_qubits, new_counts):
+    assert (
+        MeasurementOutcomeDistribution.subdistribution(counts, active_qubits)
+        == new_counts
+    )
+
+
+@pytest.mark.parametrize(
+    "counts,active_qubits",[
+        (
+            {"001": 100, "010": 101, "011": 7},
+            [0, 1, 1],
+        ),
+        ({"001": 100, "010": 101, "011": 7}, [0, 2, 3],),
+        ({"001": 100, "010": 101, "011": 7}, [],),
+    ],
+)
+def test_if_subdistribution_raised_error_for_invalid_input(counts, active_qubits):
+    with pytest.raises(ValueError):
+        assert MeasurementOutcomeDistribution.subdistribution(counts, active_qubits)
