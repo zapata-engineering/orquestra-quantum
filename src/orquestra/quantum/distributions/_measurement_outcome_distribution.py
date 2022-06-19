@@ -77,7 +77,7 @@ class MeasurementOutcomeDistribution:
             list(self.distribution_dict.keys())[0]
         )  # already checked in __init__ that all keys have the same length
 
-    def subdistribution(counts, active_qubits):
+    def subdistribution(self, active_qubits: List[int]) -> MeasurementOutcomeDistribution:
         new_counts = {}
 
         # check for no out of range indexes
