@@ -147,6 +147,20 @@ class Circuit:
             f"n_qubits={self.n_qubits})"
         )
 
+    def inverse(self) -> "Circuit":
+        """Create a circuit that, when applied to the current circuit, will
+        produce the identity circuit."""
+        try:
+            return type(self)(
+                operations=[op.gate.dagger() for op in reversed(self.operations)],
+                n_qubits=self.n_qubits,
+            )
+        except AttributeError as e:
+            raise AttributeError(
+                "Inverse is not implemented for this circuit type,"
+                " since there are operators in it without the `dagger` method."
+            ) from e
+
 
 @singledispatch
 def _append_to_circuit(other, circuit: Circuit):

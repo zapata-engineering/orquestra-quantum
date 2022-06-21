@@ -89,6 +89,17 @@ class Gate(Protocol):
     def dagger(self) -> "Gate":
         raise NotImplementedError()
 
+    def power(self, exponent: float) -> "Gate":
+        """Gate representing the underlying matrix raised to the power
+        of the given exponent.
+        """
+        raise NotImplementedError()
+
+    @property
+    def exp(self) -> "Gate":
+        """Gate representing the exponential of the given gate."""
+        raise NotImplementedError()
+
     def bind(self, symbols_map: Dict[sympy.Symbol, Parameter]) -> "Gate":
         raise NotImplementedError()
 
@@ -208,6 +219,13 @@ class MatrixFactoryGate:
     def dagger(self) -> Union["MatrixFactoryGate", Gate]:
         return self if self.is_hermitian else Dagger(self)
 
+    @property
+    def exp(self) -> "Gate":
+        return Exponential(self)
+
+    def power(self, exponent: float) -> "Gate":
+        return Power(self, exponent)
+
     def __str__(self):
         return (
             f"{self.name}({', '.join(map(str,self.params))})"
@@ -289,6 +307,19 @@ class ControlledGate(Gate):
             num_control_qubits=self.num_control_qubits,
         )
 
+    @property
+    def exp(self) -> "Gate":
+        return ControlledGate(
+            wrapped_gate=self.wrapped_gate.exp,
+            num_control_qubits=self.num_control_qubits,
+        )
+
+    def power(self, exponent: float) -> "Gate":
+        return ControlledGate(
+            wrapped_gate=self.wrapped_gate.power(exponent),
+            num_control_qubits=self.num_control_qubits,
+        )
+
     def bind(self, symbols_map) -> "Gate":
         return self.wrapped_gate.bind(symbols_map).controlled(self.num_control_qubits)
 
@@ -333,6 +364,120 @@ class Dagger(Gate):
     @property
     def dagger(self) -> "Gate":
         return self.wrapped_gate
+
+    @property
+    def exp(self) -> "Gate":
+        return Exponential(self)
+
+    def power(self, exponent: float) -> "Gate":
+        return Power(self, exponent)
+
+
+EXPONENTIAL_GATE_NAME = "Exponential"
+
+
+@dataclass(frozen=True)
+class Exponential(Gate):
+    wrapped_gate: Gate
+
+    def __post_init__(self):
+        if len(self.wrapped_gate.free_symbols) > 0:
+            raise ValueError(
+                "On gates with free symbols the exponential cannot be performed"
+            )
+
+    @property
+    def matrix(self) -> sympy.Matrix:
+        return self.wrapped_gate.matrix.exp()
+
+    @property
+    def params(self) -> Tuple[Parameter, ...]:
+        return self.wrapped_gate.params
+
+    @property
+    def num_qubits(self) -> int:
+        return self.wrapped_gate.num_qubits
+
+    @property
+    def name(self):
+        return EXPONENTIAL_GATE_NAME
+
+    def controlled(self, num_control_qubits: int) -> Gate:
+        return self.wrapped_gate.controlled(num_control_qubits).exp
+
+    def bind(self, symbols_map) -> "Gate":
+        raise NotImplementedError(
+            "Gates exponential do not possess free symbols to bind"
+        )
+
+    def replace_params(self, new_params: Tuple[Parameter, ...]) -> "Gate":
+        return self.wrapped_gate.replace_params(new_params).exp
+
+    @property
+    def dagger(self) -> "Gate":
+        return self.wrapped_gate.dagger.exp
+
+    @property
+    def exp(self) -> "Gate":
+        return Exponential(self)
+
+    def power(self, exponent: float) -> "Gate":
+        return Power(self, exponent)
+
+
+POWER_GATE_SYMBOL = "^"
+
+
+@dataclass(frozen=True)
+class Power(Gate):
+    wrapped_gate: Gate
+    exponent: float
+
+    def __post_init__(self):
+        if len(self.wrapped_gate.free_symbols) > 0:
+            raise ValueError("Gates with free symbols cannot be exponentiated")
+
+    @property
+    def name(self) -> str:
+        return f"{self.wrapped_gate.name}{POWER_GATE_SYMBOL}{self.exponent}"
+
+    @property
+    def params(self) -> Tuple[Parameter, ...]:
+        return self.wrapped_gate.params
+
+    @property
+    def free_symbols(self) -> Iterable[sympy.Symbol]:
+        return get_free_symbols(self.params)
+
+    @property
+    def num_qubits(self) -> int:
+        return self.wrapped_gate.num_qubits
+
+    @property
+    def matrix(self) -> sympy.Matrix:
+        return self.wrapped_gate.matrix**self.exponent
+
+    def controlled(self, num_control_qubits: int) -> "Gate":
+        return self.wrapped_gate.controlled(num_control_qubits).power(self.exponent)
+
+    @property
+    def dagger(self) -> "Gate":
+        return self.wrapped_gate.dagger.power(self.exponent)
+
+    @property
+    def exp(self) -> "Gate":
+        return Exponential(self)
+
+    def power(self, exponent: float) -> "Gate":
+        return Power(self, exponent)
+
+    def bind(self, symbols_map: Dict[sympy.Symbol, Parameter]) -> "Gate":
+        raise NotImplementedError(
+            "Gates raised to a power do not possess free symbols to bind",
+        )
+
+    def replace_params(self, new_params: Tuple[Parameter, ...]) -> "Gate":
+        return self.wrapped_gate.replace_params(new_params).power(self.exponent)
 
 
 def _n_qubits(matrix):
