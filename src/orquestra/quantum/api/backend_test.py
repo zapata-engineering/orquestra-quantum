@@ -279,7 +279,6 @@ class QuantumBackendGatesTests:
         tested_gate,
         operators,
         target_values,
-        tol_exp_val,
     ):
         n_samples = 1000
 
