@@ -75,6 +75,7 @@ def skip_tests_for_excluded_gates(func):
 
 class QuantumBackendTests:
     def test_run_circuit_and_measure_correct_indexing(self, backend):
+
         # Note: this test may fail with noisy devices
         # Given
         backend.number_of_circuits_run = 0
@@ -190,6 +191,7 @@ class QuantumBackendTests:
 
 
 class QuantumBackendGatesTests:
+    exp_val_spread = 1
     gates_to_exclude: List[str] = []
 
     @pytest.mark.parametrize(
@@ -225,7 +227,9 @@ class QuantumBackendGatesTests:
             calculated_value = expectation_values.values[0]
 
             # Then
-            assert calculated_value == pytest.approx(target_values[i], abs=sigma * 3)
+            assert calculated_value == pytest.approx(
+                target_values[i], abs=self.exp_val_spread * sigma * 3
+            )
 
     @pytest.mark.parametrize(
         "initial_gate,tested_gate,params,target_values",
@@ -259,7 +263,9 @@ class QuantumBackendGatesTests:
             calculated_value = expectation_values.values[0]
 
             # Then
-            assert calculated_value == pytest.approx(target_values[i], abs=sigma * 3)
+            assert calculated_value == pytest.approx(
+                target_values[i], abs=self.exp_val_spread * sigma * 3
+            )
 
     @pytest.mark.parametrize(
         "initial_gates,tested_gate,operators,target_values",
@@ -273,6 +279,7 @@ class QuantumBackendGatesTests:
         tested_gate,
         operators,
         target_values,
+        tol_exp_val,
     ):
         n_samples = 1000
 
@@ -295,7 +302,9 @@ class QuantumBackendGatesTests:
             calculated_value = expectation_values.values[0]
 
             # Then
-            assert calculated_value == pytest.approx(target_values[i], abs=sigma * 5)
+            assert calculated_value == pytest.approx(
+                target_values[i], abs=self.exp_val_spread * sigma * 5
+            )
 
     @pytest.mark.parametrize(
         "initial_gates,tested_gate,params,operators,target_values",
@@ -332,10 +341,16 @@ class QuantumBackendGatesTests:
             calculated_value = expectation_values.values[0]
 
             # Then
-            assert calculated_value == pytest.approx(target_values[i], abs=sigma * 5)
+            assert calculated_value == pytest.approx(
+                target_values[i], abs=self.exp_val_spread * sigma * 5
+            )
 
 
 class QuantumSimulatorTests(QuantumBackendTests):
+    atol_wavefunction = 1e-15
+    atol_wavefunction_element = 1e-7
+    atol_distribution = 1e-7
+
     def test_get_wavefunction(self, wf_simulator):
         # Given
         wf_simulator.number_of_circuits_run = 0
@@ -348,8 +363,12 @@ class QuantumSimulatorTests(QuantumBackendTests):
         # Then
         assert isinstance(wavefunction, Wavefunction)
         assert len(wavefunction.get_probabilities()) == 8
-        assert wavefunction[0] == pytest.approx((1 / np.sqrt(2) + 0j), abs=1e-7)
-        assert wavefunction[7] == pytest.approx((1 / np.sqrt(2) + 0j), abs=1e-7)
+        assert wavefunction[0] == pytest.approx(
+            (1 / np.sqrt(2) + 0j), abs=self.atol_wavefunction_element
+        )
+        assert wavefunction[7] == pytest.approx(
+            (1 / np.sqrt(2) + 0j), abs=self.atol_wavefunction_element
+        )
         assert wf_simulator.number_of_circuits_run == 1
         assert wf_simulator.number_of_jobs_run == 1
 
@@ -365,8 +384,12 @@ class QuantumSimulatorTests(QuantumBackendTests):
         # Then
         assert isinstance(distribution, MeasurementOutcomeDistribution)
         assert distribution.get_number_of_subsystems() == 3
-        assert distribution.distribution_dict[(0, 0, 0)] == pytest.approx(0.5, abs=1e-7)
-        assert distribution.distribution_dict[(1, 1, 1)] == pytest.approx(0.5, abs=1e-7)
+        assert distribution.distribution_dict[(0, 0, 0)] == pytest.approx(
+            0.5, abs=self.atol_distribution
+        )
+        assert distribution.distribution_dict[(1, 1, 1)] == pytest.approx(
+            0.5, abs=self.atol_distribution
+        )
         assert wf_simulator.number_of_circuits_run == 1
         assert wf_simulator.number_of_jobs_run == 1
 
@@ -383,7 +406,11 @@ class QuantumSimulatorTests(QuantumBackendTests):
             circuit, operator
         )
 
-        assert np.allclose(expectation_values.values, target_expectation_values.values)
+        np.testing.assert_allclose(
+            expectation_values.values,
+            target_expectation_values.values,
+            atol=self.atol_wavefunction,
+        )
         assert wf_simulator.number_of_circuits_run == 1
         assert wf_simulator.number_of_jobs_run == 1
 
@@ -394,13 +421,17 @@ class QuantumSimulatorTests(QuantumBackendTests):
         np.testing.assert_allclose(
             wf_simulator.get_wavefunction(circuit, initial_state=initial_state),
             np.array([0.5, -0.5, 0.5, -0.5]),
+            atol=self.atol_wavefunction,
         )
         np.testing.assert_allclose(
-            wf_simulator.get_wavefunction(circuit), 0.5 * np.ones(4)
+            wf_simulator.get_wavefunction(circuit),
+            0.5 * np.ones(4),
+            atol=self.atol_wavefunction,
         )
 
 
 class QuantumSimulatorGatesTest:
+    atol_wavefunction = 1e-15
     gates_to_exclude: List[str] = []
 
     @pytest.mark.parametrize(
@@ -409,7 +440,11 @@ class QuantumSimulatorGatesTest:
     )
     @skip_tests_for_excluded_gates
     def test_one_qubit_non_parametric_gates_using_amplitudes(
-        self, wf_simulator, initial_gate, tested_gate, target_amplitudes
+        self,
+        wf_simulator,
+        initial_gate,
+        tested_gate,
+        target_amplitudes,
     ):
         # Given
         gate_1 = builtin_gate_by_name(initial_gate)(0)
@@ -421,7 +456,9 @@ class QuantumSimulatorGatesTest:
         wavefunction = wf_simulator.get_wavefunction(circuit)
 
         # Then
-        assert np.allclose(wavefunction.amplitudes, target_amplitudes)
+        np.testing.assert_allclose(
+            wavefunction.amplitudes, target_amplitudes, atol=self.atol_wavefunction
+        )
 
     @pytest.mark.parametrize(
         "initial_gate,tested_gate,params,target_amplitudes",
@@ -429,7 +466,12 @@ class QuantumSimulatorGatesTest:
     )
     @skip_tests_for_excluded_gates
     def test_one_qubit_parametric_gates_using_amplitudes(
-        self, wf_simulator, initial_gate, tested_gate, params, target_amplitudes
+        self,
+        wf_simulator,
+        initial_gate,
+        tested_gate,
+        params,
+        target_amplitudes,
     ):
         # Given
         gate_1 = builtin_gate_by_name(initial_gate)(0)
@@ -441,7 +483,10 @@ class QuantumSimulatorGatesTest:
         wavefunction = wf_simulator.get_wavefunction(circuit)
 
         # Then
-        assert np.allclose(wavefunction.amplitudes, target_amplitudes)
+
+        np.testing.assert_allclose(
+            wavefunction.amplitudes, target_amplitudes, atol=self.atol_wavefunction
+        )
 
     @pytest.mark.parametrize(
         "initial_gates,tested_gate,target_amplitudes",
@@ -449,7 +494,11 @@ class QuantumSimulatorGatesTest:
     )
     @skip_tests_for_excluded_gates
     def test_two_qubit_non_parametric_gates_using_amplitudes(
-        self, wf_simulator, initial_gates, tested_gate, target_amplitudes
+        self,
+        wf_simulator,
+        initial_gates,
+        tested_gate,
+        target_amplitudes,
     ):
         # Given
         gate_1 = builtin_gate_by_name(initial_gates[0])(0)
@@ -462,7 +511,9 @@ class QuantumSimulatorGatesTest:
         wavefunction = wf_simulator.get_wavefunction(circuit)
 
         # Then
-        assert np.allclose(wavefunction.amplitudes, target_amplitudes)
+        np.testing.assert_allclose(
+            wavefunction.amplitudes, target_amplitudes, atol=self.atol_wavefunction
+        )
 
     @pytest.mark.parametrize(
         "initial_gates,tested_gate,params,target_amplitudes",
@@ -470,7 +521,12 @@ class QuantumSimulatorGatesTest:
     )
     @skip_tests_for_excluded_gates
     def test_two_qubit_parametric_gates_using_amplitudes(
-        self, wf_simulator, initial_gates, tested_gate, params, target_amplitudes
+        self,
+        wf_simulator,
+        initial_gates,
+        tested_gate,
+        params,
+        target_amplitudes,
     ):
         # Given
         gate_1 = builtin_gate_by_name(initial_gates[0])(0)
@@ -482,4 +538,6 @@ class QuantumSimulatorGatesTest:
         wavefunction = wf_simulator.get_wavefunction(circuit)
 
         # Then
-        assert np.allclose(wavefunction.amplitudes, target_amplitudes)
+        np.testing.assert_allclose(
+            wavefunction.amplitudes, target_amplitudes, atol=self.atol_wavefunction
+        )
