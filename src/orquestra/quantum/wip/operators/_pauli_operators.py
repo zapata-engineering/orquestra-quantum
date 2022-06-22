@@ -2,16 +2,28 @@ import copy
 import re
 import warnings
 from collections import OrderedDict
-from typing import Dict, FrozenSet, Iterator, List, Sequence, Tuple, Union, cast
+from typing import (
+    Any,
+    Dict,
+    FrozenSet,
+    Hashable,
+    Iterator,
+    List,
+    Sequence,
+    Tuple,
+    Union,
+    cast,
+)
+from cirq import Pauli
 import numpy as np
+from itertools import chain, product
 
 from orquestra.quantum.circuits import Circuit, builtin_gate_by_name, Operation
 
-_coefficient_types = Union[int, float, complex]
+CoefficientTypes = Union[int, float, complex]
+PauliRepresentation = Union["PauliTerm", "PauliSum"]
 
 allowed_operators = ["X", "Y", "Z", "I"]
-
-PauliRepresentation = Union["PauliTerm", "PauliOp"]
 
 # Use ASCII values instead of actual strings
 # as keys to allow for commutativity
@@ -29,20 +41,24 @@ COEFF_MAP = {
     "ZX": 1.0j,
     "ZY": -1.0j,
 }
-"""
-# TODO:
-- __hash__
-- __rmul__
-- __add__
-- __radd__
-- __sub__
-- __rsub__
-- compact_str
 
-- convenience methods (maybe put them in __init__)
 
-- all paulisums
-"""
+def _efficient_exponentiation(
+    pauli_rep: PauliRepresentation, power: int
+) -> PauliRepresentation:
+    """
+    A more efficient implementation of exponentiation.
+    Assumes validation checks already done from parent routine.
+    """
+    if power == 0:
+        return type(pauli_rep).identity()
+
+    if power % 2 == 1:
+        return pauli_rep * _efficient_exponentiation(pauli_rep, power - 1)
+
+    intermediate_result = _efficient_exponentiation(pauli_rep, power // 2)
+
+    return intermediate_result * intermediate_result
 
 
 class PauliTerm:
@@ -53,7 +69,7 @@ class PauliTerm:
     def __init__(
         self,
         operator: Union[Tuple[str, int], str],
-        coefficient: _coefficient_types = 1.0,
+        coefficient: CoefficientTypes = 1.0,
     ):
         if isinstance(operator, str):
             matched_pattern = re.match(r"([a-zA-Z]+)(-?[0-9]+)", operator, re.I)
@@ -85,7 +101,7 @@ class PauliTerm:
     def from_list(
         cls,
         list_of_terms: List[Tuple[str, int]],
-        coefficient: _coefficient_types = 1.0,
+        coefficient: CoefficientTypes = 1.0,
     ) -> "PauliTerm":
         """
         A slightly more efficient constructor when all the elements of the term are known beforehand.
@@ -121,7 +137,7 @@ class PauliTerm:
 
         ##########################################################
 
-        result_term = PauliTerm("I0")
+        result_term = PauliTerm.identity()
         result_term.coefficient = complex(coefficient)
         for op, idx in list_of_terms:
             if op != "I":
@@ -130,15 +146,44 @@ class PauliTerm:
         return result_term
 
     @classmethod
-    def from_str(cls, pauli_term_str: str) -> "PauliTerm":
-        pass
+    def from_str(cls, str_pauli_term: str) -> "PauliTerm":
+        """Construct a PauliTerm from the result of str(pauli_term)"""
+        # split into str_coef, str_op at first '*'' outside parenthesis
+        try:
+            str_coef, str_op = re.split(r"\*(?![^(]*\))", str_pauli_term, maxsplit=1)
+        except ValueError:
+            raise ValueError(
+                "Could not separate the pauli string into "
+                f"coefficient and operator. {str_pauli_term} does"
+                " not match <coefficient>*<operator>"
+            )
+        # parse the coefficient into complex
+        try:
+            coef = complex(str_coef.replace(" ", ""))
+        except ValueError:
+            raise ValueError(f"Could not parse the coefficient {str_coef}")
 
-    def copy(self, new_coefficient: _coefficient_types = None) -> "PauliTerm":
+        result_term = PauliTerm.identity() * coef
+        if str_op == "I":
+            assert isinstance(result_term, PauliTerm)
+            return result_term
+
+        for op in str_op.split("*"):
+            result_term *= cls(op)
+        breakpoint()
+        assert isinstance(result_term, PauliTerm)
+        return result_term
+
+    @staticmethod
+    def identity() -> "PauliTerm":
+        return PauliTerm("I0", 1.0)
+
+    def copy(self, new_coefficient: CoefficientTypes = None) -> "PauliTerm":
         """
         Properly creates a new PauliTerm, with a completely new dictionary
         of operators
         """
-        new_term = PauliTerm("I0", 1.0)  # create new object
+        new_term = PauliTerm.identity()  # create new object
         # manually copy all attributes over
         for key in self.__dict__.keys():
             val = self.__dict__[key]
@@ -158,6 +203,15 @@ class PauliTerm:
         Returns the list of qubit indices associated with this term.
         """
         return list(self._ops.keys())
+
+    @property
+    def is_ising(self) -> bool:
+        """
+        Returns whether the term represents an ising model
+        (i.e. contains only Z terms)
+        """
+
+        return set(self._ops.values()) == {"Z"}
 
     @property
     def circuit(self) -> Circuit:
@@ -190,10 +244,10 @@ class PauliTerm:
             yield self[i], i
 
     def __eq__(self, other: object) -> bool:
-        if not isinstance(self, (PauliOp, PauliTerm)):
+        if not isinstance(self, (PauliSum, PauliTerm)):
             raise ValueError(f"Can't compare with object of type {type(other)}")
 
-        if isinstance(other, PauliOp):
+        if isinstance(other, PauliSum):
             return other == self
 
         cast_other = cast(PauliTerm, other)
@@ -201,6 +255,30 @@ class PauliTerm:
             self.operations_as_set() == cast_other.operations_as_set()
             and np.allclose(self.coefficient, cast_other.coefficient)
         )
+
+    def __add__(
+        self, other: Union[PauliRepresentation, CoefficientTypes]
+    ) -> "PauliSum":
+        if isinstance(other, PauliSum):
+            return other + self
+
+        if isinstance(other, PauliTerm):
+            return PauliSum([self, other]).simplify()
+
+        return self + PauliTerm("I0", other)
+
+    def __radd__(self, other: CoefficientTypes) -> "PauliSum":
+        return self + PauliTerm("I0", other)
+
+    def __sub__(
+        self, other: Union[PauliRepresentation, CoefficientTypes]
+    ) -> "PauliSum":
+        return self + -1.0 * other
+
+    def __rsub__(
+        self, other: Union[PauliRepresentation, CoefficientTypes]
+    ) -> "PauliSum":
+        return other + -1.0 * self
 
     def _multiply_by_operator(self, op: str, index: int) -> "PauliTerm":
         result_term = PauliTerm("I0", 0)
@@ -224,18 +302,16 @@ class PauliTerm:
         return result_term
 
     def __mul__(
-        self, term: Union[PauliRepresentation, _coefficient_types]
+        self, term: Union[PauliRepresentation, CoefficientTypes]
     ) -> PauliRepresentation:
         """Multiplies this Pauli Term with another PauliTerm, PauliSum, or number according to the
         Pauli algebra rules.
-        :param term: (PauliTerm or PauliSum or Number) A term to multiply by.
-        :returns: The product of this PauliTerm and term.
         """
-        if isinstance(term, PauliOp):
+        if isinstance(term, PauliSum):
             pass
-            # return (PauliOp([self]) * term).simplify()
+            # return (PauliSum([self]) * term).simplify()
         elif isinstance(term, PauliTerm):
-            result_term = PauliTerm("I0", 1.0)
+            result_term = PauliTerm.identity()
             result_term._ops = self._ops.copy()
 
             new_coeff = self.coefficient * term.coefficient
@@ -247,22 +323,19 @@ class PauliTerm:
 
         return self.copy(self.coefficient * cast(complex, term))
 
+    def __rmul__(self, other: CoefficientTypes) -> "PauliTerm":
+        result = self * other
+        assert isinstance(result, PauliTerm)
+        return result
+
     def __pow__(self, power: int) -> "PauliTerm":
-        """Raises this PauliTerm to power.
-        :param power: The power to raise this PauliTerm to.
-        :return: The power-fold product of power.
+        """
+        Raises this PauliTerm to power.
         """
         if not isinstance(power, int) or power < 0:
             raise ValueError("The power must be a non-negative integer.")
 
-        if len(self.qubits) == 0:
-            # There weren't any nontrivial operators
-            return self.copy(new_coefficient=1.0)
-
-        result = PauliTerm("I0", 1)
-        for _ in range(power):
-            result = cast(PauliTerm, result * self)
-        return result
+        return cast(PauliTerm, _efficient_exponentiation(self, power))
 
     def __repr__(self) -> str:
         term_strs = []
@@ -275,11 +348,177 @@ class PauliTerm:
         return out
 
 
-class PauliOp:
-    def __init__(self, terms: Sequence[PauliTerm]):
-        self.terms = terms
+class PauliSum:
+    def __init__(self, terms: Sequence[PauliTerm] = None):
+        if not terms:
+            terms = []
+
+        if not (
+            isinstance(terms, Sequence)
+            and all([isinstance(term, PauliTerm) for term in terms])
+        ):
+            raise ValueError(
+                "PauliSums can be constructed only from Sequences of PauliTerms."
+            )
+
+        self.terms: Sequence[PauliTerm] = terms
+
+    @classmethod
+    def from_str(cls, str_pauli_sum: str) -> "PauliSum":
+        """Construct a PauliSum from the result of str(pauli_sum)"""
+        # split str_pauli_sum only at "+" outside of parenthesis to allow
+        # e.g. "0.5*X0 + (0.5+0j)*Z2"
+        str_terms = re.split(r"\+(?![^(]*\))", str_pauli_sum)
+        str_terms = [s.strip() for s in str_terms]
+        terms = [PauliTerm.from_str(term) for term in str_terms]
+        return cls(terms).simplify()
+
+    def __len__(self) -> int:
+        return len(self.terms)
+
+    def __getitem__(self, idx: int) -> PauliTerm:
+        return self.terms[idx]
+
+    def __iter__(self) -> Iterator[PauliTerm]:
+        return self.terms.__iter__()
+
+    @property
+    def qubits(self) -> List[int]:
+        return list(set(chain.from_iterable([term.qubits for term in self.terms])))
+
+    @property
+    def is_ising(self) -> bool:
+        """
+        Returns whether the full operator represents an ising model.
+        """
+        if not hasattr(self, "_is_ising"):
+            self._is_ising = all([term.is_ising for term in self.terms])
+        return self._is_ising
+
+    @property
+    def circuits(self) -> List[Circuit]:
+        if not hasattr(self, "_circuits"):
+            self._circuits = [term.circuit for term in self.terms]
+
+        return self._circuits
+
+    @staticmethod
+    def identity() -> "PauliSum":
+        return PauliSum([PauliTerm.identity()])
+
+    @staticmethod
+    def _validate_type(object: Any) -> None:
+        if not isinstance(object, (PauliSum, PauliTerm, int, float, complex)):
+            raise ValueError(
+                f"Can't carry out operation with object of type {type(object)}."
+            )
+
+    def __eq__(self, other: object) -> bool:
+        PauliSum._validate_type(other)
+
+        if isinstance(other, (int, float, complex)):
+            constant_term: PauliTerm = cast(
+                PauliTerm, (PauliTerm.identity() * complex(other))
+            )
+            return self == PauliSum([constant_term])
+
+        if isinstance(other, PauliTerm):
+            return self == PauliSum([other])
+
+        other = cast(PauliSum, other)
+        if len(self) != len(other):
+            return False
+
+        return set(self.terms) == set(other.terms)
+
+    def __add__(
+        self, other: Union[PauliRepresentation, CoefficientTypes]
+    ) -> "PauliSum":
+        PauliSum._validate_type(other)
+
+        if isinstance(other, PauliTerm):
+            other = PauliSum([other])
+        elif isinstance(other, (int, float, complex)):
+            other = PauliSum([PauliTerm("I0", other)])
+
+        new_op = PauliSum([term.copy() for term in chain(self.terms, other.terms)])
+
+        return new_op.simplify()
+
+    def __radd__(self, other: CoefficientTypes) -> "PauliSum":
+        assert isinstance(other, (int, float, complex))
+        return self + other
+
+    def __sub__(
+        self, other: Union[PauliRepresentation, CoefficientTypes]
+    ) -> "PauliSum":
+        # No need to check for types here since it will be
+        # carried out in the __add__ function
+        return self + -1.0 * other
+
+    def __rsub__(
+        self, other: Union[PauliRepresentation, CoefficientTypes]
+    ) -> "PauliSum":
+        return other + -1.0 * self
+
+    def __mul__(
+        self, other: Union[PauliRepresentation, CoefficientTypes]
+    ) -> "PauliSum":
+        PauliSum._validate_type(other)
+
+        other_terms = (
+            other.terms
+            if isinstance(other, PauliSum)
+            else [cast(PauliTerm, PauliTerm.identity() * other)]
+        )
+
+        new_paulisum = PauliSum(
+            cast(
+                Sequence[PauliTerm],
+                [
+                    left_term * right_term
+                    for left_term, right_term in product(self.terms, other_terms)
+                ],
+            )
+        )
+
+        return new_paulisum.simplify()
+
+    def __rmul__(self, other: CoefficientTypes) -> "PauliSum":
+        assert isinstance(other, (int, float, complex))
+
+        new_terms = [cast(PauliTerm, term.copy() * other) for term in self.terms]
+
+        return PauliSum(new_terms).simplify()
+
+    def __pow__(self, power: int) -> "PauliSum":
+        if not isinstance(power, int) and power < 0:
+            raise ValueError(f"Power must be a non-negative integer. Got {power}.")
+
+        return cast(PauliSum, _efficient_exponentiation(self, power))
+
+    def simplify(self) -> "PauliSum":
+        like_terms: Dict[Hashable, List[PauliTerm]] = OrderedDict()
+        for term in self.terms:
+            key = term.operations_as_set()
+            if key in like_terms:
+                like_terms[key].append(term)
+            else:
+                like_terms[key] = [term]
+
+        terms = []
+        for term_list in like_terms.values():
+            first_term = term_list[0]
+            if len(term_list) == 1 and not np.isclose(first_term.coefficient, 0.0):  # type: ignore
+                terms.append(first_term)
+            else:
+                coeff = sum(t.coefficient for t in term_list)
+                if not np.isclose(coeff, 0.0):  # type: ignore
+                    terms.append(term_list[0].copy(new_coefficient=coeff))
+        return PauliSum(terms)
+
+    def __repr__(self):
+        return " + ".join([str(term) for term in self.terms])
 
 
-tmp = PauliTerm.from_list([("I", 0), ("X", 1), ("Y", 2)])
-tmp2 = PauliTerm("X1", 1.0)
-breakpoint()
+tmp = PauliTerm.from_str("(1.0 + 2j)*X1*Z2")
