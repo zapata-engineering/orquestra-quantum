@@ -250,21 +250,6 @@ class TestCircuitInverse:
             np.eye(2**circuit.n_qubits),
         )
 
-    def test_inverting_and_multiplying_circuit_yields_correct_result(self):
-        operations = [
-            CZ(0, 1),
-            CNOT(0, 1),
-        ]
-        circuit = Circuit(operations=operations)
-        circuit_inverse = circuit.inverse()
-        circuit_inverse_times_circuit = [
-            op_inv.gate.matrix @ op.gate.matrix
-            for op, op_inv in zip(
-                circuit.operations, reversed(circuit_inverse.operations)
-            )
-        ]
-        assert circuit_inverse_times_circuit == [sympy.eye(4)] * len(circuit.operations)
-
     def test_inverting_an_empty_circuit_yields_an_empty_circuit(self):
         circuit = Circuit()
         circuit_inverse = circuit.inverse()
