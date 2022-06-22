@@ -234,6 +234,22 @@ def test_splitting_circuits_partitions_it_into_expected_chunks():
 
 
 class TestCircuitInverse:
+    @pytest.mark.parametrize(
+        "circuit",
+        [
+            Circuit([H(0)]),
+            Circuit([H(1), CZ(0, 1), H(0)]),
+            Circuit([RX(0.1)(0), RZ(sympy.pi)(0), RZ(0.1)(1)]),
+        ],
+    )
+    def test_concatenating_circuit_and_its_ivnerse_yields_identity_circuit(
+        self, circuit
+    ):
+        assert np.allclose(
+            np.array((circuit + circuit.inverse()).to_unitary()),
+            np.eye(2**circuit.n_qubits),
+        )
+
     def test_inverting_and_multiplying_circuit_yields_correct_result(self):
         operations = [
             CZ(0, 1),
