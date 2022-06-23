@@ -150,9 +150,13 @@ class Circuit:
     def inverse(self) -> "Circuit":
         """Create a circuit that, when applied to the current circuit, will
         produce the identity circuit."""
+        assert all(isinstance(op, _gates.GateOperation) for op in self.operations)
         try:
             return type(self)(
-                operations=[op.gate.dagger() for op in reversed(self.operations)],
+                operations=[
+                    op.gate.dagger(*op.qubit_indices)
+                    for op in reversed(self.operations)
+                ],
                 n_qubits=self.n_qubits,
             )
         except AttributeError as e:
