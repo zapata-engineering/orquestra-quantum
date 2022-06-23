@@ -416,3 +416,76 @@ class TestSavingDistributions:
                 distributions, loaded_distributions
             )
         )
+
+
+class TestSubdistribution:
+    @pytest.mark.parametrize(
+        "input_distribution,active_qubits,target_dict",
+        [
+            (
+                MeasurementOutcomeDistribution(
+                    {"001": 100, "010": 101, "011": 7}, normalize=False
+                ),
+                [0, 1, 2],
+                {(0, 0, 1): 100, (0, 1, 0): 101, (0, 1, 1): 7},
+            ),
+            (
+                MeasurementOutcomeDistribution(
+                    {"001": 50, "010": 45, "011": 5}, normalize=True
+                ),
+                [0, 2],
+                {(0, 1): 0.55, (0, 0): 0.45},
+            ),
+            (
+                MeasurementOutcomeDistribution(
+                    {"001": 100, "010": 101, "011": 7}, normalize=False
+                ),
+                [1, 0, 2],
+                {(0, 0, 1): 100, (1, 0, 0): 101, (1, 0, 1): 7},
+            ),
+            (
+                MeasurementOutcomeDistribution(
+                    {(0, 0, 1): 100, (0, 1, 0): 101, (0, 1, 1): 7}, normalize=False
+                ),
+                [1, 0],
+                {(0, 0): 100, (1, 0): 108},
+            ),
+            (
+                MeasurementOutcomeDistribution(
+                    {"001": 100, "010": 101, "011": 7}, normalize=False
+                ),
+                [2, 1, 0],
+                {(1, 0, 0): 100, (0, 1, 0): 101, (1, 1, 0): 7},
+            ),
+        ],
+    )
+    def test_if_subdistribution_works(
+        self, input_distribution, active_qubits, target_dict
+    ):
+        assert (
+            input_distribution.subdistribution(active_qubits).distribution_dict
+            == target_dict
+        )
+
+    @pytest.mark.parametrize(
+        "input_distribution,active_qubits",
+        [
+            (
+                MeasurementOutcomeDistribution({"001": 100, "010": 101, "011": 7}),
+                [0, 1, 1],
+            ),
+            (
+                MeasurementOutcomeDistribution({"001": 100, "010": 101, "011": 7}),
+                [0, 2, 3],
+            ),
+            (
+                MeasurementOutcomeDistribution({"001": 100, "010": 101, "011": 7}),
+                [],
+            ),
+        ],
+    )
+    def test_if_subdistribution_raised_error_for_invalid_input(
+        self, input_distribution, active_qubits
+    ):
+        with pytest.raises(ValueError):
+            assert input_distribution.subdistribution(active_qubits)

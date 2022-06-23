@@ -69,7 +69,8 @@ def test_expectation_values_io():
     )
 
     assert np.allclose(
-        expectation_values_object.values, expectation_values_object_loaded.values,
+        expectation_values_object.values,
+        expectation_values_object_loaded.values,
     )
     assert len(expectation_values_object.correlations) == len(
         expectation_values_object_loaded.correlations
@@ -129,7 +130,7 @@ def test_sample_from_wavefunction():
 def test_sample_from_wavefunction_column_vector():
     n_qubits = 4
     expected_bitstring = (0, 0, 0, 1)
-    amplitudes = np.array([0] * (2 ** n_qubits)).reshape(2 ** n_qubits, 1)
+    amplitudes = np.array([0] * (2**n_qubits)).reshape(2**n_qubits, 1)
     amplitudes[1] = 1  # |0001> will be measured in all cases.
     wavefunction = Wavefunction(amplitudes)
     sample = set(sample_from_wavefunction(wavefunction, 500))
@@ -140,7 +141,7 @@ def test_sample_from_wavefunction_column_vector():
 def test_sample_from_wavefunction_row_vector():
     n_qubits = 4
     expected_bitstring = (0, 0, 0, 1)
-    amplitudes = np.array([0] * (2 ** n_qubits))
+    amplitudes = np.array([0] * (2**n_qubits))
     amplitudes[1] = 1  # |0001> will be measured in all cases.
     wavefunction = Wavefunction(amplitudes)
     sample = set(sample_from_wavefunction(wavefunction, 500))
@@ -151,7 +152,7 @@ def test_sample_from_wavefunction_row_vector():
 def test_sample_from_wavefunction_list():
     n_qubits = 4
     expected_bitstring = (0, 0, 0, 1)
-    amplitudes = [0] * (2 ** n_qubits)
+    amplitudes = [0] * (2**n_qubits)
     amplitudes[1] = 1  # |0001> will be measured in all cases.
     wavefunction = Wavefunction(amplitudes)
     sample = set(sample_from_wavefunction(wavefunction, 500))
@@ -162,7 +163,7 @@ def test_sample_from_wavefunction_list():
 @pytest.mark.parametrize("n_samples", [-1, 0])
 def test_sample_from_wavefunction_fails_for_invalid_n_samples(n_samples):
     n_qubits = 4
-    amplitudes = [0] * (2 ** n_qubits)
+    amplitudes = [0] * (2**n_qubits)
     amplitudes[1] = 1
     wavefunction = Wavefunction(amplitudes)
     with pytest.raises(ValueError):
@@ -193,7 +194,8 @@ def test_get_expectation_values_from_parities():
 
     assert len(expectation_values.estimator_covariances) == 3
     assert np.allclose(
-        expectation_values.estimator_covariances[0], np.array([[0.014705882352941176]]),
+        expectation_values.estimator_covariances[0],
+        np.array([[0.014705882352941176]]),
     )
     assert np.allclose(
         expectation_values.estimator_covariances[1], np.array([[0.00428797]])
@@ -301,14 +303,16 @@ def test_concatenate_expectation_values_with_cov_and_corr():
     combined_expectation_values = concatenate_expectation_values(expectation_values_set)
     assert len(combined_expectation_values.estimator_covariances) == 3
     assert np.allclose(
-        combined_expectation_values.estimator_covariances[0], [[0.1, 0.2], [0.3, 0.4]],
+        combined_expectation_values.estimator_covariances[0],
+        [[0.1, 0.2], [0.3, 0.4]],
     )
     assert np.allclose(combined_expectation_values.estimator_covariances[1], [[0.1]])
     assert np.allclose(combined_expectation_values.estimator_covariances[2], [[0.2]])
 
     assert len(combined_expectation_values.correlations) == 3
     assert np.allclose(
-        combined_expectation_values.correlations[0], [[-0.1, -0.2], [-0.3, -0.4]],
+        combined_expectation_values.correlations[0],
+        [[-0.1, -0.2], [-0.3, -0.4]],
     )
     assert np.allclose(combined_expectation_values.correlations[1], [[-0.1]])
     assert np.allclose(combined_expectation_values.correlations[2], [[-0.2]])
@@ -862,45 +866,3 @@ class TestMeasurements:
         for sample in correct_samples:
             bitstring = tuple([int(measurement_value) for measurement_value in sample])
             assert correct_samples[sample] <= bitstring_counts[bitstring]
-
-
-@pytest.mark.parametrize(
-    "counts,active_qubits,new_counts",
-    [
-        (
-            {"001": 100, "010": 101, "011": 7},
-            [0, 1, 2],
-            {"001": 100, "010": 101, "011": 7},
-        ),
-        ({"001": 100, "010": 101, "011": 7}, [0, 2], {"01": 107, "00": 101},),
-        (
-            {"001": 100, "010": 101, "011": 7},
-            [1, 0, 2],
-            {"001": 100, "100": 101, "101": 7},
-        ),
-        ({"001": 100, "010": 101, "011": 7}, [1, 0], {"00": 100, "10": 108},),
-        (
-            {"001": 100, "010": 101, "011": 7},
-            [2, 1, 0],
-            {"100": 100, "010": 101, "110": 7},
-        ),
-    ],
-)
-def test_if_subdistribution_works(counts, active_qubits, new_counts):
-    assert (
-        MeasurementOutcomeDistribution.subdistribution(counts, active_qubits)
-        == new_counts
-    )
-
-
-@pytest.mark.parametrize(
-    "counts,active_qubits",
-    [
-        ({"001": 100, "010": 101, "011": 7}, [0, 1, 1],),
-        ({"001": 100, "010": 101, "011": 7}, [0, 2, 3],),
-        ({"001": 100, "010": 101, "011": 7}, [],),
-    ],
-)
-def test_if_subdistribution_raised_error_for_invalid_input(counts, active_qubits):
-    with pytest.raises(ValueError):
-        assert MeasurementOutcomeDistribution.subdistribution(counts, active_qubits)
