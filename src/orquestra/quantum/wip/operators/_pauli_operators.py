@@ -123,8 +123,9 @@ class PauliTerm:
         coefficient: CoefficientTypes = 1.0,
     ) -> "PauliTerm":
         """
-        A slightly more efficient constructor when all the elements of the term are known beforehand.
-        Users should employ this function instead of creating individual terms and multiplying.
+        A slightly more efficient constructor when all the elements of the term are
+         known beforehand. Users should employ this function instead of creating
+         individual terms and multiplying.
         """
 
         ############### Some checks on input first ###############
@@ -132,8 +133,9 @@ class PauliTerm:
 
         if not all([isinstance(op, tuple) for op in list_of_terms]):
             raise ValueError(
-                "The list can only contain tuples of the form (op, index). If you want to initialize from strings,"
-                " check the PauliTerm.from_str function."
+                "The list can only contain tuples of the form (op, index). If you"
+                " want to initialize from strings, check the"
+                " PauliTerm.from_str function."
             )
 
         valid_input = all(
@@ -151,7 +153,8 @@ class PauliTerm:
 
         if len(set(idx_list)) != len(idx_list):
             raise ValueError(
-                "Duplicate indices used in list. Manually create terms and multiply them instead."
+                "Duplicate indices used in list. Manually create terms"
+                " and multiply them instead."
             )
 
         ##########################################################
@@ -337,8 +340,8 @@ class PauliTerm:
     def __mul__(
         self, other: Union[PauliRepresentation, CoefficientTypes]
     ) -> PauliRepresentation:
-        """Multiplies this Pauli Term with another PauliTerm, PauliSum, or number according to the
-        Pauli algebra rules.
+        """Multiplies this Pauli Term with another PauliTerm, PauliSum, or number
+        according to the Pauli algebra rules.
         """
         _validate_type(other)
 
@@ -400,7 +403,7 @@ class PauliSum:
     def from_str(cls, str_pauli_sum: str) -> "PauliSum":
         """Construct a PauliSum from the result of str(pauli_sum)"""
         # split str_pauli_sum only at "+" outside of parenthesis to allow
-        # e.g. "0.5*X0 + (0.5+0j)*Z2"
+        # e.g. "(0.5)*X0 + (0.5+0j)*Z2"
         str_terms = re.split(r"\+(?![^(]*\))", str_pauli_sum)
         str_terms = [s.strip() for s in str_terms]
         terms = [PauliTerm.from_str(term) for term in str_terms]
@@ -439,20 +442,11 @@ class PauliSum:
     def identity() -> "PauliSum":
         return PauliSum([PauliTerm.identity()])
 
-    @staticmethod
-    def _validate_type(object: Any) -> None:
-        if not isinstance(object, (PauliSum, PauliTerm, int, float, complex)):
-            raise TypeError(
-                f"Can't carry out operation with object of type {type(object)}."
-            )
-
     def __eq__(self, other: object) -> bool:
         _validate_type(other)
 
         if isinstance(other, (int, float, complex)):
-            constant_term: PauliTerm = cast(
-                PauliTerm, (PauliTerm.identity() * complex(other))
-            )
+            constant_term = PauliTerm("I0", complex(other))
             return self == PauliSum([constant_term])
 
         if isinstance(other, PauliTerm):
@@ -489,9 +483,7 @@ class PauliSum:
         # carried out in the __add__ function
         return self + -1.0 * other
 
-    def __rsub__(
-        self, other: Union[PauliRepresentation, CoefficientTypes]
-    ) -> "PauliSum":
+    def __rsub__(self, other: CoefficientTypes) -> "PauliSum":
         return other + -1.0 * self
 
     def __mul__(
@@ -525,7 +517,7 @@ class PauliSum:
         return PauliSum(new_terms).simplify()
 
     def __pow__(self, power: int) -> "PauliSum":
-        if not isinstance(power, int) and power < 0:
+        if not isinstance(power, int) or power < 0:
             raise ValueError(f"Power must be a non-negative integer. Got {power}.")
 
         return cast(PauliSum, _efficient_exponentiation(self, power))
@@ -542,7 +534,7 @@ class PauliSum:
         terms = []
         for term_list in like_terms.values():
             first_term = term_list[0]
-            if len(term_list) == 1 and not np.isclose(first_term.coefficient, 0.0):  # type: ignore
+            if len(term_list) == 1 and not np.isclose(first_term.coefficient, 0.0):
                 terms.append(first_term)
             else:
                 coeff = sum(t.coefficient for t in term_list)
