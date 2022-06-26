@@ -1,6 +1,7 @@
 ################################################################################
 # © Copyright 2022 Zapata Computing Inc.
 ################################################################################
+import copy
 import json
 import math
 import sys
@@ -75,6 +76,37 @@ class MeasurementOutcomeDistribution:
         return len(
             list(self.distribution_dict.keys())[0]
         )  # already checked in __init__ that all keys have the same length
+
+    def subdistribution(
+        self, active_qubits: List[int]
+    ) -> "MeasurementOutcomeDistribution":
+        """
+        Returns a subdistribution, which represents measurements outcome including only
+        the specified qubits.
+
+        Returns:
+            active_qubits: indices of the qubits that should be included in
+                the subdistribution. Order of the indices will be preserved in
+                the order of the result bitstrings.
+
+        """
+        new_counts: Dict[Union[str, Tuple[int, ...]], float] = {}
+
+        # check for no out of range indexes
+        if max(active_qubits) + 1 > len(list(self.distribution_dict.keys())[0]):
+            raise ValueError("Active qubit indeces contains out of bound index.")
+
+        # check for duplicate indexes
+        if len(active_qubits) != len(set(active_qubits)):
+            raise ValueError("There exist duplicate indices in the active qubit list")
+
+        for key in copy.deepcopy(list(self.distribution_dict.keys())):
+            new_key = "".join(str(key[i]) for i in active_qubits)
+            new_counts[new_key] = self.distribution_dict.pop(key) + new_counts.get(
+                new_key, 0
+            )
+        normalize = is_normalized(self.distribution_dict)
+        return MeasurementOutcomeDistribution(new_counts, normalize=normalize)
 
 
 def preprocess_distibution_dict(
