@@ -1,6 +1,9 @@
 ################################################################################
 # © Copyright 2021-2022 Zapata Computing Inc.
 ################################################################################
+
+import os
+from collections import Counter
 from math import sqrt
 
 import numpy as np
@@ -11,7 +14,20 @@ from orquestra.quantum.circuits._builtin_gates import RX, RY, U3, H, X
 from orquestra.quantum.circuits._circuit import Circuit
 from orquestra.quantum.symbolic_simulator import SymbolicSimulator
 from orquestra.quantum.testing import create_random_wavefunction
-from orquestra.quantum.wavefunction import Wavefunction
+from orquestra.quantum.utils import RNDSEED, convert_bitstrings_to_tuples
+from orquestra.quantum.wavefunction import (
+    Wavefunction,
+    load_wavefunction,
+    sample_from_wavefunction,
+    save_wavefunction,
+)
+
+
+def remove_file_if_exists(filename):
+    try:
+        os.remove(filename)
+    except OSError:
+        pass
 
 
 class TestInitSystemInZeroState:
@@ -280,3 +296,81 @@ class TestGates:
         returned_wavefunction = simulator.get_wavefunction(circuit)
 
         assert returned_wavefunction == expected_wavefunction
+
+
+def test_real_wavefunction_io():
+    wf = Wavefunction([0, 1, 0, 0, 0, 0, 0, 0])
+    save_wavefunction(wf, "wavefunction.json")
+    loaded_wf = load_wavefunction("wavefunction.json")
+    assert np.allclose(wf.amplitudes, loaded_wf.amplitudes)
+    remove_file_if_exists("wavefunction.json")
+
+
+def test_imag_wavefunction_io():
+    wf = Wavefunction([0, 1j, 0, 0, 0, 0, 0, 0])
+    save_wavefunction(wf, "wavefunction.json")
+    loaded_wf = load_wavefunction("wavefunction.json")
+    assert np.allclose(wf.amplitudes, loaded_wf.amplitudes)
+    remove_file_if_exists("wavefunction.json")
+
+
+def test_sample_from_wavefunction():
+    wavefunction = create_random_wavefunction(4, seed=RNDSEED)
+
+    samples = sample_from_wavefunction(wavefunction, 10000, seed=RNDSEED)
+    sampled_dict = Counter(samples)
+
+    sampled_probabilities = []
+    for num in range(len(wavefunction)):
+        bitstring = format(num, "b")
+        while len(bitstring) < wavefunction.n_qubits:
+            bitstring = "0" + bitstring
+        measurement = convert_bitstrings_to_tuples([bitstring])[0]
+        sampled_probabilities.append(sampled_dict[measurement] / 10000)
+
+    probabilities = wavefunction.get_probabilities()
+    for sampled_prob, exact_prob in zip(sampled_probabilities, probabilities):
+        assert np.allclose(sampled_prob, exact_prob, atol=0.01)
+
+
+def test_sample_from_wavefunction_column_vector():
+    n_qubits = 4
+    expected_bitstring = (0, 0, 0, 1)
+    amplitudes = np.array([0] * (2**n_qubits)).reshape(2**n_qubits, 1)
+    amplitudes[1] = 1  # |0001> will be measured in all cases.
+    wavefunction = Wavefunction(amplitudes)
+    sample = set(sample_from_wavefunction(wavefunction, 500))
+    assert len(sample) == 1
+    assert sample.pop() == expected_bitstring
+
+
+def test_sample_from_wavefunction_row_vector():
+    n_qubits = 4
+    expected_bitstring = (0, 0, 0, 1)
+    amplitudes = np.array([0] * (2**n_qubits))
+    amplitudes[1] = 1  # |0001> will be measured in all cases.
+    wavefunction = Wavefunction(amplitudes)
+    sample = set(sample_from_wavefunction(wavefunction, 500))
+    assert len(sample) == 1
+    assert sample.pop() == expected_bitstring
+
+
+def test_sample_from_wavefunction_list():
+    n_qubits = 4
+    expected_bitstring = (0, 0, 0, 1)
+    amplitudes = [0] * (2**n_qubits)
+    amplitudes[1] = 1  # |0001> will be measured in all cases.
+    wavefunction = Wavefunction(amplitudes)
+    sample = set(sample_from_wavefunction(wavefunction, 500))
+    assert len(sample) == 1
+    assert sample.pop() == expected_bitstring
+
+
+@pytest.mark.parametrize("n_samples", [-1, 0])
+def test_sample_from_wavefunction_fails_for_invalid_n_samples(n_samples):
+    n_qubits = 4
+    amplitudes = [0] * (2**n_qubits)
+    amplitudes[1] = 1
+    wavefunction = Wavefunction(amplitudes)
+    with pytest.raises(ValueError):
+        sample_from_wavefunction(wavefunction, n_samples)
