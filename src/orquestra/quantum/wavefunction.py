@@ -1,14 +1,20 @@
 ################################################################################
 # © Copyright 2021-2022 Zapata Computing Inc.
 ################################################################################
+import json
 from math import log2
-from typing import Any, Dict, List, Sequence, Set, Union
+from typing import Any, Dict, List, Optional, Sequence, Set, Tuple, Union
 from warnings import warn
 
 import numpy as np
 from sympy import Matrix, Symbol
 
-from orquestra.quantum.typing import ParameterizedVector
+from orquestra.quantum.typing import AnyPath, LoadSource, ParameterizedVector
+from orquestra.quantum.utils import (
+    convert_array_to_dict,
+    convert_dict_to_array,
+    ensure_open,
+)
 
 
 def _is_number(possible_number):
@@ -222,3 +228,61 @@ def flip_amplitudes(amplitudes: Union[Sequence[complex], np.ndarray]) -> np.ndar
 
 def _flip_bits(n, num_bits):
     return int(bin(n)[2:].zfill(num_bits)[::-1], 2)
+
+
+def load_wavefunction(file: LoadSource) -> Wavefunction:
+    """Load a qubit wavefunction from a file.
+
+    Args:
+        file (str or file-like object): the name of the file, or a file-like object.
+
+    Returns:
+        wavefunction (orquestra.quantum.Wavefunction): the wavefunction object
+    """
+
+    with ensure_open(file) as f:
+        data = json.load(f)
+
+    wavefunction = Wavefunction(convert_dict_to_array(data["amplitudes"]))
+    return wavefunction
+
+
+def save_wavefunction(wavefunction: Wavefunction, filename: AnyPath) -> None:
+    """Save a wavefunction object to a file.
+
+    Args:
+        wavefunction (orquestra.quantum.Wavefunction): the wavefunction object
+        filename (str): the name of the file
+    """
+
+    data: Dict[str, Any] = {}
+    data["amplitudes"] = convert_array_to_dict(wavefunction.amplitudes)
+    with open(filename, "w") as f:
+        f.write(json.dumps(data, indent=2))
+
+
+def sample_from_wavefunction(
+    wavefunction: Wavefunction,
+    n_samples: int,
+    seed: Optional[int] = None,
+) -> List[Tuple[int, ...]]:
+    """Sample bitstrings from a wavefunction.
+
+    Args:
+        wavefunction: the wavefunction to sample from.
+        n_samples: the number of samples taken. Needs to be greater than 0.
+        seed: the seed of the sampler
+
+    Returns:
+        List[Tuple[int]]: A list of tuples where the each tuple is a sampled bitstring.
+    """
+    if n_samples < 1:
+        raise ValueError("Must sample from wavefunction at least once.")
+    rng = np.random.default_rng(seed)
+    outcomes_str, probabilities_np = zip(*wavefunction.get_outcome_probs().items())
+    probabilities = [
+        x[0] if isinstance(x, (list, np.ndarray)) else x for x in list(probabilities_np)
+    ]
+    samples_ndarray = rng.choice(a=outcomes_str, size=n_samples, p=probabilities)
+    samples = [tuple(int(y) for y in list(x)[::-1]) for x in list(samples_ndarray)]
+    return samples
