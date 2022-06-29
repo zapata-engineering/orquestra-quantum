@@ -23,6 +23,7 @@ class TestPauliTermOperations:
         assert PauliTerm("X0", 1.0)._ops[0] == "X"
         assert PauliTerm("Y0", 1.0)._ops[0] == "Y"
         assert PauliTerm("Z0", 1.0)._ops[0] == "Z"
+        assert PauliTerm("z0", 1.0)._ops[0] == "Z"
 
         # Test multi-digit qubit indices work
         assert 123 in PauliTerm("X123", 1.0)._ops
@@ -55,7 +56,7 @@ class TestPauliTermOperations:
         # Test passing wrong operator
         with pytest.raises(ValueError) as e:
             PauliTerm("A0")
-        assert "Got A" in str(e.value)
+        assert "Badly formatted" in str(e.value)
 
     def test_pauliterm_from_list_constructor(self, pauli_term):
         assert len(pauli_term._ops) == 3
@@ -71,12 +72,7 @@ class TestPauliTermOperations:
         # Error for bad qubit index
         with pytest.raises(ValueError) as e:
             PauliTerm.from_list([("X", -1)])
-        assert "invalid" in str(e.value)
-
-        # Error for bad operator
-        with pytest.raises(ValueError) as e:
-            PauliTerm.from_list([("A", 0)])
-        assert "invalid" in str(e.value)
+        assert "Invalid qubit index" in str(e.value)
 
         # Error for duplicate qubits
         with pytest.raises(ValueError) as e:

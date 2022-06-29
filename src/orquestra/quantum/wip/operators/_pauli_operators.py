@@ -39,7 +39,7 @@ from orquestra.quantum.circuits import Circuit, Operation, builtin_gate_by_name
 CoefficientTypes = Union[int, float, complex]
 PauliRepresentation = Union["PauliTerm", "PauliSum"]
 
-allowed_operators = ["X", "Y", "Z", "I"]
+ALLOWED_OPERATORS = ["X", "Y", "Z", "I"]
 
 # Use ASCII values instead of actual strings
 # as keys to allow for commutativity
@@ -92,33 +92,47 @@ class PauliTerm:
 
     def __init__(
         self,
-        operator: Union[Tuple[str, int], str],
+        operator: Union[str, Dict[int, str]],
         coefficient: CoefficientTypes = 1.0,
     ):
-        if isinstance(operator, str):
-            matched_pattern = re.match(r"([a-zA-Z]+)([0-9]+)", operator, re.I)
+        self.coefficient = complex(coefficient)
+
+        if isinstance(operator, dict):
+            # Verify key values
+            if not all(
+                [
+                    qubit_idx >= 0 and isinstance(qubit_idx, int)
+                    for qubit_idx in operator.keys()
+                ]
+            ):
+                raise ValueError(
+                    "Invalid qubit index in dictionary keys."
+                    " Make sure all qubit indices are non-negative integers."
+                )
+
+            # Verify value values
+            if not all([op in ALLOWED_OPERATORS for op in operator.values()]):
+                raise ValueError(
+                    "Invalid operators in dictionary."
+                    f" Allowed ones are {ALLOWED_OPERATORS}."
+                )
+            self._ops: Dict[int, str] = operator
+        elif isinstance(operator, str):
+            matched_pattern = re.match(r"([XYZI])([0-9]+)", operator, re.I)
 
             if not matched_pattern:
                 raise ValueError("Badly formatted string representation passed.")
 
             op, qubit_idx = matched_pattern.groups()
-        elif isinstance(operator, tuple):
-            op, qubit_idx = operator
 
-        qubit_idx = int(qubit_idx)
+            self._ops = {}
+            if op != "I":
+                self._ops[int(qubit_idx)] = op.upper()
+        else:
+            raise TypeError(f"Wrong type of operator passed. Got {type(operator)}.")
 
-        if op not in allowed_operators:
-            raise ValueError(f"Passed operator not supported. Got {op}.")
-
-        self._ops: Dict[int, str] = OrderedDict()
-        if op != "I":
-            self._ops[qubit_idx] = op
-
-        self.coefficient = complex(coefficient)
-
-    @classmethod
+    @staticmethod
     def from_list(
-        cls,
         list_of_terms: List[Tuple[str, int]],
         coefficient: CoefficientTypes = 1.0,
     ) -> "PauliTerm":
@@ -129,26 +143,13 @@ class PauliTerm:
         """
 
         ############### Some checks on input first ###############
-        op_list, idx_list = zip(*list_of_terms)
+        _, idx_list = zip(*list_of_terms)
 
         if not all([isinstance(op, tuple) for op in list_of_terms]):
             raise ValueError(
                 "The list can only contain tuples of the form (op, index). If you"
                 " want to initialize from strings, check the"
                 " PauliTerm.from_str function."
-            )
-
-        valid_input = all(
-            [
-                all([op in allowed_operators for op in op_list]),
-                all([idx >= 0 for idx in idx_list]),
-            ]
-        )
-
-        if not valid_input:
-            raise ValueError(
-                "Some of the input was invalid. Make sure you only pass Pauli operators"
-                " and non-negative qubit indices."
             )
 
         if len(set(idx_list)) != len(idx_list):
@@ -159,16 +160,15 @@ class PauliTerm:
 
         ##########################################################
 
-        result_term = PauliTerm.identity()
-        result_term.coefficient = complex(coefficient)
+        result_dict = {}
         for op, idx in list_of_terms:
             if op != "I":
-                result_term._ops[idx] = op
+                result_dict[idx] = op
 
-        return result_term
+        return PauliTerm(result_dict, coefficient)
 
-    @classmethod
-    def from_str(cls, str_pauli_term: str) -> "PauliTerm":
+    @staticmethod
+    def from_str(str_pauli_term: str) -> "PauliTerm":
         """Construct a PauliTerm from the result of str(pauli_term)"""
         # split into str_coef, str_op at first '*'' outside parenthesis
         try:
@@ -191,7 +191,7 @@ class PauliTerm:
             return result_term
 
         for op in str_op.split("*"):
-            result_term *= cls(op)
+            result_term *= PauliTerm(op)
 
         assert isinstance(result_term, PauliTerm)
         return result_term
@@ -399,15 +399,15 @@ class PauliSum:
             )
         self.terms: Sequence[PauliTerm] = terms
 
-    @classmethod
-    def from_str(cls, str_pauli_sum: str) -> "PauliSum":
+    @staticmethod
+    def from_str(str_pauli_sum: str) -> "PauliSum":
         """Construct a PauliSum from the result of str(pauli_sum)"""
         # split str_pauli_sum only at "+" outside of parenthesis to allow
         # e.g. "(0.5)*X0 + (0.5+0j)*Z2"
         str_terms = re.split(r"\+(?![^(]*\))", str_pauli_sum)
         str_terms = [s.strip() for s in str_terms]
         terms = [PauliTerm.from_str(term) for term in str_terms]
-        return cls(terms).simplify()
+        return PauliSum(terms).simplify()
 
     def __len__(self) -> int:
         return len(self.terms)
