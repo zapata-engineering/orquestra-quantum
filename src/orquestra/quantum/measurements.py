@@ -569,6 +569,7 @@ class Measurements:
             self.bitstrings = []
         else:
             self.bitstrings = bitstrings
+        self.virtual_to_physical_qubits_dict = None
 
     @classmethod
     def from_counts(cls, counts: Dict[str, int]):
