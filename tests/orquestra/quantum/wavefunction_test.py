@@ -10,9 +10,9 @@ import numpy as np
 import pytest
 from sympy import I, Matrix, Symbol, cos, exp, sin
 
+from orquestra.quantum.backends.symbolic_simulator import SymbolicSimulator
 from orquestra.quantum.circuits._builtin_gates import RX, RY, U3, H, X
 from orquestra.quantum.circuits._circuit import Circuit
-from orquestra.quantum.symbolic_simulator import SymbolicSimulator
 from orquestra.quantum.testing import create_random_wavefunction
 from orquestra.quantum.utils import RNDSEED, convert_bitstrings_to_tuples
 from orquestra.quantum.wavefunction import (

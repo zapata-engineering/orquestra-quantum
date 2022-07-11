@@ -8,6 +8,7 @@ import pytest
 import sympy
 
 from orquestra.quantum.api.estimation import EstimationTask
+from orquestra.quantum.backends.symbolic_simulator import SymbolicSimulator
 from orquestra.quantum.circuits import RX, RY, RZ, Circuit, H, X
 from orquestra.quantum.estimation import (
     calculate_exact_expectation_values,
@@ -18,7 +19,6 @@ from orquestra.quantum.estimation import (
 )
 from orquestra.quantum.measurements import ExpectationValues, Measurements
 from orquestra.quantum.openfermion import IsingOperator, QubitOperator
-from orquestra.quantum.symbolic_simulator import SymbolicSimulator
 from orquestra.quantum.testing import MockQuantumBackend
 
 
