@@ -1,4 +1,4 @@
-#   Copyright 2022 The OpenFermion Developers
+#   Copyright 2017 The OpenFermion Developers
 #   Modifications copyright 2022 Zapata Computing, Inc. for compatibility reasons.
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,6 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-import copy
 import re
 import warnings
 from collections import OrderedDict
@@ -36,7 +35,6 @@ import numpy as np
 
 from orquestra.quantum.circuits import Circuit, Operation, builtin_gate_by_name
 
-CoefficientTypes = Union[int, float, complex]
 PauliRepresentation = Union["PauliTerm", "PauliSum"]
 
 ALLOWED_OPERATORS = ["X", "Y", "Z", "I"]
@@ -93,18 +91,13 @@ class PauliTerm:
     def __init__(
         self,
         operator: Union[str, Dict[int, str]],
-        coefficient: CoefficientTypes = 1.0,
+        coefficient: complex = 1.0,
     ):
         self.coefficient = complex(coefficient)
 
         if isinstance(operator, dict):
             # Verify key values
-            if not all(
-                [
-                    qubit_idx >= 0 and isinstance(qubit_idx, int)
-                    for qubit_idx in operator.keys()
-                ]
-            ):
+            if not all([qubit_idx >= 0 for qubit_idx in operator]):
                 raise ValueError(
                     "Invalid qubit index in dictionary keys."
                     " Make sure all qubit indices are non-negative integers."
@@ -116,7 +109,9 @@ class PauliTerm:
                     "Invalid operators in dictionary."
                     f" Allowed ones are {ALLOWED_OPERATORS}."
                 )
-            self._ops: Dict[int, str] = operator
+            self._ops: Dict[int, str] = {
+                idx: op for idx, op in operator.items() if op != "I"
+            }
         elif isinstance(operator, str):
             matched_pattern = re.match(r"([XYZI])([0-9]+)", operator, re.I)
 
@@ -134,7 +129,7 @@ class PauliTerm:
     @staticmethod
     def from_list(
         list_of_terms: List[Tuple[str, int]],
-        coefficient: CoefficientTypes = 1.0,
+        coefficient: complex = 1.0,
     ) -> "PauliTerm":
         """
         A slightly more efficient constructor when all the elements of the term are
@@ -160,10 +155,7 @@ class PauliTerm:
 
         ##########################################################
 
-        result_dict = {}
-        for op, idx in list_of_terms:
-            if op != "I":
-                result_dict[idx] = op
+        result_dict = {idx: op for op, idx in list_of_terms if op != "I"}
 
         return PauliTerm(result_dict, coefficient)
 
@@ -200,23 +192,14 @@ class PauliTerm:
     def identity() -> "PauliTerm":
         return PauliTerm("I0", 1.0)
 
-    def copy(self, new_coefficient: CoefficientTypes = None) -> "PauliTerm":
+    def copy(self, new_coefficient: complex = None) -> "PauliTerm":
         """
         Properly creates a new PauliTerm, with a completely new dictionary
         of operators
         """
-        new_term = PauliTerm.identity()  # create new object
-        # manually copy all attributes over
-        for key, val in self.__dict__.items():
-            if isinstance(val, (dict, list, set)):  # mutable types
-                new_term.__dict__[key] = copy.copy(val)
-            else:  # immutable types
-                new_term.__dict__[key] = val
+        new_coefficient = new_coefficient if new_coefficient else self.coefficient
 
-        if new_coefficient:
-            new_term.coefficient = new_coefficient
-
-        return new_term
+        return PauliTerm(operator=self._ops, coefficient=new_coefficient)
 
     @property
     def qubits(self) -> Set[int]:
@@ -255,7 +238,7 @@ class PauliTerm:
         return len(self._ops)
 
     def __getitem__(self, i: int) -> str:
-        if i not in self._ops.keys():
+        if i not in self._ops:
             warnings.warn("Index not in term! Identity is returned.", UserWarning)
 
         return self._ops.get(i, "I")
@@ -290,9 +273,7 @@ class PauliTerm:
             and np.allclose(self.coefficient, cast_other.coefficient)
         )
 
-    def __add__(
-        self, other: Union[PauliRepresentation, CoefficientTypes]
-    ) -> "PauliSum":
+    def __add__(self, other: Union[PauliRepresentation, complex]) -> "PauliSum":
         _validate_type(other)
 
         if isinstance(other, PauliSum):
@@ -303,21 +284,16 @@ class PauliTerm:
 
         return self + PauliTerm("I0", other)
 
-    def __radd__(self, other: CoefficientTypes) -> "PauliSum":
+    def __radd__(self, other: complex) -> "PauliSum":
         return self + PauliTerm("I0", other)
 
-    def __sub__(
-        self, other: Union[PauliRepresentation, CoefficientTypes]
-    ) -> "PauliSum":
+    def __sub__(self, other: Union[PauliRepresentation, complex]) -> "PauliSum":
         return self + -1.0 * other
 
-    def __rsub__(
-        self, other: Union[PauliRepresentation, CoefficientTypes]
-    ) -> "PauliSum":
+    def __rsub__(self, other: Union[PauliRepresentation, complex]) -> "PauliSum":
         return other + -1.0 * self
 
     def _multiply_by_operator(self, op: str, index: int) -> "PauliTerm":
-        result_term = PauliTerm("I0", 0)
         result_coeff = self.coefficient
         result_ops = self._ops.copy()
 
@@ -331,14 +307,13 @@ class PauliTerm:
             # Case 3: different pauli ops return third op
             result_ops[index] = OPERATOR_MAP[ord(self[index]) + ord(op)]
             result_coeff *= COEFF_MAP[self[index] + op]
+        else:
+            raise ValueError(f"Unsupported operation. Got {op}.")
 
-        result_term._ops = result_ops
-        result_term.coefficient = result_coeff
-
-        return result_term
+        return PauliTerm(result_ops, result_coeff)
 
     def __mul__(
-        self, other: Union[PauliRepresentation, CoefficientTypes]
+        self, other: Union[PauliRepresentation, complex]
     ) -> PauliRepresentation:
         """Multiplies this Pauli Term with another PauliTerm, PauliSum, or number
         according to the Pauli algebra rules.
@@ -348,19 +323,18 @@ class PauliTerm:
         if isinstance(other, PauliSum):
             return (PauliSum([self]) * other).simplify()
         elif isinstance(other, PauliTerm):
-            result_term = PauliTerm.identity()
-            result_term._ops = self._ops.copy()
+            result_term = self.copy(new_coefficient=1)
 
-            new_coeff = self.coefficient * other.coefficient
             for op, index in other:
                 if op != "I":
                     result_term = result_term._multiply_by_operator(op, index)
 
+            new_coeff = self.coefficient * other.coefficient
             return result_term.copy(new_coefficient=result_term.coefficient * new_coeff)
 
         return self.copy(self.coefficient * complex(other))
 
-    def __rmul__(self, other: CoefficientTypes) -> "PauliTerm":
+    def __rmul__(self, other: complex) -> "PauliTerm":
         result = self * other
         assert isinstance(result, PauliTerm)
         return result
@@ -375,14 +349,12 @@ class PauliTerm:
         return cast(PauliTerm, _efficient_exponentiation(self.copy(), power))
 
     def __repr__(self) -> str:
-        term_strs = []
-        for index in self._ops.keys():
-            term_strs.append("%s%s" % (self[index], index))
+        term_strs = [f"{self[index]}{index}" for index in self._ops]
 
         if len(term_strs) == 0:
             term_strs.append("I")
-        out = "%s*%s" % (self.coefficient, "*".join(term_strs))
-        return out
+
+        return f"{self.coefficient}*{'*'.join(term_strs)}"
 
 
 class PauliSum:
@@ -458,9 +430,7 @@ class PauliSum:
 
         return set(self.terms) == set(other.terms)
 
-    def __add__(
-        self, other: Union[PauliRepresentation, CoefficientTypes]
-    ) -> "PauliSum":
+    def __add__(self, other: Union[PauliRepresentation, complex]) -> "PauliSum":
         _validate_type(other)
 
         if isinstance(other, PauliTerm):
@@ -472,23 +442,19 @@ class PauliSum:
 
         return new_op.simplify()
 
-    def __radd__(self, other: CoefficientTypes) -> "PauliSum":
+    def __radd__(self, other: complex) -> "PauliSum":
         assert isinstance(other, (int, float, complex))
         return self + other
 
-    def __sub__(
-        self, other: Union[PauliRepresentation, CoefficientTypes]
-    ) -> "PauliSum":
+    def __sub__(self, other: Union[PauliRepresentation, complex]) -> "PauliSum":
         # No need to check for types here since it will be
         # carried out in the __add__ function
         return self + -1.0 * other
 
-    def __rsub__(self, other: CoefficientTypes) -> "PauliSum":
+    def __rsub__(self, other: complex) -> "PauliSum":
         return other + -1.0 * self
 
-    def __mul__(
-        self, other: Union[PauliRepresentation, CoefficientTypes]
-    ) -> "PauliSum":
+    def __mul__(self, other: Union[PauliRepresentation, complex]) -> "PauliSum":
         _validate_type(other)
 
         other_terms = (
@@ -509,7 +475,7 @@ class PauliSum:
 
         return new_paulisum.simplify()
 
-    def __rmul__(self, other: CoefficientTypes) -> "PauliSum":
+    def __rmul__(self, other: complex) -> "PauliSum":
         assert isinstance(other, (int, float, complex))
 
         new_terms = [cast(PauliTerm, term.copy() * other) for term in self.terms]
