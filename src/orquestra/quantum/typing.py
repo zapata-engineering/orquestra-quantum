@@ -4,11 +4,10 @@
 """Types commonly encountered in orquestra repositories."""
 from numbers import Number
 from os import PathLike
-from typing import Any, Callable, Dict, List, Sequence, Union
+from typing import Any, Dict, Protocol, Sequence, Union, runtime_checkable
 
 import numpy as np
 import sympy
-from typing_extensions import Protocol, runtime_checkable
 
 
 @runtime_checkable

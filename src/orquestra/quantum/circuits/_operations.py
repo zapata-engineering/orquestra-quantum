@@ -4,10 +4,9 @@
 from abc import abstractmethod
 from functools import singledispatch
 from numbers import Number
-from typing import Dict, Iterable, Tuple, TypeVar
+from typing import Dict, Iterable, Protocol, Tuple, TypeVar
 
 import sympy
-from typing_extensions import Protocol
 
 from orquestra.quantum.typing import Parameter, ParameterizedVector
 

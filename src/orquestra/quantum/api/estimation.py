@@ -2,10 +2,9 @@
 # © Copyright 2022 Zapata Computing Inc.
 ################################################################################
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Optional, Protocol
 
 import numpy as np
-from typing_extensions import Protocol
 
 from orquestra.quantum.circuits import Circuit
 

@@ -4,11 +4,10 @@
 """Data structures for orquestra gates."""
 import math
 from dataclasses import dataclass, replace
-from typing import Callable, Dict, Iterable, Tuple, Union
+from typing import Callable, Dict, Iterable, Protocol, Tuple, Union, runtime_checkable
 
 import numpy as np
 import sympy
-from typing_extensions import Protocol, runtime_checkable
 
 from orquestra.quantum.typing import ParameterizedVector
 
