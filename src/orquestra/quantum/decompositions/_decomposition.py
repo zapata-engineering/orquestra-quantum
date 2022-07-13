@@ -2,9 +2,7 @@
 # © Copyright 2021 Zapata Computing Inc.
 ################################################################################
 from abc import abstractmethod
-from typing import Iterable, Sequence, TypeVar
-
-from typing_extensions import Protocol
+from typing import Iterable, Protocol, Sequence, TypeVar
 
 OperationType = TypeVar("OperationType")
 
