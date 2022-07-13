@@ -4,7 +4,6 @@ from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Union
 
 import numpy as np
 
-from orquestra.quantum.openfermion.ops import IsingOperator
 from orquestra.quantum.typing import AnyPath, LoadSource
 from orquestra.quantum.utils import (
     convert_array_to_dict,
@@ -137,7 +136,7 @@ def check_parity_of_vector(
 
 
 def get_parities_from_measurements(
-    measurements: List[Tuple[int]], ising_operator: IsingOperator
+    measurements: List[Tuple[int]], ising_operator
 ) -> Parities:
     """Get expectation values from bitstrings.
 
@@ -148,6 +147,10 @@ def get_parities_from_measurements(
     Returns:
         orquestra.quantum.measurement.Parities: parities of each term in the operator
     """
+
+    # leave this import inside this function to avoid circular imports
+    # note that ising_operator in args is not typed because of this
+    from orquestra.quantum.openfermion.ops import IsingOperator
 
     # check input format
     if not isinstance(ising_operator, IsingOperator):
