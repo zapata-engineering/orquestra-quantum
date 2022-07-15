@@ -71,12 +71,13 @@ def _validate_order_of_outputs_matches_order_of_inputs(
 
     return all(
         [
-            np.array_equal(
+            np.allclose(
                 expectation_values[i].values,
                 estimator(
                     backend=_backend,
                     estimation_tasks=[task],
                 )[0].values,
+                rtol = 0.1 # 10% tolerance
             )
             for i, task in enumerate(_estimation_tasks)
         ]
@@ -98,8 +99,8 @@ def _validate_expectation_value_includes_coefficients(
         estimation_tasks=estimation_tasks,
     )
 
-    return not np.array_equal(
-        expectation_values[0].values, expectation_values[1].values
+    return np.allclose(
+        expectation_values[0].values, expectation_values[1].values/19.971997, rtol = 0.1 # 10% tolerance
     )
 
 
