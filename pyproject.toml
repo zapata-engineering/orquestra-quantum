@@ -51,3 +51,8 @@ log_level="INFO"
 
 [tool.black]
 exclude = '(src/orquestra/quantum/openfermion|tests/orquestra/quantum/openfermion_tests)'
+
+[tool.flake8]
+ignore = ['E203', 'E266', 'F401', 'W605']
+max-line-length = 88
+exclude = ['src/orquestra/quantum/openfermion/', 'tests/orquestra/quantum/openfermion_tests/']

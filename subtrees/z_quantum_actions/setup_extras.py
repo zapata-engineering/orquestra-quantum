@@ -7,6 +7,7 @@ extras = {
     "dev": [
         "black~=22.3",
         "flake8~=3.9.0",
+        "Flake8-pyproject>=0.9.0",
         "isort~=5.9.0",
         "mypy~=0.910",
         "pytest~=6.2.5",

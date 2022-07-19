@@ -63,8 +63,10 @@ github_actions-default:
 		${VENV_NAME}/bin/python3 -m pip install --upgrade pip && \
 		${VENV_NAME}/bin/python3 -m pip install -e '.[dev]'
 
-flake8-default: clean
-	$(PYTHON) -m flake8 --ignore=E203,E266,F401,W503 --max-line-length=88 src tests
+# flake8p is a wrapper library that runs flake8 from config in pyproject.toml
+# we can now use it instead of flake8 to lint the code
+flake8p-default: clean
+	$(PYTHON) -m flake8p --ignore=E203,E266,F401,W503 --max-line-length=88 src tests
 
 mypy-default: clean
 	@echo scanning files with mypy: Please be patient....
@@ -88,7 +90,7 @@ coverage-default:
 		&& echo Code coverage Passed the $(MIN_COVERAGE)% mark!
 
 
-style-default: flake8 mypy black isort
+style-default: flake8p mypy black isort
 	@echo This project passes style!
 
 muster-default: style coverage
