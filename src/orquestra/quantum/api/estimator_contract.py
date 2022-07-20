@@ -84,6 +84,7 @@ def _validate_order_of_outputs_matches_order_of_inputs(
     )
 
 
+# This contract assumes the expectation value scales linearly with the coefficient
 def _validate_expectation_value_includes_coefficients(
     estimator: EstimateExpectationValues,
 ):
@@ -104,6 +105,37 @@ def _validate_expectation_value_includes_coefficients(
         expectation_values[0].values,
         expectation_values[1].values / term_coefficient,
         rtol=0.1,  # 10% tolerance
+    )
+
+
+# The gibbs objective estimator exponentiates the expectation value of each outcome,
+# sums the results, and takes the negative log of the sum. This does not scale linearly
+# with the coefficient. We check expectation value includes coefficient differently
+def _validate_expectation_value_includes_coefficients_for_gibbs_estimator(
+    estimator: EstimateExpectationValues,
+):
+    term_coefficient = 30
+    estimation_tasks = [
+        EstimationTask(IsingOperator("Z0"), Circuit([RX(np.pi / 3)(0)]), 10000),
+        EstimationTask(
+            IsingOperator("Z0", term_coefficient), Circuit([RX(np.pi / 3)(0)]), 10000
+        ),
+    ]
+
+    expectation_values = estimator(
+        backend=_backend,
+        estimation_tasks=estimation_tasks,
+    )
+
+    # For a sufficiently large coefficient, the exponential should become
+    # much larger (greater than linear scaling)
+    # Note that we take the negative exponential here because the gibbs
+    # estimator takes the negative log
+    return np.all(
+        np.greater(
+            np.exp(-expectation_values[1].values) / term_coefficient,
+            np.exp(-expectation_values[0].values),
+        )
     )
 
 
@@ -133,5 +165,12 @@ ESTIMATOR_CONTRACTS = [
     _validate_each_task_returns_one_expecation_value,
     _validate_order_of_outputs_matches_order_of_inputs,
     _validate_expectation_value_includes_coefficients,
+    _validate_constant_terms_are_included_in_output,
+]
+
+ESTIMATOR_CONTRACTS_GIBBS = [
+    _validate_each_task_returns_one_expecation_value,
+    _validate_order_of_outputs_matches_order_of_inputs,
+    _validate_expectation_value_includes_coefficients_for_gibbs_estimator,
     _validate_constant_terms_are_included_in_output,
 ]
