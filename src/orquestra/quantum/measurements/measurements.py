@@ -6,7 +6,7 @@ from __future__ import annotations
 import copy
 import json
 from collections import Counter
-from typing import Dict, Iterable, List, Optional, Sequence, TextIO, Tuple, cast
+from typing import Dict, Iterable, List, Optional, Sequence, TextIO, Tuple, Union, cast
 
 import numpy as np
 
@@ -19,6 +19,7 @@ from orquestra.quantum.utils import (
 
 from .expectation_values import ExpectationValues
 from .parities import check_parity_of_vector
+from ..wip.operators import PauliSum
 
 
 def convert_bitstring_to_int(bitstring: Sequence[int]) -> int:
@@ -285,8 +286,9 @@ class Measurements:
 
         return MeasurementOutcomeDistribution(distribution)
 
+    # Union[PauliSum, PauliTerm]
     def get_expectation_values(
-        self, ising_operator, use_bessel_correction: bool = False
+        self, ising_operator: PauliSum, use_bessel_correction: bool = False
     ) -> ExpectationValues:
         """Get the expectation values of an operator from the measurements.
 
@@ -304,10 +306,8 @@ class Measurements:
         # performed in the Z basis, so we need the operator to be Ising (containing only
         # Z terms). A general Qubit Operator could have X or Y terms which don’t get
         # directly measured.
-        from orquestra.quantum.openfermion.ops import IsingOperator
-
-        if not isinstance(ising_operator, IsingOperator):
-            raise TypeError("Input operator is not openfermion.IsingOperator")
+        if not ising_operator.is_ising:
+            raise TypeError("Input operator is not ising.")
 
         # Count number of occurrences of bitstrings
         bitstring_frequencies = self.get_counts()
@@ -315,27 +315,25 @@ class Measurements:
 
         # Perform weighted average
         expectation_values_list = [
-            coefficient
+            term.coefficient
             * get_expectation_value_from_frequencies(
-                [cast(int, op[0]) for op in term], bitstring_frequencies
+                term._ops.keys(), bitstring_frequencies
             )
-            for term, coefficient in ising_operator.terms.items()
+            for term in ising_operator.terms
         ]
         expectation_values = np.array(expectation_values_list)
 
-        correlations = np.zeros((len(ising_operator.terms),) * 2)
+        correlations = np.zeros((len(ising_operator.terms),) * 2, dtype=complex)
         for i, first_term in enumerate(ising_operator.terms):
-            correlations[i, i] = ising_operator.terms[first_term] ** 2
+            correlations[i, i] = first_term.coefficient**2
             for j in range(i):
-                second_term = list(ising_operator.terms.keys())[j]
-                first_term_qubits = set(op[0] for op in first_term)
-                second_term_qubits = set(op[0] for op in second_term)
-                marked_qubits = first_term_qubits.symmetric_difference(
-                    second_term_qubits
+                second_term = ising_operator[j]
+                marked_qubits = first_term.qubits.symmetric_difference(
+                    second_term.qubits
                 )
                 correlations[i, j] = (
-                    ising_operator.terms[first_term]
-                    * ising_operator.terms[second_term]
+                    first_term.coefficient
+                    * second_term.coefficient
                     * get_expectation_value_from_frequencies(
                         marked_qubits, bitstring_frequencies
                     )

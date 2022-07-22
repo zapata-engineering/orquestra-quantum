@@ -35,6 +35,7 @@ from orquestra.quantum.openfermion.ops.representations import (
 from orquestra.quantum.openfermion.transforms.opconversions.term_reordering import (
     normal_ordered,
 )
+from orquestra.quantum.wip.operators import PauliSum
 
 
 class OperatorUtilsError(Exception):
@@ -138,6 +139,10 @@ def count_qubits(operator):
     Raises:
        TypeError: Operator of invalid type.
     """
+    # Handle PauliSum
+    if isinstance(operator, PauliSum):
+        return max(operator.qubits) + 1
+
     # Handle FermionOperator.
     if isinstance(operator, FermionOperator):
         num_qubits = 0

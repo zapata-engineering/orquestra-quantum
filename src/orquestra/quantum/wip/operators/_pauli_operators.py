@@ -212,10 +212,10 @@ class PauliTerm:
     def is_ising(self) -> bool:
         """
         Returns whether the term represents an ising model
-        (i.e. contains only Z terms)
+        (i.e. contains only Z terms or is an identity term)
         """
 
-        return set(self._ops.values()) == {"Z"}
+        return set(self._ops.values()) == {"Z"} or set(self._ops.values()) == set()
 
     @property
     def circuit(self) -> Circuit:
@@ -338,6 +338,9 @@ class PauliTerm:
         result = self * other
         assert isinstance(result, PauliTerm)
         return result
+
+    def __truediv__(self, other: complex):
+        return self * (1.0 / other)
 
     def __pow__(self, power: int) -> "PauliTerm":
         """
@@ -481,6 +484,9 @@ class PauliSum:
         new_terms = [cast(PauliTerm, term.copy() * other) for term in self.terms]
 
         return PauliSum(new_terms).simplify()
+
+    def __truediv__(self, other: complex):
+        return self * (1.0 / other)
 
     def __pow__(self, power: int) -> "PauliSum":
         if not isinstance(power, int) or power < 0:
