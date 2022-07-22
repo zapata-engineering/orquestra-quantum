@@ -10,8 +10,8 @@ from orquestra.quantum.circuits import Circuit, GateOperation, Operation
 from orquestra.quantum.circuits._circuit import split_circuit
 from orquestra.quantum.circuits.layouts import CircuitConnectivity
 from orquestra.quantum.openfermion import IsingOperator, QubitOperator, SymbolicOperator
-from orquestra.quantum.wip.operators import PauliRepresentation, PauliTerm, PauliSum
 from orquestra.quantum.wavefunction import Wavefunction
+from orquestra.quantum.wip.operators import PauliRepresentation, PauliSum, PauliTerm
 
 from ..distributions import (
     MeasurementOutcomeDistribution,

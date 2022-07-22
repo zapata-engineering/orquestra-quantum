@@ -31,7 +31,8 @@ from orquestra.quantum.openfermion.transforms import (
 )
 from orquestra.quantum.utils import ValueEstimate, bin2dec, dec2bin
 from orquestra.quantum.wavefunction import Wavefunction
-from ...wip.operators import PauliSum, PauliRepresentation, PauliTerm
+
+from ...wip.operators import PauliRepresentation, PauliSum, PauliTerm
 
 
 def get_qubitop_from_matrix(operator: List[List]) -> QubitOperator:

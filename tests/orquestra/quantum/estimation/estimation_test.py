@@ -19,7 +19,7 @@ from orquestra.quantum.estimation import (
 from orquestra.quantum.measurements import ExpectationValues, Measurements
 from orquestra.quantum.symbolic_simulator import SymbolicSimulator
 from orquestra.quantum.testing import MockQuantumBackend
-from orquestra.quantum.wip.operators import PauliTerm, PauliSum
+from orquestra.quantum.wip.operators import PauliSum, PauliTerm
 
 
 class TestEstimatorUtils:

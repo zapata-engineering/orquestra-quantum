@@ -17,9 +17,9 @@ from orquestra.quantum.utils import (
     sample_from_probability_distribution,
 )
 
+from ..wip.operators import PauliSum
 from .expectation_values import ExpectationValues
 from .parities import check_parity_of_vector
-from ..wip.operators import PauliSum
 
 
 def convert_bitstring_to_int(bitstring: Sequence[int]) -> int:

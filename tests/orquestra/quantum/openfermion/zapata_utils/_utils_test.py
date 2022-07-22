@@ -29,7 +29,7 @@ from orquestra.quantum.openfermion.transforms import (
 from orquestra.quantum.openfermion.zapata_utils._io import load_interaction_operator
 from orquestra.quantum.utils import RNDSEED
 from orquestra.quantum.wavefunction import Wavefunction
-from orquestra.quantum.wip.operators import PauliTerm, PauliSum
+from orquestra.quantum.wip.operators import PauliSum, PauliTerm
 
 
 class TestQubitOperator(unittest.TestCase):

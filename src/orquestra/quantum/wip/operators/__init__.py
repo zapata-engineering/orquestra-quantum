@@ -1,1 +1,1 @@
-from ._pauli_operators import PauliSum, PauliTerm, PauliRepresentation
+from ._pauli_operators import PauliRepresentation, PauliSum, PauliTerm

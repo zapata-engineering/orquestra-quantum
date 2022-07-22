@@ -9,8 +9,8 @@ import numpy as np
 from orquestra.quantum.circuits import Circuit
 
 from ..measurements import ExpectationValues
-from .backend import QuantumBackend
 from ..wip.operators import PauliRepresentation, PauliSum, PauliTerm
+from .backend import QuantumBackend
 
 
 @dataclass
