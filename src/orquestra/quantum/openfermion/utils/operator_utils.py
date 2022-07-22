@@ -141,6 +141,8 @@ def count_qubits(operator):
     """
     # Handle PauliSum
     if isinstance(operator, PauliSum):
+        if operator.qubits == set():
+            return 0
         return max(operator.qubits) + 1
 
     # Handle FermionOperator.

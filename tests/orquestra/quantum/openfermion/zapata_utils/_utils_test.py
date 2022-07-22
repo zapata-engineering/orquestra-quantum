@@ -29,6 +29,7 @@ from orquestra.quantum.openfermion.transforms import (
 from orquestra.quantum.openfermion.zapata_utils._io import load_interaction_operator
 from orquestra.quantum.utils import RNDSEED
 from orquestra.quantum.wavefunction import Wavefunction
+from orquestra.quantum.wip.operators import PauliTerm, PauliSum
 
 
 class TestQubitOperator(unittest.TestCase):
@@ -140,15 +141,15 @@ class TestQubitOperator(unittest.TestCase):
         )
 
         # Given
-        op1 = QubitOperator("[Z0 Z1]")
-        op2 = QubitOperator("[Z1 Z0]")
+        op1 = PauliSum([PauliTerm.from_str("1*Z0*Z1")])
+        op2 = PauliSum([PauliTerm.from_str("1*Z1*Z0")])
 
         # When/Then
         self.assertEqual(op1, reverse_qubit_order(op2))
 
         # Given
-        op1 = QubitOperator("Z0")
-        op2 = QubitOperator("Z1")
+        op1 = PauliSum([PauliTerm("Z0")])
+        op2 = PauliSum([PauliTerm("Z1")])
 
         # When/Then
         self.assertEqual(op1, reverse_qubit_order(op2, n_qubits=2))
@@ -162,8 +163,9 @@ class TestQubitOperator(unittest.TestCase):
         """Check <Z0> and <Z1> for the state |100>"""
         # Given
         wf = Wavefunction([0, 1, 0, 0, 0, 0, 0, 0])
-        op1 = QubitOperator("Z0")
-        op2 = QubitOperator("Z1")
+        op1 = PauliTerm("Z0")
+        op2 = PauliTerm("Z1")
+
         # When
         exp_op1 = get_expectation_value(op1, wf, True)
         exp_op2 = get_expectation_value(op2, wf, True)

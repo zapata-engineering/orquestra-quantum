@@ -59,6 +59,7 @@ from ..testing.test_cases_for_backend_tests import (
     two_qubit_parametric_gates_amplitudes_test_set,
     two_qubit_parametric_gates_exp_vals_test_set,
 )
+from ..wip.operators import PauliTerm
 
 
 def skip_tests_for_excluded_gates(func):
@@ -397,7 +398,7 @@ class QuantumSimulatorTests(QuantumBackendTests):
         wf_simulator.number_of_circuits_run = 0
         wf_simulator.number_of_jobs_run = 0
         circuit = Circuit([H(0), X(1)])
-        operator = QubitOperator("[Z0] + 2[Z1]")
+        operator = PauliTerm("Z0") + PauliTerm("Z1", 2)
         target_expectation_values = ExpectationValues(np.array([0.0, -2.0]))
 
         # When

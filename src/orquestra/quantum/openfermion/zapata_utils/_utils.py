@@ -31,6 +31,7 @@ from orquestra.quantum.openfermion.transforms import (
 )
 from orquestra.quantum.utils import ValueEstimate, bin2dec, dec2bin
 from orquestra.quantum.wavefunction import Wavefunction
+from ...wip.operators import PauliSum, PauliRepresentation, PauliTerm
 
 
 def get_qubitop_from_matrix(operator: List[List]) -> QubitOperator:
@@ -107,15 +108,15 @@ def get_qubitop_from_matrix(operator: List[List]) -> QubitOperator:
 
         # Compute the trace
         tr = 0.0
-        for j in range(0, 2 ** n):  # loop over the columns
+        for j in range(0, 2**n):  # loop over the columns
             tr = tr + operator[j][f(j)] * nz(j)
 
-        return tr / 2 ** n
+        return tr / 2**n
 
     # Expand the operator in Pauli basis
-    coeffs = list(np.zeros(4 ** n))
-    labels = list(np.zeros(4 ** n))
-    for i in range(0, 4 ** n):  # loop over all 2n-bit strings
+    coeffs = list(np.zeros(4**n))
+    labels = list(np.zeros(4**n))
+    for i in range(0, 4**n):  # loop over all 2n-bit strings
         current_string = dec2bin(i, 2 * n)  # see util.py
         current_label = decode(current_string)
         coeffs[i] = trace_product(current_label)
@@ -272,7 +273,7 @@ def evaluate_qubit_operator_list(
     return value_estimate
 
 
-def reverse_qubit_order(qubit_operator: QubitOperator, n_qubits: Optional[int] = None):
+def reverse_qubit_order(qubit_operator: PauliSum, n_qubits: Optional[int] = None):
     """Reverse the order of qubit indices in a qubit operator.
 
     Args:
@@ -285,7 +286,7 @@ def reverse_qubit_order(qubit_operator: QubitOperator, n_qubits: Optional[int] =
         reversed_op (openfermion.ops.QubitOperator)
     """
 
-    reversed_op = QubitOperator()
+    reversed_op = PauliSum()
 
     if n_qubits is None:
         n_qubits = count_qubits(qubit_operator)
@@ -293,17 +294,18 @@ def reverse_qubit_order(qubit_operator: QubitOperator, n_qubits: Optional[int] =
         raise ValueError("Invalid number of qubits specified.")
 
     for term in qubit_operator.terms:
-        new_term = []
-        for factor in term:
-            new_factor = list(factor)
-            new_factor[0] = n_qubits - 1 - new_factor[0]
-            new_term.append(tuple(new_factor))
-        reversed_op += QubitOperator(tuple(new_term), qubit_operator.terms[term])
+        new_term = {}
+        for qubit_num, operator_str in term._ops.items():
+            new_qubit_num = n_qubits - 1 - qubit_num
+            new_term[new_qubit_num] = operator_str
+        reversed_op += PauliTerm(new_term, term.coefficient)
     return reversed_op
 
 
 def get_expectation_value(
-    qubit_op: QubitOperator, wavefunction: Wavefunction, reverse_operator: bool = False
+    qubit_op: PauliRepresentation,
+    wavefunction: Wavefunction,
+    reverse_operator: bool = False,
 ) -> complex:
     """Get the expectation value of a qubit operator with respect to a wavefunction.
     Args:
@@ -317,6 +319,9 @@ def get_expectation_value(
     Returns:
         the expectation value
     """
+    if isinstance(qubit_op, PauliTerm):
+        qubit_op = PauliSum([qubit_op])
+
     n_qubits = wavefunction.amplitudes.shape[0].bit_length() - 1
 
     # Convert the qubit operator to a sparse matrix. Note that the qubit indices

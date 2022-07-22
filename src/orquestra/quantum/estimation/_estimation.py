@@ -67,7 +67,8 @@ def split_estimation_tasks_to_measure(
     indices_not_to_measure = []
     for i, task in enumerate(estimation_tasks):
         if (
-            len(task.operator.terms) == 1 and () in task.operator.terms.keys()
+            len(task.operator.terms) == 1
+            and task.operator.terms[0]._ops == {}  # is constant term
         ) or task.number_of_shots == 0:
             indices_not_to_measure.append(i)
             estimation_tasks_not_to_measure.append(task)
@@ -102,7 +103,7 @@ def evaluate_non_measured_estimation_tasks(
 
     expectation_values = []
     for task in estimation_tasks:
-        if len(task.operator.terms) > 1 or () not in task.operator.terms.keys():
+        if len(task.operator.terms) > 1 or task.operator.terms[0]._ops != {}:
             if task.number_of_shots is not None and task.number_of_shots > 0:
                 raise RuntimeError(
                     "An EstimationTask required shots but was classified as\
@@ -111,7 +112,8 @@ def evaluate_non_measured_estimation_tasks(
             else:
                 coefficient = 0.0
         else:
-            coefficient = task.operator.terms[()]
+            # The task.operator only contains a single constant term
+            coefficient = task.operator.terms[0].coefficient
 
         expectation_values.append(
             ExpectationValues(
@@ -164,9 +166,7 @@ def estimate_expectation_values_by_averaging(
 
         measured_expectation_values_list = [
             expectation_values_to_real(
-                measurements.get_expectation_values(
-                    change_operator_type(frame_operator, IsingOperator)
-                )
+                measurements.get_expectation_values(frame_operator)
             )
             for frame_operator, measurements in zip(operators, measurements_list)
         ]

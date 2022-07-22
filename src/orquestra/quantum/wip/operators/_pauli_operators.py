@@ -339,7 +339,7 @@ class PauliTerm:
         assert isinstance(result, PauliTerm)
         return result
 
-    def __truediv__(self, other: complex):
+    def __truediv__(self, other: complex) -> "PauliTerm":
         return self * (1.0 / other)
 
     def __pow__(self, power: int) -> "PauliTerm":
@@ -485,7 +485,7 @@ class PauliSum:
 
         return PauliSum(new_terms).simplify()
 
-    def __truediv__(self, other: complex):
+    def __truediv__(self, other: complex) -> "PauliSum":
         return self * (1.0 / other)
 
     def __pow__(self, power: int) -> "PauliSum":

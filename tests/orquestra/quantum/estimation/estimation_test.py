@@ -17,18 +17,18 @@ from orquestra.quantum.estimation import (
     split_estimation_tasks_to_measure,
 )
 from orquestra.quantum.measurements import ExpectationValues, Measurements
-from orquestra.quantum.openfermion import IsingOperator, QubitOperator
 from orquestra.quantum.symbolic_simulator import SymbolicSimulator
 from orquestra.quantum.testing import MockQuantumBackend
+from orquestra.quantum.wip.operators import PauliTerm, PauliSum
 
 
 class TestEstimatorUtils:
     @pytest.fixture()
     def frame_operators(self):
         operators = [
-            IsingOperator("2 [Z1 Z2]"),
-            IsingOperator("[Z0 Z3]"),
-            IsingOperator("-1 [Z2]"),
+            PauliTerm.from_str("2*Z1*Z2"),
+            PauliTerm.from_str("2*Z0*Z3"),
+            PauliTerm("Z2", -1),
         ]
 
         return operators
@@ -67,7 +67,7 @@ class TestEstimatorUtils:
             evaluate_estimation_circuits,
             symbols_maps=symbols_maps,
         )
-        operator = QubitOperator()
+        operator = PauliSum()
         estimation_tasks = [
             EstimationTask(operator, circuit, 1) for circuit in circuits
         ]
@@ -91,30 +91,42 @@ class TestEstimatorUtils:
             (
                 [
                     EstimationTask(
-                        IsingOperator("2[Z0] + 3 [Z1 Z2]"), Circuit([X(0)]), 10
+                        PauliSum([PauliTerm("Z0", 2), PauliTerm.from_str("3*Z1*Z2")]),
+                        Circuit([X(0)]),
+                        10,
                     ),
                     EstimationTask(
-                        IsingOperator("2[Z0] + 3 [Z1 Z2] + 4[]"),
+                        PauliSum(
+                            [
+                                PauliTerm("Z0", 2),
+                                PauliTerm.from_str("3*Z1*Z2"),
+                                PauliTerm("I0", 4),
+                            ]
+                        ),
                         Circuit([RZ(np.pi / 2)(0)]),
                         1000,
                     ),
                     EstimationTask(
-                        IsingOperator("4[Z3]"),
+                        PauliTerm("Z3", 4),
                         Circuit([RY(np.pi / 2)(0)]),
                         17,
                     ),
                 ],
                 [
                     EstimationTask(
-                        IsingOperator("2[Z0] + 3 [Z1 Z2]"), Circuit([X(0)]), 10
+                        PauliTerm("Z0", 2) + PauliTerm.from_str("3*Z1*Z2"),
+                        Circuit([X(0)]),
+                        10,
                     ),
                     EstimationTask(
-                        IsingOperator("2[Z0] + 3 [Z1 Z2] + 4 []"),
+                        PauliTerm("I0", 4)
+                        + PauliTerm("Z0", 2)
+                        + PauliTerm.from_str("3*Z1*Z2"),
                         Circuit([RZ(np.pi / 2)(0)]),
                         1000,
                     ),
                     EstimationTask(
-                        IsingOperator("4[Z3]"),
+                        PauliTerm("Z3", 4),
                         Circuit([RY(np.pi / 2)(0)]),
                         17,
                     ),
@@ -126,94 +138,102 @@ class TestEstimatorUtils:
             (
                 [
                     EstimationTask(
-                        IsingOperator("2[Z0] + 3 [Z1 Z2]"), Circuit([X(0)]), 10
+                        PauliTerm("Z0", 2) + PauliTerm.from_str("3*Z1*Z2"),
+                        Circuit([X(0)]),
+                        10,
                     ),
                     EstimationTask(
-                        IsingOperator("4[] "),
+                        PauliTerm("I0", 4),
                         Circuit([RZ(np.pi / 2)(0)]),
                         1000,
                     ),
                     EstimationTask(
-                        IsingOperator("4[Z3]"),
+                        PauliTerm("Z3", 4),
                         Circuit([RY(np.pi / 2)(0)]),
                         17,
                     ),
                 ],
                 [
                     EstimationTask(
-                        IsingOperator("2[Z0] + 3 [Z1 Z2]"), Circuit([X(0)]), 10
+                        PauliTerm("Z0", 2) + PauliTerm.from_str("3*Z1*Z2"),
+                        Circuit([X(0)]),
+                        10,
                     ),
                     EstimationTask(
-                        IsingOperator("4[Z3]"),
+                        PauliTerm("Z3", 4),
                         Circuit([RY(np.pi / 2)(0)]),
                         17,
                     ),
                 ],
-                [
-                    EstimationTask(
-                        IsingOperator("4[]"), Circuit([RZ(np.pi / 2)(0)]), 1000
-                    )
-                ],
+                [EstimationTask(PauliTerm("I0", 4), Circuit([RZ(np.pi / 2)(0)]), 1000)],
                 [0, 2],
                 [1],
             ),
             (
                 [
-                    EstimationTask(IsingOperator("- 3 []"), Circuit([X(0)]), 0),
+                    EstimationTask(PauliTerm("I0", -3), Circuit([X(0)]), 0),
                     EstimationTask(
-                        IsingOperator("2[Z0] + 3 [Z1 Z2] + 4[]"),
+                        PauliTerm("I0", 4)
+                        + PauliTerm("Z0", 2)
+                        + PauliTerm.from_str("3*Z1*Z2"),
                         Circuit([RZ(np.pi / 2)(0)]),
                         1000,
                     ),
                     EstimationTask(
-                        IsingOperator("4[Z3]"),
+                        PauliTerm("Z3", 4),
                         Circuit([RY(np.pi / 2)(0)]),
                         17,
                     ),
                 ],
                 [
                     EstimationTask(
-                        IsingOperator("2[Z0] + 3 [Z1 Z2] + 4 []"),
+                        PauliTerm("I0", 4)
+                        + PauliTerm("Z0", 2)
+                        + PauliTerm.from_str("3*Z1*Z2"),
                         Circuit([RZ(np.pi / 2)(0)]),
                         1000,
                     ),
                     EstimationTask(
-                        IsingOperator("4[Z3]"),
+                        PauliTerm("Z3", 4),
                         Circuit([RY(np.pi / 2)(0)]),
                         17,
                     ),
                 ],
                 [
-                    EstimationTask(IsingOperator("- 3 []"), Circuit([X(0)]), 0),
+                    EstimationTask(PauliTerm("I0", -3), Circuit([X(0)]), 0),
                 ],
                 [1, 2],
                 [0],
             ),
             (
                 [
-                    EstimationTask(IsingOperator("- 3 []"), Circuit([X(0)]), 0),
+                    EstimationTask(PauliTerm("I0", -3), Circuit([X(0)]), 0),
                     EstimationTask(
-                        IsingOperator("2[Z0] + 3 [Z1 Z2] + 4[]"),
+                        PauliTerm("I0", 4)
+                        + PauliTerm("Z0", 2)
+                        + PauliTerm.from_str("3*Z1*Z2"),
                         Circuit([RZ(np.pi / 2)(0)]),
                         1000,
                     ),
                     EstimationTask(
-                        IsingOperator("4[Z3]"),
+                        PauliTerm("Z3", 4),
                         Circuit([RY(np.pi / 2)(0)]),
                         0,
                     ),
                 ],
                 [
                     EstimationTask(
-                        IsingOperator("2[Z0] + 3 [Z1 Z2] + 4 []"),
+                        PauliTerm("I0", 4)
+                        + PauliTerm("Z0", 2)
+                        + PauliTerm.from_str("3*Z1*Z2"),
                         Circuit([RZ(np.pi / 2)(0)]),
                         1000,
                     ),
                 ],
                 [
-                    EstimationTask(IsingOperator("- 3 []"), Circuit([X(0)]), 0),
+                    EstimationTask(PauliTerm("I0", -3), Circuit([X(0)]), 0),
                     EstimationTask(
-                        IsingOperator("4[Z3]"),
+                        PauliTerm("Z3", 4),
                         Circuit([RY(np.pi / 2)(0)]),
                         0,
                     ),
@@ -250,7 +270,7 @@ class TestEstimatorUtils:
             (
                 [
                     EstimationTask(
-                        IsingOperator("4[] "),
+                        PauliTerm("I0", 4),
                         Circuit([RZ(np.pi / 2)(0)]),
                         1000,
                     ),
@@ -266,13 +286,15 @@ class TestEstimatorUtils:
             (
                 [
                     EstimationTask(
-                        IsingOperator("- 2.5 [] - 0.5 []"), Circuit([X(0)]), 0
+                        PauliTerm("I0", -0.5) + PauliTerm("I0", -2.5),
+                        Circuit([X(0)]),
+                        0,
                     ),
                     EstimationTask(
-                        IsingOperator("0.001[] "), Circuit([RZ(np.pi / 2)(0)]), 2
+                        PauliTerm("I0", 0.001), Circuit([RZ(np.pi / 2)(0)]), 2
                     ),
                     EstimationTask(
-                        IsingOperator("2.5 [Z1] + 1.0 [Z2 Z3]"),
+                        PauliTerm("Z1", 2.5) + PauliTerm.from_str("1*Z2*Z3"),
                         Circuit([RY(np.pi / 2)(0)]),
                         0,
                     ),
@@ -316,22 +338,24 @@ class TestEstimatorUtils:
             (
                 [
                     EstimationTask(
-                        IsingOperator("- 2.5 [] - 0.5 [Z1]"), Circuit([X(0)]), 1
+                        PauliSum([PauliTerm("I0", -2.5), PauliTerm("Z1", -0.5)]),
+                        Circuit([X(0)]),
+                        1,
                     ),
                 ]
             ),
             (
                 [
                     EstimationTask(
-                        IsingOperator("0.001 [Z0]"),
+                        PauliTerm("Z0", 0.001),
                         Circuit([RZ(np.pi / 2)(0)]),
                         0,
                     ),
                     EstimationTask(
-                        IsingOperator("2.0[] "), Circuit([RZ(np.pi / 2)(0)]), 2
+                        PauliTerm("I0", 2.0), Circuit([RZ(np.pi / 2)(0)]), 2
                     ),
                     EstimationTask(
-                        IsingOperator("1.5 [Z0 Z1]"),
+                        PauliTerm.from_str("1.5*Z0*Z1"),
                         Circuit([RY(np.pi / 2)(0)]),
                         10,
                     ),
@@ -350,22 +374,22 @@ TEST_CASES_EIGENSTATES = [
     (
         [
             EstimationTask(
-                IsingOperator("Z0"), circuit=Circuit([X(0)]), number_of_shots=10
+                PauliTerm("Z0"), circuit=Circuit([X(0)]), number_of_shots=10
             ),
             EstimationTask(
-                IsingOperator((), coefficient=2.0),
+                PauliTerm("I0", coefficient=2.0),
                 circuit=Circuit([RY(np.pi / 4)(0)]),
                 number_of_shots=30,
             ),
             # tests correlation
             EstimationTask(
-                IsingOperator("[Z0] + [Z1]"),
+                PauliSum([PauliTerm("Z0"), PauliTerm("Z1")]),
                 circuit=Circuit([X(0), X(1)]),
                 number_of_shots=10,
             ),
             # tests negative correlation
             EstimationTask(
-                IsingOperator("[Z0] + [Z1]"),
+                PauliSum([PauliTerm("Z0"), PauliTerm("Z1")]),
                 circuit=Circuit([X(1)]),
                 number_of_shots=10,
             ),
@@ -390,12 +414,12 @@ TEST_CASES_NONEIGENSTATES = [
     (
         [
             EstimationTask(
-                IsingOperator("Z0"),
+                PauliTerm("Z0"),
                 circuit=Circuit([H(0)]),
                 number_of_shots=1000,
             ),
             EstimationTask(
-                IsingOperator("Z0", coefficient=-2),
+                PauliTerm("Z0", coefficient=-2),
                 circuit=Circuit([RY(np.pi / 4)(0)]),
                 number_of_shots=1000,
             ),
@@ -421,7 +445,7 @@ TEST_CASES_NONEIGENSTATES_WITH_LOW_NUMBER_OF_SHOTS = [
         4
         * [
             EstimationTask(
-                IsingOperator("[Z0] + [Z1]"),
+                PauliSum([PauliTerm("Z0"), PauliTerm("Z1")]),
                 circuit=Circuit([X(0), X(1)]),
                 number_of_shots=10,
             ),
@@ -471,15 +495,15 @@ class TestBasicEstimationMethods:
     @pytest.fixture()
     def estimation_tasks(self):
         task_1 = EstimationTask(
-            IsingOperator("[Z0]"), circuit=Circuit([X(0)]), number_of_shots=10
+            PauliTerm("Z0"), circuit=Circuit([X(0)]), number_of_shots=10
         )
         task_2 = EstimationTask(
-            IsingOperator("[Z0]"),
+            PauliTerm("Z0"),
             circuit=Circuit([RY(np.pi / 2)(0)]),
             number_of_shots=20,
         )
         task_3 = EstimationTask(
-            IsingOperator("[]", coefficient=2.0),
+            PauliTerm("I0", coefficient=2.0),
             circuit=Circuit([RY(np.pi / 4)(0)]),
             number_of_shots=30,
         )
@@ -626,7 +650,7 @@ class TestBasicEstimationMethods:
 
     def test_no_measured_estimation_tasks_provided(simulator):
         estimation_tasks = [
-            EstimationTask(IsingOperator("Z0"), Circuit([H(0)]), 0),
+            EstimationTask(PauliTerm("Z0"), Circuit([H(0)]), 0),
         ]
 
         target = [

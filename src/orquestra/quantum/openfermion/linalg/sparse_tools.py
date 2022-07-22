@@ -21,6 +21,7 @@ import numpy.linalg
 import scipy
 import scipy.sparse
 import scipy.sparse.linalg
+from sympy import Q
 
 from orquestra.quantum.openfermion.ops.operators import FermionOperator, QubitOperator
 from orquestra.quantum.openfermion.ops.representations import PolynomialTensor
@@ -29,6 +30,7 @@ from orquestra.quantum.openfermion.utils.operator_utils import (
     count_qubits,
     is_hermitian,
 )
+from ...wip.operators import PauliSum
 
 # Make global definitions.
 identity_csc = scipy.sparse.identity(2, format="csc", dtype=complex)
@@ -112,14 +114,14 @@ def jordan_wigner_sparse(fermion_operator, n_qubits=None):
         ]
 
     # Construct the Scipy sparse matrix.
-    n_hilbert = 2 ** n_qubits
+    n_hilbert = 2**n_qubits
     values_list = [[]]
     row_list = [[]]
     column_list = [[]]
     for term in fermion_operator.terms:
         coefficient = fermion_operator.terms[term]
         sparse_matrix = coefficient * scipy.sparse.identity(
-            2 ** n_qubits, dtype=complex, format="csc"
+            2**n_qubits, dtype=complex, format="csc"
         )
         for ladder_operator in term:
             sparse_matrix = (
@@ -144,7 +146,73 @@ def jordan_wigner_sparse(fermion_operator, n_qubits=None):
     return sparse_operator
 
 
-def qubit_operator_sparse(qubit_operator, n_qubits=None):
+def pauli_sum_sparse(qubit_operator: PauliSum, n_qubits=None):
+    """Initialize a Scipy sparse matrix from a QubitOperator.
+
+    Args:
+        qubit_operator(QubitOperator): instance of the QubitOperator class.
+        n_qubits (int): Number of qubits.
+
+    Returns:
+        The corresponding Scipy sparse matrix.
+    """
+    if n_qubits is None:
+        n_qubits = count_qubits(qubit_operator)
+    if n_qubits < count_qubits(qubit_operator):
+        raise ValueError("Invalid number of qubits specified.")
+
+    # Construct the Scipy sparse matrix.
+    n_hilbert = 2**n_qubits
+    values_list = [[]]
+    row_list = [[]]
+    column_list = [[]]
+
+    # Loop through the terms.
+    for qubit_term in qubit_operator.terms:
+        tensor_factor = 0
+        coefficient = qubit_term.coefficient
+        sparse_operators = [coefficient]
+        for qubit_num, operator_str in qubit_term._ops.items():
+
+            # Grow space for missing identity operators.
+            if qubit_num > tensor_factor:
+                identity_qubits = qubit_num - tensor_factor
+                identity = scipy.sparse.identity(
+                    2**identity_qubits, dtype=complex, format="csc"
+                )
+                sparse_operators += [identity]
+
+            # Add actual operator to the list.
+            sparse_operators += [pauli_matrix_map[operator_str]]
+            tensor_factor = qubit_num + 1
+
+        # Grow space at end of string unless operator acted on final qubit.
+        if tensor_factor < n_qubits or not qubit_term:
+            identity_qubits = n_qubits - tensor_factor
+            identity = scipy.sparse.identity(
+                2**identity_qubits, dtype=complex, format="csc"
+            )
+            sparse_operators += [identity]
+
+        # Extract triplets from sparse_term.
+        sparse_matrix = kronecker_operators(sparse_operators)
+        values_list.append(sparse_matrix.tocoo(copy=False).data)
+        (column, row) = sparse_matrix.nonzero()
+        column_list.append(column)
+        row_list.append(row)
+
+    # Create sparse operator.
+    values_list = numpy.concatenate(values_list)
+    row_list = numpy.concatenate(row_list)
+    column_list = numpy.concatenate(column_list)
+    sparse_operator = scipy.sparse.coo_matrix(
+        (values_list, (row_list, column_list)), shape=(n_hilbert, n_hilbert)
+    ).tocsc(copy=False)
+    sparse_operator.eliminate_zeros()
+    return sparse_operator
+
+def qubit_operator_sparse(qubit_operator: 
+    QubitOperator, n_qubits=None):
     """Initialize a Scipy sparse matrix from a QubitOperator.
 
     Args:
@@ -222,7 +290,7 @@ def jw_configuration_state(occupied_orbitals, n_qubits):
         basis_vector(sparse): The basis state as a sparse matrix
     """
     one_index = sum(2 ** (n_qubits - 1 - i) for i in occupied_orbitals)
-    basis_vector = numpy.zeros(2 ** n_qubits, dtype=float)
+    basis_vector = numpy.zeros(2**n_qubits, dtype=float)
     basis_vector[one_index] = 1
     return basis_vector
 
@@ -251,7 +319,7 @@ def jw_number_indices(n_electrons, n_qubits):
             in a Jordan-Wigner encoding.
     """
     occupations = itertools.combinations(range(n_qubits), n_electrons)
-    indices = [sum([2 ** n for n in occupation]) for occupation in occupations]
+    indices = [sum([2**n for n in occupation]) for occupation in occupations]
     return indices
 
 
@@ -312,7 +380,7 @@ def jw_get_ground_state_at_particle_number(sparse_operator, particle_number):
 
     # Expand the state
     state = eigvecs[:, 0]
-    expanded_state = numpy.zeros(2 ** n_qubits, dtype=complex)
+    expanded_state = numpy.zeros(2**n_qubits, dtype=complex)
     expanded_state[jw_number_indices(particle_number, n_qubits)] = state
 
     return eigvals[0], expanded_state
@@ -467,6 +535,8 @@ def get_sparse_operator(operator, n_qubits=None, trunc=None, hbar=1.0):
         return jordan_wigner_sparse(operator, n_qubits)
     elif isinstance(operator, QubitOperator):
         return qubit_operator_sparse(operator, n_qubits)
+    elif isinstance(operator, PauliSum):
+        return pauli_sum_sparse(operator, n_qubits)
     else:
         raise TypeError(
             "Failed to convert a {} to a sparse matrix.".format(type(operator).__name__)

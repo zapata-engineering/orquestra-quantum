@@ -16,12 +16,12 @@ from orquestra.quantum.measurements import (
     convert_bitstring_to_int,
     get_expectation_value_from_frequencies,
 )
-from orquestra.quantum.openfermion.ops import IsingOperator
 from orquestra.quantum.utils import (
     RNDSEED,
     convert_tuples_to_bitstrings,
     get_ordered_list_of_bitstrings,
 )
+from orquestra.quantum.wip.operators import PauliTerm
 
 
 def remove_file_if_exists(filename):
@@ -307,7 +307,11 @@ class TestMeasurements:
         measurements = Measurements(
             [(0, 1, 0), (0, 1, 0), (0, 0, 0), (1, 0, 0), (1, 1, 1)]
         )
-        ising_operator = IsingOperator("10[] + [Z0 Z1] - 15[Z1 Z2]")
+        ising_operator = (
+            PauliTerm("I0", 10)
+            + PauliTerm.from_str("1*Z0*Z1")
+            - PauliTerm.from_str("15*Z1*Z2")
+        )
         target_expectation_values = np.array([10, -0.2, -3])
         target_correlations = np.array([[100, -2, -30], [-2, 1, -9], [-30, -9, 225]])
         denominator = len(measurements.bitstrings)
@@ -348,7 +352,11 @@ class TestMeasurements:
         measurements = Measurements(
             [(0, 1, 0), (0, 1, 0), (0, 0, 0), (1, 0, 0), (1, 1, 1)]
         )
-        ising_operator = IsingOperator("10[] + [Z0 Z1] - 15[Z1 Z2]")
+        ising_operator = (
+            PauliTerm("I0", 10)
+            + PauliTerm.from_str("1*Z0*Z1")
+            - PauliTerm.from_str("15*Z1*Z2")
+        )
         target_expectation_values = np.array([10, -0.2, -3])
         target_correlations = np.array([[100, -2, -30], [-2, 1, -9], [-30, -9, 225]])
         denominator = len(measurements.bitstrings) - 1
