@@ -166,9 +166,7 @@ def estimate_expectation_values_by_averaging(
 
         measured_expectation_values_list = [
             expectation_values_to_real(
-                measurements.get_expectation_values(
-                    frame_operator
-                )
+                measurements.get_expectation_values(frame_operator)
             )
             for frame_operator, measurements in zip(operators, measurements_list)
         ]
