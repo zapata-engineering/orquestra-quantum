@@ -102,6 +102,7 @@ def evaluate_non_measured_estimation_tasks(
 
     expectation_values = []
     for task in estimation_tasks:
+        coefficient: complex
         if len(task.operator.terms) > 1 or task.operator.terms[0]._ops != {}:
             if task.number_of_shots is not None and task.number_of_shots > 0:
                 raise RuntimeError(
