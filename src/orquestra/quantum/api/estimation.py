@@ -13,46 +13,29 @@ from .backend import QuantumBackend
 from ..wip.operators import PauliRepresentation, PauliSum, PauliTerm
 
 
-# class EstimationTask:
-#     """
-#     Data class defining an estimation problem.
+@dataclass
+class EstimationTask:
+    """
+    Data class defining an estimation problem.
 
-#     Args:
-#         operator: Operator for which we want to calculate the expectation values
-#         circuit: Circuit used for evaluating the operator
-#         constraints: Define constraints used in the estimation process,
-#             e.g. number of shots or target accuracy.
-#     """
+    Args:
+        operator: Operator for which we want to calculate the expectation values
+        circuit: Circuit used for evaluating the operator
+        constraints: Define constraints used in the estimation process,
+            e.g. number of shots or target accuracy.
+    """
 
-#     def __init__(
-#         self,
-#         operator: PauliRepresentation,
-#         circuit: Circuit,
-#         number_of_shots: Optional[int],
-#     ):
-#         if isinstance(operator, PauliTerm):
-#             operator = PauliSum([operator])
-#         self.operator = operator
-#         self.circuit = circuit
-#         self.number_of_shots = number_of_shots
-
-
-def EstimationTask(
-    operator: PauliRepresentation,
-    circuit: Circuit,
-    number_of_shots: Optional[int],
-):
-    if isinstance(operator, PauliTerm):
-        operator = PauliSum([operator])
-
-    return EstimationTaskk(operator, circuit, number_of_shots)
-
-
-@dataclass(frozen=True)
-class EstimationTaskk:
-    operator: PauliRepresentation
-    circuit: Circuit
-    number_of_shots: Optional[int]
+    def __init__(
+        self,
+        operator: PauliRepresentation,
+        circuit: Circuit,
+        number_of_shots: Optional[int],
+    ):
+        if isinstance(operator, PauliTerm):
+            operator = PauliSum([operator])
+        self.operator = operator
+        self.circuit = circuit
+        self.number_of_shots = number_of_shots
 
 
 class EstimationPreprocessor(Protocol):
