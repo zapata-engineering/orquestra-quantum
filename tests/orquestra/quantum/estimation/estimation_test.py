@@ -259,26 +259,8 @@ class TestEstimatorUtils:
             indices_for_non_measureds,
         ) = split_estimation_tasks_to_measure(estimation_tasks)
 
-        assert all(
-            [
-                task1.operator == task2.operator
-                and task1.circuit == task2.circuit
-                and task1.number_of_shots == task2.number_of_shots
-                for task1, task2 in zip(
-                    estimation_task_to_measure, ref_estimation_tasks_to_measure
-                )
-            ]
-        )
-        assert all(
-            [
-                task1.operator == task2.operator
-                and task1.circuit == task2.circuit
-                and task1.number_of_shots == task2.number_of_shots
-                for task1, task2 in zip(
-                    non_measured_estimation_tasks, ref_non_measured_estimation_tasks
-                )
-            ]
-        )
+        assert estimation_task_to_measure == ref_estimation_tasks_to_measure
+        assert non_measured_estimation_tasks == ref_non_measured_estimation_tasks
         assert indices_to_measure == ref_indices_to_measure
         assert ref_non_measured_indices == indices_for_non_measureds
 
