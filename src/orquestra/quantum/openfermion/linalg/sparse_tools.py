@@ -212,8 +212,8 @@ def pauli_sum_sparse(qubit_operator: PauliSum, n_qubits=None):
     sparse_operator.eliminate_zeros()
     return sparse_operator
 
-def qubit_operator_sparse(qubit_operator: 
-    QubitOperator, n_qubits=None):
+
+def qubit_operator_sparse(qubit_operator: QubitOperator, n_qubits=None):
     """Initialize a Scipy sparse matrix from a QubitOperator.
 
     Args:
@@ -229,7 +229,7 @@ def qubit_operator_sparse(qubit_operator:
         raise ValueError("Invalid number of qubits specified.")
 
     # Construct the Scipy sparse matrix.
-    n_hilbert = 2 ** n_qubits
+    n_hilbert = 2**n_qubits
     values_list = [[]]
     row_list = [[]]
     column_list = [[]]
@@ -245,7 +245,7 @@ def qubit_operator_sparse(qubit_operator:
             if pauli_operator[0] > tensor_factor:
                 identity_qubits = pauli_operator[0] - tensor_factor
                 identity = scipy.sparse.identity(
-                    2 ** identity_qubits, dtype=complex, format="csc"
+                    2**identity_qubits, dtype=complex, format="csc"
                 )
                 sparse_operators += [identity]
 
@@ -257,7 +257,7 @@ def qubit_operator_sparse(qubit_operator:
         if tensor_factor < n_qubits or not qubit_term:
             identity_qubits = n_qubits - tensor_factor
             identity = scipy.sparse.identity(
-                2 ** identity_qubits, dtype=complex, format="csc"
+                2**identity_qubits, dtype=complex, format="csc"
             )
             sparse_operators += [identity]
 

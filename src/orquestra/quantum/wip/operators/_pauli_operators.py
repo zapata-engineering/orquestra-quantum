@@ -361,6 +361,14 @@ class PauliTerm:
 
         return f"{self.coefficient}*{'*'.join(term_strs)}"
 
+    @property
+    def terms(self) -> List["PauliTerm"]:
+        return [self]
+
+    @property
+    def is_constant(self) -> bool:
+        return self._ops == {}
+
 
 class PauliSum:
     def __init__(self, terms: Sequence[PauliTerm] = None):
@@ -518,3 +526,7 @@ class PauliSum:
 
     def __repr__(self):
         return " + ".join([str(term) for term in self.terms])
+
+    @property
+    def is_constant(self) -> bool:
+        return len(self.terms) == 1 and self.terms[0].is_constant

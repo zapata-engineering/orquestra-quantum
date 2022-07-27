@@ -208,8 +208,6 @@ class QuantumSimulator(QuantumBackend):
             operator: Operator for which we calculate the expectation value.
         """
         wavefunction = self.get_wavefunction(circuit)
-        if isinstance(operator, PauliTerm):
-            operator = PauliSum([operator])
         expectation_values = ExpectationValues(
             np.array(
                 [get_expectation_value(term, wavefunction) for term in operator.terms]

@@ -286,7 +286,6 @@ class Measurements:
 
         return MeasurementOutcomeDistribution(distribution)
 
-    # Union[PauliSum, PauliTerm]
     def get_expectation_values(
         self, ising_operator: PauliSum, use_bessel_correction: bool = False
     ) -> ExpectationValues:
