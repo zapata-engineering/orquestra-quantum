@@ -212,10 +212,10 @@ class PauliTerm:
     def is_ising(self) -> bool:
         """
         Returns whether the term represents an ising model
-        (i.e. contains only Z terms)
+        (i.e. contains only Z terms or is an identity term)
         """
 
-        return set(self._ops.values()) == {"Z"}
+        return set(self._ops.values()) == {"Z"} or set(self._ops.values()) == set()
 
     @property
     def circuit(self) -> Circuit:
@@ -339,6 +339,11 @@ class PauliTerm:
         assert isinstance(result, PauliTerm)
         return result
 
+    def __truediv__(self, other: complex) -> "PauliTerm":
+        result = self * (1.0 / other)
+        assert isinstance(result, PauliTerm)
+        return result
+
     def __pow__(self, power: int) -> "PauliTerm":
         """
         Raises this PauliTerm to power.
@@ -355,6 +360,14 @@ class PauliTerm:
             term_strs.append("I")
 
         return f"{self.coefficient}*{'*'.join(term_strs)}"
+
+    @property
+    def terms(self) -> List["PauliTerm"]:
+        return [self]
+
+    @property
+    def is_constant(self) -> bool:
+        return self._ops == {}
 
 
 class PauliSum:
@@ -482,6 +495,9 @@ class PauliSum:
 
         return PauliSum(new_terms).simplify()
 
+    def __truediv__(self, other: complex) -> "PauliSum":
+        return self * (1.0 / other)
+
     def __pow__(self, power: int) -> "PauliSum":
         if not isinstance(power, int) or power < 0:
             raise ValueError(f"Power must be a non-negative integer. Got {power}.")
@@ -510,3 +526,7 @@ class PauliSum:
 
     def __repr__(self):
         return " + ".join([str(term) for term in self.terms])
+
+    @property
+    def is_constant(self) -> bool:
+        return len(self.terms) == 1 and self.terms[0].is_constant

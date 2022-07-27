@@ -11,6 +11,7 @@ from orquestra.quantum.circuits._circuit import split_circuit
 from orquestra.quantum.circuits.layouts import CircuitConnectivity
 from orquestra.quantum.openfermion import IsingOperator, QubitOperator, SymbolicOperator
 from orquestra.quantum.wavefunction import Wavefunction
+from orquestra.quantum.wip.operators import PauliRepresentation, PauliSum, PauliTerm
 
 from ..distributions import (
     MeasurementOutcomeDistribution,
@@ -197,7 +198,7 @@ class QuantumSimulator(QuantumBackend):
         return Wavefunction(state)
 
     def get_exact_expectation_values(
-        self, circuit: Circuit, operator: SymbolicOperator
+        self, circuit: Circuit, operator: PauliRepresentation
     ) -> ExpectationValues:
         """Calculates the expectation values for given operator, based on the exact
         quantum state produced by circuit.
@@ -207,10 +208,10 @@ class QuantumSimulator(QuantumBackend):
             operator: Operator for which we calculate the expectation value.
         """
         wavefunction = self.get_wavefunction(circuit)
-        if isinstance(operator, IsingOperator):
-            operator = change_operator_type(operator, QubitOperator)
         expectation_values = ExpectationValues(
-            np.array([get_expectation_value(term, wavefunction) for term in operator])
+            np.array(
+                [get_expectation_value(term, wavefunction) for term in operator.terms]
+            )
         )
         expectation_values = expectation_values_to_real(expectation_values)
         return expectation_values

@@ -9,7 +9,7 @@ import numpy as np
 from orquestra.quantum.circuits import Circuit
 
 from ..measurements import ExpectationValues
-from ..openfermion import SymbolicOperator
+from ..wip.operators import PauliRepresentation
 from .backend import QuantumBackend
 
 
@@ -25,7 +25,7 @@ class EstimationTask:
             e.g. number of shots or target accuracy.
     """
 
-    operator: SymbolicOperator
+    operator: PauliRepresentation
     circuit: Circuit
     number_of_shots: Optional[int]
 
