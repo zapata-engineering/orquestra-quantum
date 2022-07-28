@@ -80,13 +80,13 @@ class TestPauliTermOperations:
         assert "Duplicate" in str(e.value)
 
     def test_pauliterm_from_str_constructor(self, pauli_term):
-        assert PauliTerm.from_str(str(pauli_term)) == pauli_term
+        assert PauliTerm(str(pauli_term)) == pauli_term
 
         with pytest.raises(ValueError):
-            PauliTerm.from_str("(5.0j + 9)*I")
+            PauliTerm("(5.0j + 9)*I")
 
         with pytest.raises(ValueError):
-            PauliTerm.from_str("X*(5.0 + 9j)")
+            PauliTerm("X*(5.0 + 9j)")
 
     def test_pauliterm_identity(self, pauli_term):
         identity_term = PauliTerm.identity()
@@ -318,12 +318,8 @@ class TestPauliSumOperations:
         with pytest.raises(ValueError):
             PauliSum([PauliTerm.identity(), 1])
 
-        # Non-list input
-        with pytest.raises(ValueError):
-            PauliSum(PauliTerm.identity())
-
-    def test_paulisum_formstr(self, pauli_sum):
-        assert PauliSum.from_str(str(pauli_sum)) == pauli_sum
+    def test_paulisum_fromstr(self, pauli_sum):
+        assert PauliSum(str(pauli_sum)) == pauli_sum
 
     def test_paulisum_qubits(self, pauli_sum):
         assert pauli_sum.qubits == {0, 1, 2}
