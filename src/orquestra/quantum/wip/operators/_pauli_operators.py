@@ -96,9 +96,9 @@ def _parse_operator(op_str: str) -> Tuple[int, str]:
 def _parse_operators_and_coefficient(
     term_str: str,
 ) -> Tuple[Optional[complex], Dict[int, str]]:
-    parts = term_str.split("*")
+    parts = re.split(r"\ *\*\ *", term_str.strip(" "))
     try:
-        coef = complex(parts[0].strip(" "))
+        coef = complex(parts[0])
         operators_strs = parts[1:]
     except ValueError:
         coef = None
