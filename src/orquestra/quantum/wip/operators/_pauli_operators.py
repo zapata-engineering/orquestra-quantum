@@ -366,11 +366,9 @@ class PauliTerm:
 
 
 class PauliSum:
-    def __init__(self, terms: Union[str, PauliTerm, Sequence[PauliTerm]] = None):
+    def __init__(self, terms: Union[str, Sequence[PauliTerm]] = None):
         if isinstance(terms, str):
             terms = [PauliTerm(s.strip()) for s in re.split(r"\+(?![^(]*\))", terms)]
-        elif isinstance(terms, PauliTerm):
-            terms = [terms]
         if not terms:
             terms = []
 
