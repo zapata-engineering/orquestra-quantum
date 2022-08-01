@@ -4,149 +4,231 @@ from unittest.mock import Mock
 
 import pytest
 
-from orquestra.quantum.circuits import Circuit
+from orquestra.quantum.circuits import Circuit, X, Y, Z
 from orquestra.quantum.wip.operators._pauli_operators import PauliSum, PauliTerm
 
 
-class TestPauliTermOperations:
-    @pytest.fixture
-    def pauli_term(self):
-        correct_list = [("X", 0), ("Y", 1), ("Z", 12)]
-        return PauliTerm.from_list(correct_list, coefficient=2.0)
+@pytest.fixture
+def pauli_term():
+    correct_list = [("X", 0), ("Y", 1), ("Z", 12)]
+    return PauliTerm.from_list(correct_list, coefficient=2.0)
 
-    @pytest.fixture
-    def pauli_sum(self):
-        return 0.5 * PauliTerm("X0") + 0.5j * PauliTerm("Y0")
 
-    def test_pauliterm_native_constructor(self):
-        # Test creating terms from different Pauli ops
-        assert PauliTerm("X0", 1.0)._ops[0] == "X"
-        assert PauliTerm("Y0", 1.0)._ops[0] == "Y"
-        assert PauliTerm("Z0", 1.0)._ops[0] == "Z"
-        assert PauliTerm("z0", 1.0)._ops[0] == "Z"
+@pytest.fixture
+def pauli_sum():
+    return 0.5 * PauliTerm("X0") + 0.5j * PauliTerm("Y0")
 
-        # Test multi-digit qubit indices work
-        assert 123 in PauliTerm("X123", 1.0)._ops
 
-        # Test different types of coefficients work
-        assert PauliTerm("Z0", 1).coefficient == 1
-        assert isinstance(PauliTerm("Z0", 1).coefficient, complex)
+class TestPauliTermInitialization:
+    @pytest.mark.parametrize(
+        "pauli_str, coefficient, qubit_index, operator",
+        [
+            ("X0", 1.0, 0, "X"),
+            ("Z0", -1j, 0, "Z"),
+            ("z1", -2.0, 1, "Z"),
+            ("y2", 1.5, 2, "Y"),
+            ("X123", 4 + 0.5j, 123, "X"),
+        ],
+    )
+    def test_term_can_be_initialized_using_single_operator_and_coefficient(
+        self, pauli_str, coefficient, qubit_index, operator
+    ):
+        term = PauliTerm(pauli_str, coefficient)
+        assert term.operations_as_set() == frozenset([(qubit_index, operator)])
+        assert term.coefficient == coefficient
+        assert term.qubits == {qubit_index}
 
-        assert PauliTerm("Z0", 2.0).coefficient == 2.0
-        assert isinstance(PauliTerm("Z0", 2.0).coefficient, complex)
+    @pytest.mark.parametrize(
+        "pauli_str, coefficient, qubit_indices, operators",
+        [
+            ("X0 * Z1", -1.0, (0, 1), ("X", "Z")),
+            ("X3 * Y12", -0.5, (3, 12), ("X", "Y")),
+        ],
+    )
+    def test_term_can_be_initialized_using_multiple_operators_and_coefficient(
+        self, pauli_str, coefficient, qubit_indices, operators
+    ):
+        term = PauliTerm(pauli_str, coefficient)
+        assert term.operations_as_set() == frozenset(zip(qubit_indices, operators))
+        assert term.coefficient == coefficient
+        assert term.qubits == frozenset(qubit_indices)
 
-        assert PauliTerm("Z0", 3.4 + 1.5j).coefficient == 3.4 + 1.5j
+    @pytest.mark.parametrize(
+        "pauli_str, coefficient, qubit_indices, operators",
+        [
+            ("-1.0 * X0 * Z1", -1.0, (0, 1), ("X", "Z")),
+            ("-0.5 * X3 * Y12", -0.5, (3, 12), ("X", "Y")),
+            ("(1-0.5j) * X3 * Y12", 1 - 0.5j, (3, 12), ("X", "Y")),
+            ("(2 + 3j) * y0 * z2", 2 + 3j, (0, 2), ("Y", "Z")),
+        ],
+    )
+    def test_term_can_be_initialized_by_passing_operators_and_coef_in_string(
+        self, pauli_str, coefficient, qubit_indices, operators
+    ):
+        term = PauliTerm(pauli_str)
+        assert term.operations_as_set() == frozenset(zip(qubit_indices, operators))
+        assert term.coefficient == coefficient
+        assert term.qubits == frozenset(qubit_indices)
 
-        # Test constant does not get included in the dictionary
-        constant = PauliTerm("I0", 2.0)
-        assert 0 not in constant
-        assert constant.coefficient == 2.0
+    @pytest.mark.parametrize("coefficient", [2.0, -1, 0.1j, 2 - 3j, 2.1 + 3.7j])
+    def test_coefficient_of_pauli_term_is_always_coerced_to_complex(self, coefficient):
+        term = PauliTerm("X0", coefficient)
+        assert term.coefficient == coefficient
+        assert isinstance(term.coefficient, complex)
 
-    def test_pauliterm_passing_wrong_input_to_constructor_raises_error(self):
-        # Test passing wrongly formatted string
+    @pytest.mark.parametrize(
+        "pauli_str, expected_ops",
+        [
+            ("I0", {}),
+            ("I12", {}),
+            ("X0 * I1 * I34", {(0, "X")}),
+            ("X0 * Z1 * I34", {(0, "X"), (1, "Z")}),
+        ],
+    )
+    def test_identity_operators_are_not_stored_in_iterm(self, pauli_str, expected_ops):
+        assert PauliTerm(pauli_str).operations_as_set() == frozenset(expected_ops)
+
+    @pytest.mark.parametrize(
+        "pauli_str", ["1 X", "X - 1254", "A0", "5.0 + Z1", "0.3+0.5j * X0"]
+    )
+    def test_passing_wrong_input_to_constructor_raises_value_error(self, pauli_str):
         with pytest.raises(ValueError) as e:
-            PauliTerm("1 X")
+            PauliTerm(pauli_str)
         assert "Badly formatted" in str(e.value)
 
-        # Test passing invalid qubit number
-        with pytest.raises(ValueError) as e:
-            PauliTerm("X-1254")
-        assert "Badly formatted" in str(e.value)
+    @pytest.mark.parametrize(
+        "term",
+        [
+            PauliTerm("X0", -5.0),
+            PauliTerm("-5.0 * Z1"),
+            PauliTerm("2.0 * X0 * Y2 * Z3"),
+            PauliTerm("X0 * Y2 * Z3", 2.0),
+        ],
+    )
+    def test_creating_term_from_its_str_representation_gives_the_same_term(self, term):
+        assert PauliTerm(str(term)) == term
 
-        # Test passing wrong operator
-        with pytest.raises(ValueError) as e:
-            PauliTerm("A0")
-        assert "Badly formatted" in str(e.value)
 
-    def test_pauliterm_from_list_constructor(self, pauli_term):
-        assert len(pauli_term._ops) == 3
-        assert pauli_term[0] == "X"
-        assert pauli_term[1] == "Y"
-        assert pauli_term[12] == "Z"
+class TestConstructingPauliTermFromList:
+    @pytest.mark.parametrize(
+        "op_list, coefficient",
+        [
+            ([("X", 0), ("Y", 1), ("Z", 12)], -0.5),
+        ],
+    )
+    def test_term_constructed_from_list_has_expected_operators_and_coefficient(
+        self, op_list, coefficient
+    ):
+        term = PauliTerm.from_list(op_list, coefficient)
+        # The reverse (pair[::-1]) is from the fact, that for whatever reason
+        # from_list accepts input in the reverse direction then the
+        # operations_as_set produces it.
+        assert term.operations_as_set() == frozenset([pair[::-1] for pair in op_list])
+        assert term.coefficient == coefficient
 
-        # Error for wrong tuple shape
+    def test_term_cannot_be_constructed_from_list_of_incorrectly_shaped_tuples(self):
         with pytest.raises(ValueError) as e:
             PauliTerm.from_list([("X0")])
         assert "PauliTerm.from_str" in str(e.value)
 
-        # Error for bad qubit index
+    def test_term_cannot_be_initialized_if_any_index_in_list_is_incorrect(self):
         with pytest.raises(ValueError) as e:
             PauliTerm.from_list([("X", -1)])
         assert "Invalid qubit index" in str(e.value)
 
-        # Error for duplicate qubits
+    def test_term_cannot_be_constructed_if_qubit_indices_are_duplicate(self):
         with pytest.raises(ValueError) as e:
             PauliTerm.from_list([("X", 0), ("Y", 0)])
         assert "Duplicate" in str(e.value)
 
-    def test_pauliterm_from_str_constructor(self, pauli_term):
-        assert PauliTerm(str(pauli_term)) == pauli_term
 
-        with pytest.raises(ValueError):
-            PauliTerm("(5.0j + 9)*I")
-
-        with pytest.raises(ValueError):
-            PauliTerm("X*(5.0 + 9j)")
-
-    def test_pauliterm_identity(self, pauli_term):
+class TestPauliTermIdentity:
+    def test_identity_stores_coefficient_of_one_and_no_operators(self):
         identity_term = PauliTerm.identity()
 
         assert len(identity_term) == 0
         assert identity_term.coefficient == 1.0
 
-        # Test multiplying by identity returns term
-        assert PauliTerm.identity() * pauli_term == pauli_term
-        assert pauli_term * PauliTerm.identity() == pauli_term
+    @pytest.mark.parametrize(
+        "term",
+        [PauliTerm("X1"), PauliTerm("X0 * X1", -0.5), PauliTerm("(2.5+1j) * X0 * Z12")],
+    )
+    def test_identity_is_neutral_element_for_pauli_terms_multiplication(self, term):
+        assert PauliTerm.identity() * term == term
+        assert term * PauliTerm.identity() == term
 
-    def test_pauliterm_copy_function(self, pauli_term):
-        copied_term = pauli_term.copy(new_coefficient=2.0)
 
-        assert copied_term is not pauli_term
-        assert copied_term._ops is not pauli_term._ops
+class TestCopyingPauliTerm:
+    def test_copying_term_returns_new_object(self):
+        original = PauliTerm("X0", 2.0)
+        copy = original.copy(new_coefficient=3.0)
 
-        assert copied_term.coefficient == 2.0
-        assert copied_term._ops == pauli_term._ops
+        assert copy is not original
+        assert copy._ops is not original._ops
 
-    def test_pauliterm_qubits(self, pauli_term):
-        assert pauli_term.qubits == {0, 1, 12}
+    def test_copy_of_term_has_the_same_coef_if_new_coef_is_not_provided(self):
+        assert PauliTerm("(2.0+3j) * Y12").copy().coefficient == 2.0 + 3j
 
-    def test_pauliterm_isising(self, pauli_term):
-        assert not pauli_term.is_ising
+    def test_copying_terms_with_new_coefficient_does_not_modify_original_term(self):
+        original = PauliTerm("Y0 * Z10", -1.0)
+        copy = original.copy(new_coefficient=2.5)
 
-        assert PauliTerm.from_list([("Z", 0), ("Z", 1), ("Z", 3)]).is_ising
+        assert original.coefficient == -1.0
+        assert copy.coefficient == 2.5
 
-        pauli_term_minus_X = pauli_term * PauliTerm("Y0")
-        pauli_term_only_Zs = pauli_term_minus_X * PauliTerm("Y1")
 
-        assert pauli_term_only_Zs.is_ising
+class TestIsingOperators:
+    @pytest.mark.parametrize(
+        "term",
+        [
+            PauliTerm("Z0", -2),
+            PauliTerm("-0.5 * Z1 * Z3"),
+            PauliTerm.from_list([("Z", 3), ("Z", 4)], 5.0),
+        ],
+    )
+    def test_term_is_ising_if_it_contains_only_z_operators(self, term):
+        assert term.is_ising
 
-    def test_pauliterm_circuit(self, pauli_term):
-        assert not hasattr(pauli_term, "_circuit")
-        circuit: Circuit = pauli_term.circuit
-        assert hasattr(pauli_term, "_circuit")
+    @pytest.mark.parametrize(
+        "term", [PauliTerm("X0"), PauliTerm("Z0 * X1"), PauliTerm("X1 * Y2 * Z3")]
+    )
+    def test_term_is_not_ising_if_any_of_its_nontrivial_operators_are_not_z(self, term):
+        assert not term.is_ising
 
-        for op in circuit.operations:
-            assert op.gate.name == pauli_term[op.qubit_indices[0]]
 
-    def test_pauliterm_operations_as_set(self, pauli_term):
-        frozen_set = pauli_term.operations_as_set()
+class TestPauliTermToCircuitConversion:
+    def test_circuit_constructed_from_pauli_term_is_cached(self):
+        term = PauliTerm("X0 * Z1 * Y3", -1.0)
+        assert not hasattr(term, "_circuit")
+        circuit = term.circuit
+        assert hasattr(term, "_circuit")
+        assert term.circuit is circuit
 
-        assert isinstance(frozen_set, frozenset)
-        assert frozen_set.difference(pauli_term._ops.items()) == set()
+    def test_circuit_obtained_from_term_has_correct_gates(self):
+        term = PauliTerm("-3.5 * X0 * Z1 * Y3")
+        assert term.circuit == Circuit([X(0), Z(1), Y(3)])
 
-    def test_pauliterm_getitem_raises_warning_for_invalid_index(self, pauli_term):
+
+class TestPauliTermIndexingAndIteration:
+    @pytest.mark.parametrize(
+        "term", [PauliTerm("X0 * I2 * Y3 * Z4"), PauliTerm("X0 * Y3 * Z4")]
+    )
+    def test_accessing_undefined_or_trivial_indices_warns_and_returns_identity(
+        self, term
+    ):
         with pytest.warns(UserWarning):
-            returned_id = pauli_term[sum(pauli_term._ops.keys())]
+            returned_op = term[2]
 
-        assert returned_id == "I"
+        assert returned_op == "I"
 
-    def test_pauliterm_iterable_returns_op_idx_pairs(self, pauli_term):
-        expected = [("X", 0), ("Y", 1), ("Z", 12)]
+    def test_iterative_over_terms_yields_correct_pairs_of_operator_and_index(self):
+        term = PauliTerm("X0 * Y1 * Z12")
+        expected_items = [("X", 0), ("Y", 1), ("Z", 12)]
 
-        for (exp_left, exp_right), (left, right) in zip(expected, pauli_term):
-            assert exp_left == left
-            assert exp_right == right
+        assert list(term) == expected_items
 
+
+class TestPauliTermAlgebra:
     def test_pauliterm_equality(self, pauli_term):
         # Check copying creates an equal term
         copied_term = pauli_term.copy()
