@@ -84,6 +84,20 @@ def _validate_type(object: Any) -> None:
         )
 
 
+def _is_in_brackets(string: str) -> bool:
+    return string.startswith("(") and string.endswith(")")
+
+
+def _parse_complex(complex_str: str) -> complex:
+    value = complex(complex_str.replace(" ", ""))
+    if value.real != 0 and value.imag != 0 and not _is_in_brackets(complex_str):
+        raise ValueError(
+            "Complex number with nonzero real and imaginary part has to be "
+            "enclosed in bracket."
+        )
+    return value
+
+
 def _parse_operator(op_str: str) -> Tuple[int, str]:
     match = re.match(r"([XYZI])([0-9]+)", op_str, re.I)
 
@@ -98,7 +112,7 @@ def _parse_operators_and_coefficient(
 ) -> Tuple[Optional[complex], Dict[int, str]]:
     parts = re.split(r"\ *\*\ *", term_str.strip(" "))
     try:
-        coef = complex(parts[0])
+        coef = _parse_complex(parts[0])
         operators_strs = parts[1:]
     except ValueError:
         coef = None
