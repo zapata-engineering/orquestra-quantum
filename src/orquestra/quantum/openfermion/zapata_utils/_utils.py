@@ -320,9 +320,6 @@ def get_expectation_value(
     Returns:
         the expectation value
     """
-    if isinstance(qubit_op, PauliTerm):
-        qubit_op = PauliSum([qubit_op])
-
     n_qubits = wavefunction.amplitudes.shape[0].bit_length() - 1
 
     # Convert the qubit operator to a sparse matrix. Note that the qubit indices

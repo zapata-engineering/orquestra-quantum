@@ -31,7 +31,7 @@ from orquestra.quantum.openfermion.utils.operator_utils import (
     is_hermitian,
 )
 
-from ...wip.operators import PauliSum
+from ...wip.operators import PauliRepresentation, PauliSum, PauliTerm
 
 # Make global definitions.
 identity_csc = scipy.sparse.identity(2, format="csc", dtype=complex)
@@ -147,7 +147,7 @@ def jordan_wigner_sparse(fermion_operator, n_qubits=None):
     return sparse_operator
 
 
-def pauli_sum_sparse(qubit_operator: PauliSum, n_qubits=None):
+def pauli_operator_sparse(qubit_operator: PauliRepresentation, n_qubits=None):
     """Initialize a Scipy sparse matrix from a QubitOperator.
 
     Args:
@@ -536,8 +536,8 @@ def get_sparse_operator(operator, n_qubits=None, trunc=None, hbar=1.0):
         return jordan_wigner_sparse(operator, n_qubits)
     elif isinstance(operator, QubitOperator):
         return qubit_operator_sparse(operator, n_qubits)
-    elif isinstance(operator, PauliSum):
-        return pauli_sum_sparse(operator, n_qubits)
+    elif isinstance(operator, PauliSum) or isinstance(operator, PauliTerm):
+        return pauli_operator_sparse(operator, n_qubits)
     else:
         raise TypeError(
             "Failed to convert a {} to a sparse matrix.".format(type(operator).__name__)
