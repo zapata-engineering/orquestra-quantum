@@ -132,7 +132,7 @@ class TestPauliTermInitialization:
             ("2.0 * Y12", 3.0)
         ]
     )
-    def test_term_cannot_be_constructed_if_coefficient_is_passed_directly_and_in_pauli_string(
+    def test_term_cannot_be_constructed_if_coefficient_is_passed_via_both_ways(
         self, pauli_str, coefficient
     ):
         with pytest.raises(ValueError) as e:
