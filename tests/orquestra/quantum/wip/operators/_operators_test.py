@@ -21,6 +21,16 @@ def pauli_sum():
 
 class TestPauliTermInitialization:
     @pytest.mark.parametrize(
+        "operator_dict, coefficient",
+        [({1: "X"}, 1.5), ({0: "X", 1: "X"}, 0.5), ({0: "Y", 10: "Z"}, 0.5 + 0.5j)],
+    )
+    def test_term_can_be_initialized_with_dictionary(self, operator_dict, coefficient):
+        term = PauliTerm(operator_dict, coefficient)
+        assert term.operations_as_set() == frozenset(operator_dict.items())
+        assert term.coefficient == coefficient
+        assert term.qubits == frozenset(operator_dict)
+
+    @pytest.mark.parametrize(
         "pauli_str, coefficient, qubit_index, operator",
         [
             ("X0", 1.0, 0, "X"),
@@ -94,6 +104,7 @@ class TestPauliTermInitialization:
     def test_passing_wrong_input_to_constructor_raises_value_error(self, pauli_str):
         with pytest.raises(ValueError) as e:
             PauliTerm(pauli_str)
+
         assert "Badly formatted" in str(e.value)
 
     @pytest.mark.parametrize(
@@ -129,11 +140,13 @@ class TestConstructingPauliTermFromList:
     def test_term_cannot_be_constructed_from_list_of_incorrectly_shaped_tuples(self):
         with pytest.raises(ValueError) as e:
             PauliTerm.from_list([("X0")])
+
         assert "PauliTerm.from_str" in str(e.value)
 
     def test_term_cannot_be_initialized_if_any_index_in_list_is_incorrect(self):
         with pytest.raises(ValueError) as e:
             PauliTerm.from_list([("X", -1)])
+
         assert "Invalid qubit index" in str(e.value)
 
     def test_term_cannot_be_constructed_if_qubit_indices_are_duplicate(self):
