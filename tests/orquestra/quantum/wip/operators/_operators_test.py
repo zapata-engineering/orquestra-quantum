@@ -99,13 +99,9 @@ class TestPauliTermInitialization:
         assert PauliTerm(pauli_str).operations_as_set() == frozenset(expected_ops)
 
     @pytest.mark.parametrize(
-        "pauli_str", [
-            "1 X", "X - 1254", "A0", "5.0 + Z1", "0.3+0.5j * X0", "X0 Z1"
-        ]
+        "pauli_str", ["1 X", "X - 1254", "A0", "5.0 + Z1", "0.3+0.5j * X0", "X0 Z1"]
     )
-    def test_term_cannot_be_constructed_from_badly_formatted_string(
-        self, pauli_str
-    ):
+    def test_term_cannot_be_constructed_from_badly_formatted_string(self, pauli_str):
         with pytest.raises(ValueError) as e:
             PauliTerm(pauli_str)
 
@@ -126,11 +122,7 @@ class TestPauliTermInitialization:
             PauliTerm(pauli_str)
 
     @pytest.mark.parametrize(
-        "pauli_str, coefficient",
-        [
-            ("0.5 * X0", 0.5),
-            ("2.0 * Y12", 3.0)
-        ]
+        "pauli_str, coefficient", [("0.5 * X0", 0.5), ("2.0 * Y12", 3.0)]
     )
     def test_term_cannot_be_constructed_if_coefficient_is_passed_via_both_ways(
         self, pauli_str, coefficient
@@ -242,21 +234,18 @@ class TestPauliTermProperties:
         assert not term.is_ising
 
     @pytest.mark.parametrize(
-        "term", [
-            PauliTerm("I0", 2.0),
-            PauliTerm({}),
-            PauliTerm({0: "I", 1: "I"})
-        ]
+        "term", [PauliTerm("I0", 2.0), PauliTerm({}), PauliTerm({0: "I", 1: "I"})]
     )
     def test_term_is_constant_if_it_comprises_only_trivial_operators(self, term):
         assert term.is_constant
 
     @pytest.mark.parametrize(
-        "term", [
+        "term",
+        [
             PauliTerm("X0"),
             PauliTerm("2.5 * X0 * Z2 * Y10"),
-            PauliTerm("0.5 * I0 * I1 * Z3")
-        ]
+            PauliTerm("0.5 * I0 * I1 * Z3"),
+        ],
     )
     def test_term_is_not_constant_if_it_comprises_nontrivial_operators(self, term):
         assert not term.is_constant
