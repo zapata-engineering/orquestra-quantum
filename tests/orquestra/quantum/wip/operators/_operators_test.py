@@ -223,7 +223,7 @@ class TestCopyingPauliTerm:
         assert copy.coefficient == 2.5
 
 
-class TestIsingOperators:
+class TestPauliTermProperties:
     @pytest.mark.parametrize(
         "term",
         [
@@ -240,6 +240,26 @@ class TestIsingOperators:
     )
     def test_term_is_not_ising_if_any_of_its_nontrivial_operators_are_not_z(self, term):
         assert not term.is_ising
+
+    @pytest.mark.parametrize(
+        "term", [
+            PauliTerm("I0", 2.0),
+            PauliTerm({}),
+            PauliTerm({0: "I", 1: "I"})
+        ]
+    )
+    def test_term_is_constant_if_it_comprises_only_trivial_operators(self, term):
+        assert term.is_constant
+
+    @pytest.mark.parametrize(
+        "term", [
+            PauliTerm("X0"),
+            PauliTerm("2.5 * X0 * Z2 * Y10"),
+            PauliTerm("0.5 * I0 * I1 * Z3")
+        ]
+    )
+    def test_term_is_not_constant_if_it_comprises_nontrivial_operators(self, term):
+        assert not term.is_constant
 
 
 class TestPauliTermToCircuitConversion:
