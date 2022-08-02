@@ -50,6 +50,7 @@ from orquestra.quantum.openfermion.utils.operator_utils import (
     load_operator,
     save_operator,
 )
+from orquestra.quantum.wip.operators import PauliSum, PauliTerm
 
 
 class OperatorUtilsTest(unittest.TestCase):
@@ -62,6 +63,8 @@ class OperatorUtilsTest(unittest.TestCase):
         self.qubit_operator = jordan_wigner(self.fermion_operator)
         self.interaction_operator = get_interaction_operator(self.fermion_operator)
         self.ising_operator = IsingOperator("[Z0] + [Z1] + [Z2] + [Z3] + [Z4]")
+        self.pauli_term = PauliTerm({0: "Z", 1: "X", 2: "Y", 3: "Z", 4: "Y"}, 0.5)
+        self.pauli_sum = PauliSum([self.pauli_term])
 
     def test_n_qubits_single_fermion_term(self):
         self.assertEqual(self.n_qubits, count_qubits(self.fermion_term))
@@ -77,6 +80,12 @@ class OperatorUtilsTest(unittest.TestCase):
 
     def test_n_qubits_ising_operator(self):
         self.assertEqual(self.n_qubits, count_qubits(self.ising_operator))
+
+    def test_n_qubits_pauli_term(self):
+        self.assertEqual(self.n_qubits, count_qubits(self.pauli_term))
+
+    def test_n_qubits_pauli_sum(self):
+        self.assertEqual(self.n_qubits, count_qubits(self.pauli_sum))
 
     def test_n_qubits_bad_type(self):
         with self.assertRaises(TypeError):
