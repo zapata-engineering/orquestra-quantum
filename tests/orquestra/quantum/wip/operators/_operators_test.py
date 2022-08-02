@@ -99,13 +99,24 @@ class TestPauliTermInitialization:
         assert PauliTerm(pauli_str).operations_as_set() == frozenset(expected_ops)
 
     @pytest.mark.parametrize(
-        "pauli_str", ["1 X", "X - 1254", "A0", "5.0 + Z1", "0.3+0.5j * X0"]
+        "pauli_str", [
+            "1 X", "X - 1254", "A0", "5.0 + Z1", "0.3+0.5j * X0", "X0 Z1"
+        ]
     )
-    def test_passing_wrong_input_to_constructor_raises_value_error(self, pauli_str):
+    def test_term_cannot_be_constructed_from_badly_formatted_string(
+        self, pauli_str
+    ):
         with pytest.raises(ValueError) as e:
             PauliTerm(pauli_str)
 
         assert "Badly formatted" in str(e.value)
+
+    @pytest.mark.parametrize("operator_dict", [{0: "XX"}, {0: "X", 1: "A"}])
+    def test_term_cannot_be_constructed_from_dictionary_containing_incorrect_operators(
+        self, operator_dict
+    ):
+        with pytest.raises(ValueError):
+            PauliTerm(operator_dict)
 
     @pytest.mark.parametrize(
         "term",
