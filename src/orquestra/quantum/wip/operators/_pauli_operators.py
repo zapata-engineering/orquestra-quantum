@@ -63,9 +63,9 @@ HASH_PRECISION = 1e6
 def _efficient_exponentiation(
     pauli_rep: PauliRepresentation, power: int
 ) -> PauliRepresentation:
-    """
-    A more efficient implementation of exponentiation.
-    Assumes validation checks already done from parent routine.
+    """Efficiently exponentiate PauliTerm or PauliSum.
+
+    This function assumes validation checks have already been done from parent routine.
     """
     if power == 0:
         return type(pauli_rep).identity()
@@ -127,9 +127,7 @@ def _parse_operators_and_coefficient(
 
 
 class PauliTerm:
-    """
-    A datastructure for storing information about a single Pauli Term
-    """
+    """Representation of a single Pauli Term."""
 
     def __init__(
         self,
@@ -169,10 +167,11 @@ class PauliTerm:
         list_of_terms: List[Tuple[str, int]],
         coefficient: complex = 1.0,
     ) -> "PauliTerm":
-        """
+        """Construct PauliTerm from a list of operators.
+
         A slightly more efficient constructor when all the elements of the term are
-         known beforehand. Users should employ this function instead of creating
-         individual terms and multiplying.
+        known beforehand. Users should employ this function instead of creating
+        individual terms and multiplying.
         """
 
         ############### Some checks on input first ###############
@@ -202,9 +201,10 @@ class PauliTerm:
         return PauliTerm("I0", 1.0)
 
     def copy(self, new_coefficient: complex = None) -> "PauliTerm":
-        """
-        Properly creates a new PauliTerm, with a completely new dictionary
-        of operators
+        """Copy PauliTerm, possibly changing its coefficient to a new one.
+
+        The created copy is deep, in particular internal dictionary storing map
+        from qubit indices to operators is also copied.
         """
         new_coefficient = new_coefficient if new_coefficient else self.coefficient
 
@@ -212,26 +212,21 @@ class PauliTerm:
 
     @property
     def qubits(self) -> Set[int]:
-        """
-        Returns the list of qubit indices associated with this term.
-        """
+        """The list of qubit indices associated with this term."""
         return set(self._ops.keys())
 
     @property
     def is_ising(self) -> bool:
-        """
-        Returns whether the term represents an ising model
-        (i.e. contains only Z terms or is an identity term)
-        """
+        """True iff this term is Ising Operator (i.e. contains no X or Y operators)"""
 
         return set(self._ops.values()) == {"Z"} or set(self._ops.values()) == set()
 
     @property
     def circuit(self) -> Circuit:
-        """
-        Returns the circuit implementing this Pauli Term. Since the public API
-        treats the object as immutable, we store the circuit representation when
-        the function is called for the first time, for efficiency.
+        """Circuit implementing this Pauli term.
+
+        For efficiency constructed circuit is cached after the first invocation of
+        this property.
         """
         if not hasattr(self, "_circuit"):
             self._circuit = Circuit(
@@ -324,8 +319,9 @@ class PauliTerm:
     def __mul__(
         self, other: Union[PauliRepresentation, complex]
     ) -> PauliRepresentation:
-        """Multiplies this Pauli Term with another PauliTerm, PauliSum, or number
-        according to the Pauli algebra rules.
+        """Multiply this Pauli Term with another PauliTerm, PauliSum, or number.
+
+        This method performs simplifications according to Pauli Algebra rules.
         """
         _validate_type(other)
 
@@ -354,9 +350,7 @@ class PauliTerm:
         return result
 
     def __pow__(self, power: int) -> "PauliTerm":
-        """
-        Raises this PauliTerm to power.
-        """
+        """Raise this PauliTerm to integral power."""
         if not isinstance(power, int) or power < 0:
             raise ValueError("The power must be a non-negative integer.")
 
@@ -410,9 +404,7 @@ class PauliSum:
 
     @property
     def is_ising(self) -> bool:
-        """
-        Returns whether the full operator represents an ising model.
-        """
+        """Returns whether the full operator represents an Ising model."""
         if not hasattr(self, "_is_ising"):
             self._is_ising = all([term.is_ising for term in self.terms])
         return self._is_ising
