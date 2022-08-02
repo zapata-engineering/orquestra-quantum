@@ -118,6 +118,28 @@ class TestPauliTermInitialization:
         with pytest.raises(ValueError):
             PauliTerm(operator_dict)
 
+    @pytest.mark.parametrize("pauli_str", ["X0 * Y0", "X0 * Y1 * Z1"])
+    def test_term_cannot_be_constructed_if_duplicate_qubits_are_present_in_pauli_str(
+        self, pauli_str
+    ):
+        with pytest.raises(ValueError):
+            PauliTerm(pauli_str)
+
+    @pytest.mark.parametrize(
+        "pauli_str, coefficient",
+        [
+            ("0.5 * X0", 0.5),
+            ("2.0 * Y12", 3.0)
+        ]
+    )
+    def test_term_cannot_be_constructed_if_coefficient_is_passed_directly_and_in_pauli_string(
+        self, pauli_str, coefficient
+    ):
+        with pytest.raises(ValueError) as e:
+            PauliTerm(pauli_str, coefficient)
+
+        assert "Coefficient can be provided either in an argument " in str(e.value)
+
     @pytest.mark.parametrize(
         "term",
         [

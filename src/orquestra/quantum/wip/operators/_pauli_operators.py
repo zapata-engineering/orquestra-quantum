@@ -99,7 +99,7 @@ def _parse_complex(complex_str: str) -> complex:
 
 
 def _parse_operator(op_str: str) -> Tuple[int, str]:
-    match = re.match(r"([XYZI])([0-9]+)", op_str, re.I)
+    match = re.match(r"([XYZI])([0-9]+)$", op_str, re.I)
 
     if not match:
         raise ValueError("Badly formatted string representation passed.")
