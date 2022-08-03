@@ -7,7 +7,6 @@ from typing import Iterable, List, Optional
 
 import numpy as np
 
-from orquestra.quantum.circuits import Circuit, X, Y, Z
 from orquestra.quantum.measurements import ExpectationValues
 from orquestra.quantum.openfermion import (
     FermionOperator,
@@ -534,34 +533,6 @@ def get_polynomial_tensor(fermion_operator, n_qubits=None):
             tensor_dict[key][indices] = coefficient
 
     return PolynomialTensor(tensor_dict)
-
-
-def create_circuits_from_qubit_operator(
-    qubit_operator: PauliRepresentation,
-) -> List[Circuit]:
-    """Creates a list of circuit objects from a PauliTerm or PauliSum
-    Args:
-        qubit_operator: operator for which the Pauli terms are converted into circuits
-
-    Return:
-        circuit_set: a list of Pauli string gate circuits
-    """
-
-    term_gate_map = {"X": X, "Y": Y, "Z": Z}
-    circuit_set = []
-
-    # Loop over Pauli terms and populate circuit set list
-    for term in qubit_operator.terms:
-        circuit = Circuit()
-
-        # Loop over pauli operators in an n qubit pauli term and construct Pauli term
-        # circuit. Ignore coefficients.
-        for pauli_index, pauli_factor in term._ops.items():
-            circuit += term_gate_map[pauli_factor](pauli_index)
-
-        circuit_set += [circuit]
-
-    return circuit_set
 
 
 def get_ground_state_rdm_from_qubit_op(

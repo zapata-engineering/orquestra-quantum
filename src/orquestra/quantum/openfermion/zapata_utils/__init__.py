@@ -26,7 +26,6 @@ from ._io import (  # noqa: F403
 )
 from ._utils import (  # noqa: F403
     change_operator_type,
-    create_circuits_from_qubit_operator,
     evaluate_qubit_operator,
     evaluate_qubit_operator_list,
     generate_random_qubitop,
