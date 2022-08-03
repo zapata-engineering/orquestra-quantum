@@ -127,7 +127,11 @@ def _parse_operators_and_coefficient(
 
 
 class PauliTerm:
-    """Representation of a single Pauli Term."""
+    """Representation of a single Pauli Term.
+
+    If coefficient is not provided neither directly nor in the string repr,
+    it defaults to 1.0
+    """
 
     def __init__(
         self,
