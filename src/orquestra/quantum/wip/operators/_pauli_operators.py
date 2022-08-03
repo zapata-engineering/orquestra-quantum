@@ -179,15 +179,14 @@ class PauliTerm:
 
         if not all([isinstance(op, tuple) for op in list_of_terms]):
             raise ValueError(
-                "The list can only contain tuples of the form (op, index). If you"
-                " want to initialize from strings, check the"
-                " PauliTerm.from_str function."
+                "The list can only contain tuples of the form (op, index). If you "
+                "want to initialize from strings, use PauliTerm's constructor."
             )
 
         if len(set(idx_list)) != len(idx_list):
             raise ValueError(
                 "Duplicate indices used in list. Manually create terms"
-                " and multiply them instead."
+                "and multiply them instead."
             )
 
         ##########################################################

@@ -166,7 +166,7 @@ class TestConstructingPauliTermFromList:
         with pytest.raises(ValueError) as e:
             PauliTerm.from_list([("X0")])
 
-        assert "PauliTerm.from_str" in str(e.value)
+        assert "list can only contain" in str(e.value)
 
     def test_term_cannot_be_initialized_if_any_index_in_list_is_incorrect(self):
         with pytest.raises(ValueError) as e:
