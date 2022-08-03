@@ -59,8 +59,6 @@ def time_evolution_for_term(
         Circuit: Circuit representing evolved term.
     """
 
-    if len(term.terms) != 1:
-        raise ValueError("This function works only on a single term.")
     base_changes = []
     base_reversals = []
     cnot_gates = []
@@ -81,7 +79,7 @@ def time_evolution_for_term(
         elif term_type == "Y":
             base_changes.append(RX(np.pi / 2)(qubit_id))
             base_reversals.append(RX(-np.pi / 2)(qubit_id))
-        if i == len(term._ops) - 1:
+        if i == len(term.operations) - 1:
             central_gate = RZ(2 * time * term.coefficient)(qubit_id)
         else:
             cnot_gates.append(CNOT(qubit_id, qubit_indices[i + 1]))
