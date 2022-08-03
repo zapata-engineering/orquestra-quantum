@@ -24,6 +24,7 @@ from typing import (
     Hashable,
     Iterator,
     List,
+    Optional,
     Sequence,
     Set,
     Tuple,
@@ -62,9 +63,9 @@ HASH_PRECISION = 1e6
 def _efficient_exponentiation(
     pauli_rep: PauliRepresentation, power: int
 ) -> PauliRepresentation:
-    """
-    A more efficient implementation of exponentiation.
-    Assumes validation checks already done from parent routine.
+    """Efficiently exponentiate PauliTerm or PauliSum.
+
+    This function assumes validation checks have already been done from parent routine.
     """
     if power == 0:
         return type(pauli_rep).identity()
@@ -83,58 +84,98 @@ def _validate_type(object: Any) -> None:
         )
 
 
+def _is_in_brackets(string: str) -> bool:
+    return string.startswith("(") and string.endswith(")")
+
+
+def _parse_complex(complex_str: str) -> complex:
+    value = complex(complex_str.replace(" ", ""))
+    if value.real != 0 and value.imag != 0 and not _is_in_brackets(complex_str):
+        raise ValueError(
+            "Complex number with nonzero real and imaginary part has to be "
+            "enclosed in bracket."
+        )
+    return value
+
+
+def _parse_operator(op_str: str) -> Tuple[int, str]:
+    match = re.match(r"([XYZI])([0-9]+)$", op_str, re.I)
+
+    if not match:
+        raise ValueError("Badly formatted string representation passed.")
+
+    return int(match.group(2)), match.group(1).upper()
+
+
+def _parse_operators_and_coefficient(
+    term_str: str,
+) -> Tuple[Optional[complex], Dict[int, str]]:
+    parts = re.split(r"\ *\*\ *", term_str.strip(" "))
+    try:
+        coef = _parse_complex(parts[0])
+        operators_strs = parts[1:]
+    except ValueError:
+        coef = None
+        operators_strs = parts
+
+    operators_dict = dict([_parse_operator(op_str) for op_str in operators_strs])
+
+    if len(operators_dict) != len(operators_strs):
+        raise ValueError("Duplicate qubit index in a term detected.")
+
+    return coef, dict([_parse_operator(op_str) for op_str in operators_strs])
+
+
 class PauliTerm:
-    """
-    A datastructure for storing information about a single Pauli Term
+    """Representation of a single Pauli Term.
+
+    If coefficient is not provided neither directly nor in the string repr,
+    it defaults to 1.0
     """
 
     def __init__(
         self,
         operator: Union[str, Dict[int, str]],
-        coefficient: complex = 1.0,
+        coefficient: Optional[complex] = None,
     ):
-        self.coefficient = complex(coefficient)
-
-        if isinstance(operator, dict):
-            # Verify key values
-            if not all([qubit_idx >= 0 for qubit_idx in operator]):
+        if isinstance(operator, str):
+            _parsed_coefficient, operator = _parse_operators_and_coefficient(operator)
+            if _parsed_coefficient is not None and coefficient is not None:
                 raise ValueError(
-                    "Invalid qubit index in dictionary keys."
-                    " Make sure all qubit indices are non-negative integers."
+                    "Coefficient can be provided either in an argument or string "
+                    "representation (but not both)."
                 )
+            if _parsed_coefficient is not None:
+                coefficient = _parsed_coefficient
 
-            # Verify value values
-            if not all([op in ALLOWED_OPERATORS for op in operator.values()]):
-                raise ValueError(
-                    "Invalid operators in dictionary."
-                    f" Allowed ones are {ALLOWED_OPERATORS}."
-                )
-            self._ops: Dict[int, str] = {
-                idx: op for idx, op in operator.items() if op != "I"
-            }
-        elif isinstance(operator, str):
-            matched_pattern = re.match(r"([XYZI])([0-9]+)", operator, re.I)
+        if not all([qubit_idx >= 0 for qubit_idx in operator]):
+            raise ValueError(
+                "Invalid qubit index in dictionary keys. "
+                "Make sure all qubit indices are non-negative integers."
+            )
 
-            if not matched_pattern:
-                raise ValueError("Badly formatted string representation passed.")
+        # Verify value values
+        if not all([op in ALLOWED_OPERATORS for op in operator.values()]):
+            raise ValueError(
+                "Invalid operators in dictionary. "
+                f"Allowed ones are {ALLOWED_OPERATORS}."
+            )
 
-            op, qubit_idx = matched_pattern.groups()
-
-            self._ops = {}
-            if op != "I":
-                self._ops[int(qubit_idx)] = op.upper()
-        else:
-            raise TypeError(f"Wrong type of operator passed. Got {type(operator)}.")
+        self._ops: Dict[int, str] = {
+            idx: op for idx, op in operator.items() if op != "I"
+        }
+        self.coefficient = complex(1.0 if coefficient is None else coefficient)
 
     @staticmethod
     def from_list(
         list_of_terms: List[Tuple[str, int]],
         coefficient: complex = 1.0,
     ) -> "PauliTerm":
-        """
+        """Construct PauliTerm from a list of operators.
+
         A slightly more efficient constructor when all the elements of the term are
-         known beforehand. Users should employ this function instead of creating
-         individual terms and multiplying.
+        known beforehand. Users should employ this function instead of creating
+        individual terms and multiplying.
         """
 
         ############### Some checks on input first ###############
@@ -142,15 +183,14 @@ class PauliTerm:
 
         if not all([isinstance(op, tuple) for op in list_of_terms]):
             raise ValueError(
-                "The list can only contain tuples of the form (op, index). If you"
-                " want to initialize from strings, check the"
-                " PauliTerm.from_str function."
+                "The list can only contain tuples of the form (op, index). If you "
+                "want to initialize from strings, use PauliTerm's constructor."
             )
 
         if len(set(idx_list)) != len(idx_list):
             raise ValueError(
                 "Duplicate indices used in list. Manually create terms"
-                " and multiply them instead."
+                "and multiply them instead."
             )
 
         ##########################################################
@@ -160,42 +200,14 @@ class PauliTerm:
         return PauliTerm(result_dict, coefficient)
 
     @staticmethod
-    def from_str(str_pauli_term: str) -> "PauliTerm":
-        """Construct a PauliTerm from the result of str(pauli_term)"""
-        # split into str_coef, str_op at first '*'' outside parenthesis
-        try:
-            str_coef, str_op = re.split(r"\*(?![^(]*\))", str_pauli_term, maxsplit=1)
-        except ValueError:
-            raise ValueError(
-                "Could not separate the pauli string into "
-                f"coefficient and operator. {str_pauli_term} does"
-                " not match <coefficient>*<operator>"
-            )
-        # parse the coefficient into complex
-        try:
-            coef = complex(str_coef.replace(" ", ""))
-        except ValueError:
-            raise ValueError(f"Could not parse the coefficient {str_coef}")
-
-        result_term = PauliTerm.identity() * coef
-        if str_op == "I":
-            assert isinstance(result_term, PauliTerm)
-            return result_term
-
-        for op in str_op.split("*"):
-            result_term *= PauliTerm(op)
-
-        assert isinstance(result_term, PauliTerm)
-        return result_term
-
-    @staticmethod
     def identity() -> "PauliTerm":
         return PauliTerm("I0", 1.0)
 
     def copy(self, new_coefficient: complex = None) -> "PauliTerm":
-        """
-        Properly creates a new PauliTerm, with a completely new dictionary
-        of operators
+        """Copy PauliTerm, possibly changing its coefficient to a new one.
+
+        The created copy is deep, in particular internal dictionary storing map
+        from qubit indices to operators is also copied.
         """
         new_coefficient = new_coefficient if new_coefficient else self.coefficient
 
@@ -203,26 +215,21 @@ class PauliTerm:
 
     @property
     def qubits(self) -> Set[int]:
-        """
-        Returns the list of qubit indices associated with this term.
-        """
+        """The list of qubit indices associated with this term."""
         return set(self._ops.keys())
 
     @property
     def is_ising(self) -> bool:
-        """
-        Returns whether the term represents an ising model
-        (i.e. contains only Z terms or is an identity term)
-        """
+        """True iff this term is Ising Operator (i.e. contains no X or Y operators)"""
 
         return set(self._ops.values()) == {"Z"} or self.is_constant
 
     @property
     def circuit(self) -> Circuit:
-        """
-        Returns the circuit implementing this Pauli Term. Since the public API
-        treats the object as immutable, we store the circuit representation when
-        the function is called for the first time, for efficiency.
+        """Circuit implementing this Pauli term.
+
+        For efficiency constructed circuit is cached after the first invocation of
+        this property.
         """
         if not hasattr(self, "_circuit"):
             self._circuit = Circuit(
@@ -315,8 +322,9 @@ class PauliTerm:
     def __mul__(
         self, other: Union[PauliRepresentation, complex]
     ) -> PauliRepresentation:
-        """Multiplies this Pauli Term with another PauliTerm, PauliSum, or number
-        according to the Pauli algebra rules.
+        """Multiply this Pauli Term with another PauliTerm, PauliSum, or number.
+
+        This method performs simplifications according to Pauli Algebra rules.
         """
         _validate_type(other)
 
@@ -345,9 +353,7 @@ class PauliTerm:
         return result
 
     def __pow__(self, power: int) -> "PauliTerm":
-        """
-        Raises this PauliTerm to power.
-        """
+        """Raise this PauliTerm to integral power."""
         if not isinstance(power, int) or power < 0:
             raise ValueError("The power must be a non-negative integer.")
 
@@ -371,7 +377,9 @@ class PauliTerm:
 
 
 class PauliSum:
-    def __init__(self, terms: Sequence[PauliTerm] = None):
+    def __init__(self, terms: Union[str, Sequence[PauliTerm]] = None):
+        if isinstance(terms, str):
+            terms = [PauliTerm(s.strip()) for s in re.split(r"\+(?![^(]*\))", terms)]
         if terms is None:
             terms = []
 
@@ -382,17 +390,7 @@ class PauliSum:
             raise ValueError(
                 "PauliSums can be constructed only from Sequences of PauliTerms."
             )
-        self.terms: Sequence[PauliTerm] = terms
-
-    @staticmethod
-    def from_str(str_pauli_sum: str) -> "PauliSum":
-        """Construct a PauliSum from the result of str(pauli_sum)"""
-        # split str_pauli_sum only at "+" outside of parenthesis to allow
-        # e.g. "(0.5)*X0 + (0.5+0j)*Z2"
-        str_terms = re.split(r"\+(?![^(]*\))", str_pauli_sum)
-        str_terms = [s.strip() for s in str_terms]
-        terms = [PauliTerm.from_str(term) for term in str_terms]
-        return PauliSum(terms).simplify()
+        self.terms: Sequence[PauliTerm] = cast(Sequence[PauliTerm], terms)
 
     def __len__(self) -> int:
         return len(self.terms)
@@ -409,9 +407,7 @@ class PauliSum:
 
     @property
     def is_ising(self) -> bool:
-        """
-        Returns whether the full operator represents an ising model.
-        """
+        """Returns whether the full operator represents an Ising model."""
         if not hasattr(self, "_is_ising"):
             self._is_ising = all([term.is_ising for term in self.terms])
         return self._is_ising

@@ -26,8 +26,8 @@ class TestEstimatorUtils:
     @pytest.fixture()
     def frame_operators(self):
         operators = [
-            PauliTerm.from_str("2*Z1*Z2"),
-            PauliTerm.from_str("2*Z0*Z3"),
+            PauliTerm("2*Z1*Z2"),
+            PauliTerm("2*Z0*Z3"),
             PauliTerm("Z2", -1),
         ]
 
@@ -91,7 +91,7 @@ class TestEstimatorUtils:
             (
                 [
                     EstimationTask(
-                        PauliSum([PauliTerm("Z0", 2), PauliTerm.from_str("3*Z1*Z2")]),
+                        PauliSum([PauliTerm("Z0", 2), PauliTerm("3*Z1*Z2")]),
                         Circuit([X(0)]),
                         10,
                     ),
@@ -99,7 +99,7 @@ class TestEstimatorUtils:
                         PauliSum(
                             [
                                 PauliTerm("Z0", 2),
-                                PauliTerm.from_str("3*Z1*Z2"),
+                                PauliTerm("3*Z1*Z2"),
                                 PauliTerm("I0", 4),
                             ]
                         ),
@@ -114,14 +114,12 @@ class TestEstimatorUtils:
                 ],
                 [
                     EstimationTask(
-                        PauliTerm("Z0", 2) + PauliTerm.from_str("3*Z1*Z2"),
+                        PauliTerm("Z0", 2) + PauliTerm("3*Z1*Z2"),
                         Circuit([X(0)]),
                         10,
                     ),
                     EstimationTask(
-                        PauliTerm("I0", 4)
-                        + PauliTerm("Z0", 2)
-                        + PauliTerm.from_str("3*Z1*Z2"),
+                        PauliTerm("I0", 4) + PauliTerm("Z0", 2) + PauliTerm("3*Z1*Z2"),
                         Circuit([RZ(np.pi / 2)(0)]),
                         1000,
                     ),
@@ -138,7 +136,7 @@ class TestEstimatorUtils:
             (
                 [
                     EstimationTask(
-                        PauliTerm("Z0", 2) + PauliTerm.from_str("3*Z1*Z2"),
+                        PauliTerm("Z0", 2) + PauliTerm("3*Z1*Z2"),
                         Circuit([X(0)]),
                         10,
                     ),
@@ -155,7 +153,7 @@ class TestEstimatorUtils:
                 ],
                 [
                     EstimationTask(
-                        PauliTerm("Z0", 2) + PauliTerm.from_str("3*Z1*Z2"),
+                        PauliTerm("Z0", 2) + PauliTerm("3*Z1*Z2"),
                         Circuit([X(0)]),
                         10,
                     ),
@@ -173,9 +171,7 @@ class TestEstimatorUtils:
                 [
                     EstimationTask(PauliTerm("I0", -3), Circuit([X(0)]), 0),
                     EstimationTask(
-                        PauliTerm("I0", 4)
-                        + PauliTerm("Z0", 2)
-                        + PauliTerm.from_str("3*Z1*Z2"),
+                        PauliTerm("I0", 4) + PauliTerm("Z0", 2) + PauliTerm("3*Z1*Z2"),
                         Circuit([RZ(np.pi / 2)(0)]),
                         1000,
                     ),
@@ -187,9 +183,7 @@ class TestEstimatorUtils:
                 ],
                 [
                     EstimationTask(
-                        PauliTerm("I0", 4)
-                        + PauliTerm("Z0", 2)
-                        + PauliTerm.from_str("3*Z1*Z2"),
+                        PauliTerm("I0", 4) + PauliTerm("Z0", 2) + PauliTerm("3*Z1*Z2"),
                         Circuit([RZ(np.pi / 2)(0)]),
                         1000,
                     ),
@@ -209,9 +203,7 @@ class TestEstimatorUtils:
                 [
                     EstimationTask(PauliTerm("I0", -3), Circuit([X(0)]), 0),
                     EstimationTask(
-                        PauliTerm("I0", 4)
-                        + PauliTerm("Z0", 2)
-                        + PauliTerm.from_str("3*Z1*Z2"),
+                        PauliTerm("I0", 4) + PauliTerm("Z0", 2) + PauliTerm("3*Z1*Z2"),
                         Circuit([RZ(np.pi / 2)(0)]),
                         1000,
                     ),
@@ -223,9 +215,7 @@ class TestEstimatorUtils:
                 ],
                 [
                     EstimationTask(
-                        PauliTerm("I0", 4)
-                        + PauliTerm("Z0", 2)
-                        + PauliTerm.from_str("3*Z1*Z2"),
+                        PauliTerm("I0", 4) + PauliTerm("Z0", 2) + PauliTerm("3*Z1*Z2"),
                         Circuit([RZ(np.pi / 2)(0)]),
                         1000,
                     ),
@@ -294,7 +284,7 @@ class TestEstimatorUtils:
                         PauliTerm("I0", 0.001), Circuit([RZ(np.pi / 2)(0)]), 2
                     ),
                     EstimationTask(
-                        PauliTerm("Z1", 2.5) + PauliTerm.from_str("1*Z2*Z3"),
+                        PauliTerm("Z1", 2.5) + PauliTerm("1*Z2*Z3"),
                         Circuit([RY(np.pi / 2)(0)]),
                         0,
                     ),
@@ -355,7 +345,7 @@ class TestEstimatorUtils:
                         PauliTerm("I0", 2.0), Circuit([RZ(np.pi / 2)(0)]), 2
                     ),
                     EstimationTask(
-                        PauliTerm.from_str("1.5*Z0*Z1"),
+                        PauliTerm("1.5*Z0*Z1"),
                         Circuit([RY(np.pi / 2)(0)]),
                         10,
                     ),
