@@ -141,8 +141,8 @@ class TestQubitOperator(unittest.TestCase):
         )
 
         # Given
-        op1 = PauliSum([PauliTerm.from_str("1*Z0*Z1")])
-        op2 = PauliSum([PauliTerm.from_str("1*Z1*Z0")])
+        op1 = PauliSum([PauliTerm("1*Z0*Z1")])
+        op2 = PauliSum([PauliTerm("1*Z1*Z0")])
 
         # When/Then
         self.assertEqual(op1, reverse_qubit_order(op2))

@@ -308,9 +308,7 @@ class TestMeasurements:
             [(0, 1, 0), (0, 1, 0), (0, 0, 0), (1, 0, 0), (1, 1, 1)]
         )
         ising_operator = (
-            PauliTerm("I0", 10)
-            + PauliTerm.from_str("1*Z0*Z1")
-            - PauliTerm.from_str("15*Z1*Z2")
+            PauliTerm("I0", 10) + PauliTerm("1*Z0*Z1") - PauliTerm("15*Z1*Z2")
         )
         target_expectation_values = np.array([10, -0.2, -3])
         target_correlations = np.array([[100, -2, -30], [-2, 1, -9], [-30, -9, 225]])
@@ -353,9 +351,7 @@ class TestMeasurements:
             [(0, 1, 0), (0, 1, 0), (0, 0, 0), (1, 0, 0), (1, 1, 1)]
         )
         ising_operator = (
-            PauliTerm("I0", 10)
-            + PauliTerm.from_str("1*Z0*Z1")
-            - PauliTerm.from_str("15*Z1*Z2")
+            PauliTerm("I0", 10) + PauliTerm("1*Z0*Z1") - PauliTerm("15*Z1*Z2")
         )
         target_expectation_values = np.array([10, -0.2, -3])
         target_correlations = np.array([[100, -2, -30], [-2, 1, -9], [-30, -9, 225]])
