@@ -40,6 +40,7 @@ from orquestra.quantum.openfermion.linalg.sparse_tools import (
     jw_hartree_fock_state,
     jw_number_indices,
     jw_number_restrict_operator,
+    pauli_operator_sparse,
     qubit_operator_sparse,
     sparse_eigenspectrum,
 )
@@ -56,6 +57,7 @@ from orquestra.quantum.openfermion.utils.operator_utils import (
     hermitian_conjugated,
     is_hermitian,
 )
+from orquestra.quantum.wip.operators import PauliSum, PauliTerm
 
 
 class EigenSpectrumTest(unittest.TestCase):
@@ -151,6 +153,25 @@ class JordanWignerSparseTest(unittest.TestCase):
         )
         self.assertTrue(
             numpy.allclose(qubit_operator_sparse(QubitOperator("X1")).A, expected.A)
+        )
+
+    def test_pauli_operator_sparse_n_qubits_too_small(self):
+        with self.assertRaises(ValueError):
+            qubit_operator_sparse(PauliTerm("X3"), 1)
+
+    def test_pauli_operator_sparse_n_qubits_not_specified(self):
+        expected = csc_matrix(
+            ([1, 1, 1, 1], ([1, 0, 3, 2], [0, 1, 2, 3])), shape=(4, 4)
+        )
+        # Test PauliTerm.
+        self.assertTrue(
+            numpy.allclose(pauli_operator_sparse(PauliTerm("X1")).A, expected.A)
+        )
+        # Test PauliSum.
+        self.assertTrue(
+            numpy.allclose(
+                pauli_operator_sparse(PauliSum([PauliTerm("X1")])).A, expected.A
+            )
         )
 
 
