@@ -274,17 +274,19 @@ def evaluate_qubit_operator_list(
     return value_estimate
 
 
-def reverse_qubit_order(qubit_operator: PauliSum, n_qubits: Optional[int] = None):
+def reverse_qubit_order(
+    qubit_operator: PauliRepresentation, n_qubits: Optional[int] = None
+):
     """Reverse the order of qubit indices in a qubit operator.
 
     Args:
-        qubit_operator (openfermion.QubitOperator): the operator
+        qubit_operator: the operator to be reversed
         n_qubits (int): total number of qubits. Needs to be provided when
             the size of the system of interest is greater than the size of qubit
             operator (optional)
 
     Returns:
-        reversed_op (openfermion.ops.QubitOperator)
+        reversed_op: the reversed operator
     """
 
     reversed_op = PauliSum()
@@ -534,8 +536,10 @@ def get_polynomial_tensor(fermion_operator, n_qubits=None):
     return PolynomialTensor(tensor_dict)
 
 
-def create_circuits_from_qubit_operator(qubit_operator: QubitOperator) -> List[Circuit]:
-    """Creates a list of circuit objects from the Pauli terms of a QubitOperator
+def create_circuits_from_qubit_operator(
+    qubit_operator: PauliRepresentation,
+) -> List[Circuit]:
+    """Creates a list of circuit objects from a PauliTerm or PauliSum
     Args:
         qubit_operator: operator for which the Pauli terms are converted into circuits
 
@@ -543,20 +547,16 @@ def create_circuits_from_qubit_operator(qubit_operator: QubitOperator) -> List[C
         circuit_set: a list of Pauli string gate circuits
     """
 
-    # Get the Pauli terms, ignoring coefficients
-    pauli_terms = list(qubit_operator.terms.keys())
     term_gate_map = {"X": X, "Y": Y, "Z": Z}
     circuit_set = []
 
     # Loop over Pauli terms and populate circuit set list
-    for term in pauli_terms:
-
+    for term in qubit_operator.terms:
         circuit = Circuit()
 
-        # Loop over Pauli factors in Pauli term and construct Pauli term circuit
-        for pauli in term:  # loop over pauli operators in an n qubit pauli term
-            pauli_index = pauli[0]
-            pauli_factor = pauli[1]
+        # Loop over pauli operators in an n qubit pauli term and construct Pauli term
+        # circuit. Ignore coefficients.
+        for pauli_index, pauli_factor in term._ops.items():
             circuit += term_gate_map[pauli_factor](pauli_index)
 
         circuit_set += [circuit]
