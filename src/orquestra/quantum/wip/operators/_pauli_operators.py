@@ -380,7 +380,7 @@ class PauliSum:
     def __init__(self, terms: Union[str, Sequence[PauliTerm]] = None):
         if isinstance(terms, str):
             terms = [PauliTerm(s.strip()) for s in re.split(r"\+(?![^(]*\))", terms)]
-        if not terms:
+        if terms is None:
             terms = []
 
         if not (
