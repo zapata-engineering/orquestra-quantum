@@ -170,7 +170,7 @@ two_qubit_non_parametric_gates_exp_vals_test_set = [
     [
         ["I", "I"],
         "CNOT",
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -183,7 +183,7 @@ two_qubit_non_parametric_gates_exp_vals_test_set = [
     [
         ["I", "H"],
         "CNOT",
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -196,7 +196,7 @@ two_qubit_non_parametric_gates_exp_vals_test_set = [
     [
         ["H", "I"],
         "CNOT",
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             1,
@@ -209,7 +209,7 @@ two_qubit_non_parametric_gates_exp_vals_test_set = [
     [
         ["H", "H"],
         "CNOT",
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             1,
@@ -222,7 +222,7 @@ two_qubit_non_parametric_gates_exp_vals_test_set = [
     [
         ["I", "I"],
         "SWAP",
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -235,7 +235,7 @@ two_qubit_non_parametric_gates_exp_vals_test_set = [
     [
         ["I", "H"],
         "SWAP",
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -248,7 +248,7 @@ two_qubit_non_parametric_gates_exp_vals_test_set = [
     [
         ["H", "I"],
         "SWAP",
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -261,7 +261,7 @@ two_qubit_non_parametric_gates_exp_vals_test_set = [
     [
         ["H", "H"],
         "SWAP",
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             1,
@@ -274,7 +274,7 @@ two_qubit_non_parametric_gates_exp_vals_test_set = [
     [
         ["I", "I"],
         "ISWAP",
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -287,7 +287,7 @@ two_qubit_non_parametric_gates_exp_vals_test_set = [
     [
         ["I", "H"],
         "ISWAP",
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -300,7 +300,7 @@ two_qubit_non_parametric_gates_exp_vals_test_set = [
     [
         ["H", "I"],
         "ISWAP",
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -313,7 +313,7 @@ two_qubit_non_parametric_gates_exp_vals_test_set = [
     [
         ["H", "H"],
         "ISWAP",
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             1.00000000000000,
@@ -326,7 +326,7 @@ two_qubit_non_parametric_gates_exp_vals_test_set = [
     [
         ["I", "I"],
         "CZ",
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -339,7 +339,7 @@ two_qubit_non_parametric_gates_exp_vals_test_set = [
     [
         ["I", "H"],
         "CZ",
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -352,7 +352,7 @@ two_qubit_non_parametric_gates_exp_vals_test_set = [
     [
         ["H", "I"],
         "CZ",
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -365,7 +365,7 @@ two_qubit_non_parametric_gates_exp_vals_test_set = [
     [
         ["H", "H"],
         "CZ",
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -382,7 +382,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "CPHASE",
         [-np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -396,7 +396,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "CPHASE",
         [0],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -410,7 +410,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "CPHASE",
         [np.pi / 5],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -424,7 +424,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "CPHASE",
         [np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -438,7 +438,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "CPHASE",
         [np.pi],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -452,7 +452,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "CPHASE",
         [-np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -466,7 +466,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "CPHASE",
         [0],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -480,7 +480,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "CPHASE",
         [np.pi / 5],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -494,7 +494,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "CPHASE",
         [np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -508,7 +508,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "CPHASE",
         [np.pi],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -522,7 +522,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "CPHASE",
         [-np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -536,7 +536,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "CPHASE",
         [0],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -550,7 +550,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "CPHASE",
         [np.pi / 5],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -564,7 +564,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "CPHASE",
         [np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -578,7 +578,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "CPHASE",
         [np.pi],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -592,7 +592,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "CPHASE",
         [-np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             1 / 2,
@@ -606,7 +606,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "CPHASE",
         [0],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             1,
@@ -620,7 +620,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "CPHASE",
         [np.pi / 5],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             np.sqrt(5) / 8 + 5 / 8,
@@ -634,7 +634,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "CPHASE",
         [np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             1 / 2,
@@ -648,7 +648,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "CPHASE",
         [np.pi],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -662,7 +662,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "XX",
         [-np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -676,7 +676,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "XX",
         [0],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -690,7 +690,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "XX",
         [np.pi / 5],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -704,7 +704,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "XX",
         [np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -718,7 +718,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "XX",
         [np.pi],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -732,7 +732,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "XX",
         [-np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -746,7 +746,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "XX",
         [0],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -760,7 +760,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "XX",
         [np.pi / 5],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -774,7 +774,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "XX",
         [np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -788,7 +788,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "XX",
         [np.pi],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -802,7 +802,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "XX",
         [-np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -816,7 +816,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "XX",
         [0],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -830,7 +830,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "XX",
         [np.pi / 5],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -844,7 +844,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "XX",
         [np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -858,7 +858,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "XX",
         [np.pi],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -872,7 +872,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "XX",
         [-np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             1.00000000000000,
@@ -886,7 +886,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "XX",
         [0],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             1,
@@ -900,7 +900,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "XX",
         [np.pi / 5],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             1.00000000000000,
@@ -914,7 +914,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "XX",
         [np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             1.00000000000000,
@@ -928,7 +928,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "XX",
         [np.pi],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             1.00000000000000,
@@ -942,7 +942,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "YY",
         [-np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -956,7 +956,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "YY",
         [0],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -970,7 +970,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "YY",
         [np.pi / 5],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -984,7 +984,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "YY",
         [np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -998,7 +998,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "YY",
         [np.pi],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1012,7 +1012,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "YY",
         [-np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1026,7 +1026,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "YY",
         [0],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -1040,7 +1040,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "YY",
         [np.pi / 5],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1054,7 +1054,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "YY",
         [np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1068,7 +1068,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "YY",
         [np.pi],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1082,7 +1082,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "YY",
         [-np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1096,7 +1096,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "YY",
         [0],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -1110,7 +1110,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "YY",
         [np.pi / 5],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1124,7 +1124,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "YY",
         [np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1138,7 +1138,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "YY",
         [np.pi],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1152,7 +1152,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "YY",
         [-np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             1.00000000000000,
@@ -1166,7 +1166,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "YY",
         [0],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             1,
@@ -1180,7 +1180,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "YY",
         [np.pi / 5],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             1.00000000000000,
@@ -1194,7 +1194,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "YY",
         [np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             1.00000000000000,
@@ -1208,7 +1208,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "YY",
         [np.pi],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             1.00000000000000,
@@ -1222,7 +1222,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "ZZ",
         [-np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1236,7 +1236,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "ZZ",
         [0],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -1250,7 +1250,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "ZZ",
         [np.pi / 5],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1264,7 +1264,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "ZZ",
         [np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1278,7 +1278,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "ZZ",
         [np.pi],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1292,7 +1292,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "ZZ",
         [-np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1306,7 +1306,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "ZZ",
         [0],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -1320,7 +1320,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "ZZ",
         [np.pi / 5],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1334,7 +1334,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "ZZ",
         [np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1348,7 +1348,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "ZZ",
         [np.pi],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1362,7 +1362,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "ZZ",
         [-np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1376,7 +1376,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "ZZ",
         [0],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -1390,7 +1390,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "ZZ",
         [np.pi / 5],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1404,7 +1404,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "ZZ",
         [np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1418,7 +1418,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "ZZ",
         [np.pi],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1432,7 +1432,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "ZZ",
         [-np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             1.00000000000000,
@@ -1446,7 +1446,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "ZZ",
         [0],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             1,
@@ -1460,7 +1460,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "ZZ",
         [np.pi / 5],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             1.00000000000000,
@@ -1474,7 +1474,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "ZZ",
         [np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             1.00000000000000,
@@ -1488,7 +1488,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "ZZ",
         [np.pi],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             1.00000000000000,
@@ -1502,7 +1502,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "XY",
         [-np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -1516,7 +1516,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "XY",
         [0],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -1530,7 +1530,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "XY",
         [np.pi / 5],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -1544,7 +1544,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "XY",
         [np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -1558,7 +1558,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "I"],
         "XY",
         [np.pi],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -1572,7 +1572,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "XY",
         [-np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1586,7 +1586,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "XY",
         [0],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -1600,7 +1600,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "XY",
         [np.pi / 5],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1614,7 +1614,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "XY",
         [np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1628,7 +1628,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["I", "H"],
         "XY",
         [np.pi],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1642,7 +1642,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "XY",
         [-np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1656,7 +1656,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "XY",
         [0],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             0,
@@ -1670,7 +1670,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "XY",
         [np.pi / 5],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1684,7 +1684,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "XY",
         [np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1698,7 +1698,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "I"],
         "XY",
         [np.pi],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             0,
@@ -1712,7 +1712,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "XY",
         [-np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             1.00000000000000,
@@ -1726,7 +1726,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "XY",
         [0],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1,
             1,
@@ -1740,7 +1740,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "XY",
         [np.pi / 5],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             1.00000000000000,
@@ -1754,7 +1754,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "XY",
         [np.pi / 2],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             1.00000000000000,
@@ -1768,7 +1768,7 @@ two_qubit_parametric_gates_exp_vals_test_set = [
         ["H", "H"],
         "XY",
         [np.pi],
-        ["[]", "[X0 X1]", "[Y0 Y1]", "[Z0 Z1]", "[X1]", "[Z0]"],
+        ["I0", "X0*X1", "Y0*Y1", "Z0*Z1", "X1", "Z0"],
         [
             1.00000000000000,
             1.00000000000000,

@@ -9,16 +9,15 @@ import numpy as np
 from orquestra.quantum.circuits import Circuit, GateOperation, Operation
 from orquestra.quantum.circuits._circuit import split_circuit
 from orquestra.quantum.circuits.layouts import CircuitConnectivity
-from orquestra.quantum.openfermion import IsingOperator, QubitOperator, SymbolicOperator
 from orquestra.quantum.wavefunction import Wavefunction
-from orquestra.quantum.wip.operators import PauliRepresentation, PauliSum, PauliTerm
+from orquestra.quantum.wip.operators import PauliRepresentation
 
 from ..distributions import (
     MeasurementOutcomeDistribution,
     create_bitstring_distribution_from_probability_distribution,
 )
 from ..measurements import ExpectationValues, Measurements, expectation_values_to_real
-from ..openfermion import change_operator_type, get_expectation_value
+from ..openfermion import get_expectation_value
 
 # Note that in particular Wavefunction is a StateVector. However, for performance
 # reasons QuantumSimulator uses numpy arrays internally.

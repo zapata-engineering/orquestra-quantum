@@ -43,7 +43,6 @@ import pytest
 
 from orquestra.quantum.api.estimation import EstimationTask
 from orquestra.quantum.circuits import CNOT, Circuit, H, X, builtin_gate_by_name
-from orquestra.quantum.openfermion import QubitOperator
 from orquestra.quantum.wavefunction import Wavefunction
 
 from ..distributions import MeasurementOutcomeDistribution
@@ -211,10 +210,10 @@ class QuantumBackendGatesTests:
 
         circuit = Circuit([gate_1, gate_2])
         operators = [
-            QubitOperator("[]"),
-            QubitOperator("[X0]"),
-            QubitOperator("[Y0]"),
-            QubitOperator("[Z0]"),
+            PauliTerm.identity(),
+            PauliTerm("X0"),
+            PauliTerm("Y0"),
+            PauliTerm("Z0"),
         ]
 
         sigma = 1 / np.sqrt(n_samples)
@@ -247,10 +246,10 @@ class QuantumBackendGatesTests:
 
         circuit = Circuit([gate_1, gate_2])
         operators = [
-            QubitOperator("[]"),
-            QubitOperator("[X0]"),
-            QubitOperator("[Y0]"),
-            QubitOperator("[Z0]"),
+            PauliTerm.identity(),
+            PauliTerm("X0"),
+            PauliTerm("Y0"),
+            PauliTerm("Z0"),
         ]
 
         sigma = 1 / np.sqrt(n_samples)
@@ -294,7 +293,7 @@ class QuantumBackendGatesTests:
 
         for i, operator in enumerate(operators):
             # When
-            operator = QubitOperator(operator)
+            operator = PauliTerm(operator)
             estimation_tasks = [EstimationTask(operator, circuit, n_samples)]
             expectation_values = estimate_expectation_values_by_averaging(
                 backend_for_gates_test, estimation_tasks
@@ -333,7 +332,7 @@ class QuantumBackendGatesTests:
 
         for i, operator in enumerate(operators):
             # When
-            operator = QubitOperator(operator)
+            operator = PauliTerm(operator)
             estimation_tasks = [EstimationTask(operator, circuit, n_samples)]
             expectation_values = estimate_expectation_values_by_averaging(
                 backend_for_gates_test, estimation_tasks
