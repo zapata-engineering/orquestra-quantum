@@ -215,7 +215,7 @@ class PauliTerm:
         (i.e. contains only Z terms or is an identity term)
         """
 
-        return set(self._ops.values()) == {"Z"} or set(self._ops.values()) == set()
+        return set(self._ops.values()) == {"Z"} or self.is_constant
 
     @property
     def circuit(self) -> Circuit:

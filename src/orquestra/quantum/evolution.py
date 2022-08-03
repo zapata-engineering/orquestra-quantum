@@ -3,6 +3,7 @@
 ################################################################################
 """Functions for constructing circuits simulating evolution under given Hamiltonian."""
 import operator
+import warnings
 from functools import reduce
 from itertools import chain
 from typing import List, Optional, Tuple, Union
@@ -134,13 +135,12 @@ def time_evolution_derivatives(
         for factor in factors:
             output = circuits.Circuit()
 
-            try:
-                r = complex(term_1.coefficient) / trotter_order
-            except TypeError:
-                raise ValueError(
-                    "Term coefficients need to be numerical. "
-                    f"Offending term: {term_1}"
+            if term_1.coefficient.real != term_1.coefficient:
+                warnings.warn(
+                    "Only real coefficients are supported. The imaginary part of the "
+                    "term {} will be ignored.".format(term_1)
                 )
+            r = term_1.coefficient.real / trotter_order
             output_factors.append(r * factor)
             shift = factor * (np.pi / (4.0 * r))
 
