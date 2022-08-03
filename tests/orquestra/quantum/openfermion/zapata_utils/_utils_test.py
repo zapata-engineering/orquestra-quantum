@@ -255,7 +255,7 @@ class TestQubitOperator(unittest.TestCase):
         circuit2 = Circuit([Y(0), Z(1)])
 
         # Given
-        qubit_op = QubitOperator("Z0 X1") + QubitOperator("Y0 Z1")
+        qubit_op = PauliTerm("Z0*X1") + PauliTerm("Y0*Z1")
 
         # When
         pauli_circuits = create_circuits_from_qubit_operator(qubit_op)

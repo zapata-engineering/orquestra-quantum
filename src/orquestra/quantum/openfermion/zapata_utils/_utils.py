@@ -298,7 +298,7 @@ def reverse_qubit_order(
 
     for term in qubit_operator.terms:
         new_term = {}
-        for qubit_num, operator_str in term._ops.items():
+        for qubit_num, operator_str in term.operations:
             new_qubit_num = n_qubits - 1 - qubit_num
             new_term[new_qubit_num] = operator_str
         reversed_op += PauliTerm(new_term, term.coefficient)
