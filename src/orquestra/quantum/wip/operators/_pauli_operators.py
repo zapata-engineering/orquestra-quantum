@@ -222,7 +222,7 @@ class PauliTerm:
     def is_ising(self) -> bool:
         """True iff this term is Ising Operator (i.e. contains no X or Y operators)"""
 
-        return set(self._ops.values()) == {"Z"} or set(self._ops.values()) == set()
+        return set(self._ops.values()) == {"Z"} or self.is_constant
 
     @property
     def circuit(self) -> Circuit:
@@ -238,7 +238,8 @@ class PauliTerm:
 
         return self._circuit
 
-    def operations_as_set(self) -> FrozenSet[Tuple[int, str]]:
+    @property
+    def operations(self) -> FrozenSet[Tuple[int, str]]:
         return frozenset(self._ops.items())
 
     def __len__(self) -> int:
@@ -260,7 +261,7 @@ class PauliTerm:
             (
                 round(self.coefficient.real * HASH_PRECISION),
                 round(self.coefficient.imag * HASH_PRECISION),
-                self.operations_as_set(),
+                self.operations,
             )
         )
 
@@ -275,9 +276,8 @@ class PauliTerm:
             return other == self
 
         cast_other = cast(PauliTerm, other)
-        return (
-            self.operations_as_set() == cast_other.operations_as_set()
-            and np.allclose(self.coefficient, cast_other.coefficient)
+        return self.operations == cast_other.operations and np.allclose(
+            self.coefficient, cast_other.coefficient
         )
 
     def __add__(self, other: Union[PauliRepresentation, complex]) -> "PauliSum":
@@ -503,7 +503,7 @@ class PauliSum:
     def simplify(self) -> "PauliSum":
         like_terms: Dict[Hashable, List[PauliTerm]] = OrderedDict()
         for term in self.terms:
-            key = term.operations_as_set()
+            key = term.operations
             if key in like_terms:
                 like_terms[key].append(term)
             else:

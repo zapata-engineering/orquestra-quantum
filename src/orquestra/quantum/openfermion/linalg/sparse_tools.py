@@ -21,7 +21,6 @@ import numpy.linalg
 import scipy
 import scipy.sparse
 import scipy.sparse.linalg
-from sympy import Q
 
 from orquestra.quantum.openfermion.ops.operators import FermionOperator, QubitOperator
 from orquestra.quantum.openfermion.ops.representations import PolynomialTensor
@@ -173,7 +172,7 @@ def pauli_operator_sparse(qubit_operator: PauliRepresentation, n_qubits=None):
         tensor_factor = 0
         coefficient = qubit_term.coefficient
         sparse_operators = [coefficient]
-        for qubit_num, operator_str in qubit_term._ops.items():
+        for qubit_num, operator_str in qubit_term.operations:
 
             # Grow space for missing identity operators.
             if qubit_num > tensor_factor:

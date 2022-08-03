@@ -8,7 +8,6 @@ import numpy as np
 import pkg_resources
 import pytest
 
-from orquestra.quantum.circuits import Circuit, X, Y, Z
 from orquestra.quantum.measurements import ExpectationValues
 from orquestra.quantum.openfermion.hamiltonians import fermi_hubbard
 from orquestra.quantum.openfermion.linalg import (
@@ -244,25 +243,6 @@ class TestQubitOperator(unittest.TestCase):
 
         # Then
         self.assertEqual(number_operator, correct_operator)
-
-    def test_create_circuits_from_qubit_operator(self):
-        from orquestra.quantum.openfermion.zapata_utils._utils import (
-            create_circuits_from_qubit_operator,
-        )
-
-        # Initialize target
-        circuit1 = Circuit([Z(0), X(1)])
-        circuit2 = Circuit([Y(0), Z(1)])
-
-        # Given
-        qubit_op = QubitOperator("Z0 X1") + QubitOperator("Y0 Z1")
-
-        # When
-        pauli_circuits = create_circuits_from_qubit_operator(qubit_op)
-
-        # Then
-        self.assertEqual(pauli_circuits[0], circuit1)
-        self.assertEqual(pauli_circuits[1], circuit2)
 
 
 class TestOtherUtils(unittest.TestCase):

@@ -7,7 +7,6 @@ from typing import Iterable, List, Optional
 
 import numpy as np
 
-from orquestra.quantum.circuits import Circuit, X, Y, Z
 from orquestra.quantum.measurements import ExpectationValues
 from orquestra.quantum.openfermion import (
     FermionOperator,
@@ -274,17 +273,19 @@ def evaluate_qubit_operator_list(
     return value_estimate
 
 
-def reverse_qubit_order(qubit_operator: PauliSum, n_qubits: Optional[int] = None):
+def reverse_qubit_order(
+    qubit_operator: PauliRepresentation, n_qubits: Optional[int] = None
+):
     """Reverse the order of qubit indices in a qubit operator.
 
     Args:
-        qubit_operator (openfermion.QubitOperator): the operator
+        qubit_operator: the operator to be reversed
         n_qubits (int): total number of qubits. Needs to be provided when
             the size of the system of interest is greater than the size of qubit
             operator (optional)
 
     Returns:
-        reversed_op (openfermion.ops.QubitOperator)
+        reversed_op: the reversed operator
     """
 
     reversed_op = PauliSum()
@@ -296,7 +297,7 @@ def reverse_qubit_order(qubit_operator: PauliSum, n_qubits: Optional[int] = None
 
     for term in qubit_operator.terms:
         new_term = {}
-        for qubit_num, operator_str in term._ops.items():
+        for qubit_num, operator_str in term.operations:
             new_qubit_num = n_qubits - 1 - qubit_num
             new_term[new_qubit_num] = operator_str
         reversed_op += PauliTerm(new_term, term.coefficient)
@@ -532,36 +533,6 @@ def get_polynomial_tensor(fermion_operator, n_qubits=None):
             tensor_dict[key][indices] = coefficient
 
     return PolynomialTensor(tensor_dict)
-
-
-def create_circuits_from_qubit_operator(qubit_operator: QubitOperator) -> List[Circuit]:
-    """Creates a list of circuit objects from the Pauli terms of a QubitOperator
-    Args:
-        qubit_operator: operator for which the Pauli terms are converted into circuits
-
-    Return:
-        circuit_set: a list of Pauli string gate circuits
-    """
-
-    # Get the Pauli terms, ignoring coefficients
-    pauli_terms = list(qubit_operator.terms.keys())
-    term_gate_map = {"X": X, "Y": Y, "Z": Z}
-    circuit_set = []
-
-    # Loop over Pauli terms and populate circuit set list
-    for term in pauli_terms:
-
-        circuit = Circuit()
-
-        # Loop over Pauli factors in Pauli term and construct Pauli term circuit
-        for pauli in term:  # loop over pauli operators in an n qubit pauli term
-            pauli_index = pauli[0]
-            pauli_factor = pauli[1]
-            circuit += term_gate_map[pauli_factor](pauli_index)
-
-        circuit_set += [circuit]
-
-    return circuit_set
 
 
 def get_ground_state_rdm_from_qubit_op(

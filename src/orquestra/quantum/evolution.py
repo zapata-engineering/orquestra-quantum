@@ -3,20 +3,21 @@
 ################################################################################
 """Functions for constructing circuits simulating evolution under given Hamiltonian."""
 import operator
+import warnings
 from functools import reduce
 from itertools import chain
-from typing import Iterable, List, Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union
 
 import numpy as np
 import sympy
 
 from orquestra.quantum import circuits
 from orquestra.quantum.circuits import CNOT, RX, RZ, H
-from orquestra.quantum.openfermion import QubitOperator
+from orquestra.quantum.wip.operators import PauliRepresentation, PauliTerm
 
 
 def time_evolution(
-    hamiltonian: QubitOperator,
+    hamiltonian: PauliRepresentation,
     time: Union[float, sympy.Expr],
     method: str = "Trotter",
     trotter_order: int = 1,
@@ -36,20 +37,18 @@ def time_evolution(
     if method != "Trotter":
         raise ValueError(f"Currently the method {method} is not supported.")
 
-    terms: Iterable = list(hamiltonian.get_operators())
-
     return reduce(
         operator.add,
         (
             time_evolution_for_term(term, time / trotter_order)
             for _index_order in range(trotter_order)
-            for term in terms
+            for term in hamiltonian.terms
         ),
     )
 
 
 def time_evolution_for_term(
-    term: QubitOperator, time: Union[float, sympy.Expr]
+    term: PauliTerm, time: Union[float, sympy.Expr]
 ) -> circuits.Circuit:
     """Evolves a Pauli term for a given time and returns a circuit representing it.
     Based on section 4 from https://arxiv.org/abs/1001.3855 .
@@ -60,21 +59,17 @@ def time_evolution_for_term(
         Circuit: Circuit representing evolved term.
     """
 
-    if len(term.terms) != 1:
-        raise ValueError("This function works only on a single term.")
-    term_components = list(term.terms.keys())[0]
     base_changes = []
     base_reversals = []
     cnot_gates = []
     central_gate: Optional[circuits.GateOperation] = None
-    term_types = [component[1] for component in term_components]
-    qubit_indices = [component[0] for component in term_components]
-    coefficient = list(term.terms.values())[0]
+    term_types = list(term._ops.values())
+    qubit_indices = list(term._ops.keys())
 
     circuit = circuits.Circuit()
 
     # If constant term, return empty circuit.
-    if not term_components:
+    if term.is_constant:
         return circuit
 
     for i, (term_type, qubit_id) in enumerate(zip(term_types, qubit_indices)):
@@ -84,8 +79,8 @@ def time_evolution_for_term(
         elif term_type == "Y":
             base_changes.append(RX(np.pi / 2)(qubit_id))
             base_reversals.append(RX(-np.pi / 2)(qubit_id))
-        if i == len(term_components) - 1:
-            central_gate = RZ(2 * time * coefficient)(qubit_id)
+        if i == len(term.operations) - 1:
+            central_gate = RZ(2 * time * term.coefficient)(qubit_id)
         else:
             cnot_gates.append(CNOT(qubit_id, qubit_indices[i + 1]))
 
@@ -108,7 +103,7 @@ def time_evolution_for_term(
 
 
 def time_evolution_derivatives(
-    hamiltonian: QubitOperator,
+    hamiltonian: PauliRepresentation,
     time: float,
     method: str = "Trotter",
     trotter_order: int = 1,
@@ -132,22 +127,18 @@ def time_evolution_derivatives(
     single_trotter_derivatives = []
     factors = [1.0, -1.0]
     output_factors = []
-    terms: Iterable = list(hamiltonian.get_operators())
+    terms = hamiltonian.terms
 
     for i, term_1 in enumerate(terms):
         for factor in factors:
             output = circuits.Circuit()
 
-            try:
-                if isinstance(term_1, QubitOperator):
-                    r = list(term_1.terms.values())[0] / trotter_order
-                else:
-                    r = complex(term_1.coefficient).real / trotter_order
-            except TypeError:
-                raise ValueError(
-                    "Term coefficients need to be numerical. "
-                    f"Offending term: {term_1}"
+            if term_1.coefficient.real != term_1.coefficient:
+                warnings.warn(
+                    "Only real coefficients are supported. The imaginary part of the "
+                    "term {} will be ignored.".format(term_1)
                 )
+            r = term_1.coefficient.real / trotter_order
             output_factors.append(r * factor)
             shift = factor * (np.pi / (4.0 * r))
 

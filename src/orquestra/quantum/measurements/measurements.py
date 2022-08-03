@@ -6,7 +6,7 @@ from __future__ import annotations
 import copy
 import json
 from collections import Counter
-from typing import Dict, Iterable, List, Optional, Sequence, TextIO, Tuple, Union, cast
+from typing import Dict, Iterable, List, Optional, Sequence, TextIO, Tuple
 
 import numpy as np
 
@@ -17,7 +17,7 @@ from orquestra.quantum.utils import (
     sample_from_probability_distribution,
 )
 
-from ..wip.operators import PauliSum
+from ..wip.operators import PauliRepresentation
 from .expectation_values import ExpectationValues
 from .parities import check_parity_of_vector
 
@@ -287,7 +287,7 @@ class Measurements:
         return MeasurementOutcomeDistribution(distribution)
 
     def get_expectation_values(
-        self, ising_operator: PauliSum, use_bessel_correction: bool = False
+        self, ising_operator: PauliRepresentation, use_bessel_correction: bool = False
     ) -> ExpectationValues:
         """Get the expectation values of an operator from the measurements.
 
@@ -326,7 +326,7 @@ class Measurements:
         for i, first_term in enumerate(ising_operator.terms):
             correlations[i, i] = first_term.coefficient**2
             for j in range(i):
-                second_term = ising_operator[j]
+                second_term = ising_operator.terms[j]
                 marked_qubits = first_term.qubits.symmetric_difference(
                     second_term.qubits
                 )

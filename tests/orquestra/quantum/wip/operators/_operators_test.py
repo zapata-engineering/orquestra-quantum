@@ -26,7 +26,7 @@ class TestPauliTermInitialization:
     )
     def test_term_can_be_initialized_with_dictionary(self, operator_dict, coefficient):
         term = PauliTerm(operator_dict, coefficient)
-        assert term.operations_as_set() == frozenset(operator_dict.items())
+        assert term.operations == frozenset(operator_dict.items())
         assert term.coefficient == coefficient
         assert term.qubits == frozenset(operator_dict)
 
@@ -44,7 +44,7 @@ class TestPauliTermInitialization:
         self, pauli_str, coefficient, qubit_index, operator
     ):
         term = PauliTerm(pauli_str, coefficient)
-        assert term.operations_as_set() == frozenset([(qubit_index, operator)])
+        assert term.operations == frozenset([(qubit_index, operator)])
         assert term.coefficient == coefficient
         assert term.qubits == {qubit_index}
 
@@ -59,7 +59,7 @@ class TestPauliTermInitialization:
         self, pauli_str, coefficient, qubit_indices, operators
     ):
         term = PauliTerm(pauli_str, coefficient)
-        assert term.operations_as_set() == frozenset(zip(qubit_indices, operators))
+        assert term.operations == frozenset(zip(qubit_indices, operators))
         assert term.coefficient == coefficient
         assert term.qubits == frozenset(qubit_indices)
 
@@ -76,7 +76,7 @@ class TestPauliTermInitialization:
         self, pauli_str, coefficient, qubit_indices, operators
     ):
         term = PauliTerm(pauli_str)
-        assert term.operations_as_set() == frozenset(zip(qubit_indices, operators))
+        assert term.operations == frozenset(zip(qubit_indices, operators))
         assert term.coefficient == coefficient
         assert term.qubits == frozenset(qubit_indices)
 
@@ -96,7 +96,7 @@ class TestPauliTermInitialization:
         ],
     )
     def test_identity_operators_are_not_stored_in_iterm(self, pauli_str, expected_ops):
-        assert PauliTerm(pauli_str).operations_as_set() == frozenset(expected_ops)
+        assert PauliTerm(pauli_str).operations == frozenset(expected_ops)
 
     @pytest.mark.parametrize(
         "pauli_str", ["1 X", "X - 1254", "A0", "5.0 + Z1", "0.3+0.5j * X0", "X0 Z1"]
@@ -159,7 +159,7 @@ class TestConstructingPauliTermFromList:
         # The reverse (pair[::-1]) is from the fact, that for whatever reason
         # from_list accepts input in the reverse direction then the
         # operations_as_set produces it.
-        assert term.operations_as_set() == frozenset([pair[::-1] for pair in op_list])
+        assert term.operations == frozenset([pair[::-1] for pair in op_list])
         assert term.coefficient == coefficient
 
     def test_term_cannot_be_constructed_from_list_of_incorrectly_shaped_tuples(self):

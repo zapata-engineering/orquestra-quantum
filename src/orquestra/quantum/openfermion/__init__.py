@@ -134,7 +134,6 @@ from orquestra.quantum.openfermion.zapata_utils import (
     get_fermion_number_operator,
     get_diagonal_component,
     get_polynomial_tensor,
-    create_circuits_from_qubit_operator,
     get_ground_state_rdm_from_qubit_op,
     remove_inactive_orbitals,
     hf_rdm,
