@@ -455,6 +455,10 @@ class TestPauliSumOperations:
         with pytest.raises(ValueError):
             PauliSum([PauliTerm.identity(), 1])
 
+    def test_paulisum_cannot_be_constructed_from_term_not_wrapped_in_list(self):
+        with pytest.raises(ValueError):
+            PauliSum(PauliTerm.identity())
+
     def test_paulisum_fromstr(self, pauli_sum):
         assert PauliSum(str(pauli_sum)) == pauli_sum
 
