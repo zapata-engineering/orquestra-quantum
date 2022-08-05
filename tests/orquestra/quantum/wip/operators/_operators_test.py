@@ -215,7 +215,7 @@ class TestCopyingPauliTerm:
         assert copy.coefficient == 2.5
 
 
-class TestPauliTermProperties:
+class TestPauliOperatorProperties:
     @pytest.mark.parametrize(
         "term",
         [
@@ -249,6 +249,19 @@ class TestPauliTermProperties:
     )
     def test_term_is_not_constant_if_it_comprises_nontrivial_operators(self, term):
         assert not term.is_constant
+
+    @pytest.mark.parametrize(
+        "operator,n_qubits",
+        [
+            (PauliTerm("X0"), 1),
+            (PauliSum("2"), 0),
+            (PauliTerm("Z0*Z3"), 4),
+            (PauliTerm("X0*X1"), 2),
+            (PauliSum("2*Z2 + X5"), 6),
+        ],
+    )
+    def test_n_qubits(self, operator, n_qubits):
+        assert operator.n_qubits == n_qubits
 
 
 class TestPauliTermToCircuitConversion:
