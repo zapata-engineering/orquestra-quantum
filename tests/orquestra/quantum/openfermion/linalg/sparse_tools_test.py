@@ -174,6 +174,13 @@ class JordanWignerSparseTest(unittest.TestCase):
             )
         )
 
+    def test_pauli_operator_sparse_with_different_qubit_order(self):
+        op = PauliTerm("(2+0j)*Z0*Z3")
+        op2 = PauliTerm("(2+0j)*Z3*Z0")
+        self.assertTrue(
+            numpy.allclose(pauli_operator_sparse(op).A, pauli_operator_sparse(op2).A)
+        )
+
 
 class ComputationalBasisStateTest(unittest.TestCase):
     def test_computational_basis_state(self):
