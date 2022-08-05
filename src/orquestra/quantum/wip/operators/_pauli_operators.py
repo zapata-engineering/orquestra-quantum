@@ -375,6 +375,17 @@ class PauliTerm:
     def is_constant(self) -> bool:
         return self._ops == {}
 
+    @property
+    def n_qubits(self) -> int:
+        """Number of qubits used in this PauliTerm.
+
+        Follows the convention of openfermion's `count_qubits`.
+        Note that this is different from the number of operations. For example,
+        PauliTerm("Z0*Z3").n_qubits = 4, but len(PauliTerm("Z0*Z3").qubits) = 2.
+
+        """
+        return 0 if self.is_constant else max(self.qubits) + 1
+
 
 class PauliSum:
     def __init__(self, terms: Union[str, Sequence[PauliTerm]] = None):
@@ -526,3 +537,14 @@ class PauliSum:
     @property
     def is_constant(self) -> bool:
         return len(self.terms) == 1 and self.terms[0].is_constant
+
+    @property
+    def n_qubits(self) -> int:
+        """Number of qubits used in this PauliSum.
+
+        Follows the convention of openfermion's `count_qubits`, so that a qubit is
+        counted even if there are no operations on it. For example,
+        PauliSum("Z0+Z3").n_qubits = 4, but len(PauliSum("Z0+Z3").qubits) = 2.
+
+        """
+        return 0 if self.is_constant else max(self.qubits) + 1
