@@ -316,7 +316,7 @@ class Measurements:
         expectation_values_list = [
             term.coefficient
             * get_expectation_value_from_frequencies(
-                term._ops.keys(), bitstring_frequencies
+                term.qubits, bitstring_frequencies
             )
             for term in ising_operator.terms
         ]

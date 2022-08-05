@@ -63,8 +63,7 @@ def time_evolution_for_term(
     base_reversals = []
     cnot_gates = []
     central_gate: Optional[circuits.GateOperation] = None
-    term_types = list(term._ops.values())
-    qubit_indices = list(term._ops.keys())
+    qubit_indices = sorted(term.qubits)
 
     circuit = circuits.Circuit()
 
@@ -72,7 +71,8 @@ def time_evolution_for_term(
     if term.is_constant:
         return circuit
 
-    for i, (term_type, qubit_id) in enumerate(zip(term_types, qubit_indices)):
+    for i, qubit_id in enumerate(qubit_indices):
+        term_type = term[qubit_id]
         if term_type == "X":
             base_changes.append(H(qubit_id))
             base_reversals.append(H(qubit_id))
