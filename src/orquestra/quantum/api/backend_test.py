@@ -48,6 +48,7 @@ from orquestra.quantum.wavefunction import Wavefunction
 from ..distributions import MeasurementOutcomeDistribution
 from ..estimation import estimate_expectation_values_by_averaging
 from ..measurements import ExpectationValues, Measurements
+from ..operators import PauliTerm
 from ..testing.test_cases_for_backend_tests import (
     one_qubit_non_parametric_gates_amplitudes_test_set,
     one_qubit_non_parametric_gates_exp_vals_test_set,
@@ -58,7 +59,6 @@ from ..testing.test_cases_for_backend_tests import (
     two_qubit_parametric_gates_amplitudes_test_set,
     two_qubit_parametric_gates_exp_vals_test_set,
 )
-from ..operators import PauliTerm
 
 
 def skip_tests_for_excluded_gates(func):

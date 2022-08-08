@@ -21,8 +21,8 @@ import numpy as np
 from orquestra.quantum.circuits import RX, RY, RZ, Circuit, H
 
 from ..api.estimation import EstimateExpectationValues, EstimationTask
-from ..symbolic_simulator import SymbolicSimulator
 from ..operators import PauliTerm
+from ..symbolic_simulator import SymbolicSimulator
 
 _backend = SymbolicSimulator(seed=1997)
 
