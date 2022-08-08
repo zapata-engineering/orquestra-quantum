@@ -1,4 +1,7 @@
-# Import pretty much everything.
+################################################################################
+# © Copyright 2020-2022 Zapata Computing Inc.
+################################################################################
+"""This module contains functions and classes for pauli representations of operators."""
 from ._io import (
     convert_dict_to_op,
     convert_op_to_dict,

@@ -16,7 +16,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-"""This module contains utilities from openfermion adapted for use with Orquestra's
+"""This module contains functions from openfermion adapted for use with Orquestra's
 PauliTerm and PauliSum classes.
 """
 from .operator_utils import hermitian_conjugated, is_hermitian
