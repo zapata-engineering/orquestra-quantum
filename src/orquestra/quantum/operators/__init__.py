@@ -1,4 +1,18 @@
 # Import pretty much everything.
-from ._openfermion_utils import expectation, get_sparse_operator
+from ._io import (
+    convert_dict_to_op,
+    convert_op_to_dict,
+    get_pauli_strings,
+    load_operator,
+    load_operator_set,
+    save_operator,
+    save_operator_set,
+)
+from ._openfermion_utils import (
+    expectation,
+    get_sparse_operator,
+    hermitian_conjugated,
+    is_hermitian,
+)
 from ._pauli_operators import PauliRepresentation, PauliSum, PauliTerm
 from ._utils import get_expectation_value, reverse_qubit_order

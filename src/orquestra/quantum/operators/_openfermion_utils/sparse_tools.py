@@ -4,6 +4,7 @@ from typing import Optional
 import numpy
 import scipy
 import scipy.sparse
+import scipy.sparse.linalg
 
 from .._pauli_operators import PauliRepresentation, PauliSum, PauliTerm
 

@@ -1,6 +1,3 @@
-################################################################################
-# © Copyright 2020-2022 Zapata Computing Inc.
-################################################################################
 #   Copyright 2017 The OpenFermion Developers
 #   Modifications copyright 2022 Zapata Computing, Inc. for compatibility reasons.
 #
@@ -16,8 +13,11 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-"""This module contains utilities from openfermion adapted for use with Orquestra's
-PauliTerm and PauliSum classes.
-"""
-from .operator_utils import hermitian_conjugated, is_hermitian
-from .sparse_tools import expectation, get_sparse_operator
+import os
+
+# Tolerance to consider number zero.
+EQ_TOLERANCE = 1e-8
+
+# Molecular data directory.
+THIS_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
+DATA_DIRECTORY = os.path.realpath(os.path.join(THIS_DIRECTORY, "testing/data"))
