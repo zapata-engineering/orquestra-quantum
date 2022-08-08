@@ -3,6 +3,7 @@ from typing import Optional
 
 import numpy
 import scipy
+import scipy.sparse
 
 from .._pauli_operators import PauliRepresentation, PauliSum, PauliTerm
 
