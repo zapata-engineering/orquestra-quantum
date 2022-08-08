@@ -14,7 +14,7 @@
 #   limitations under the License.
 """This module provides functions to interface with scipy.sparse."""
 from functools import reduce
-from typing import Optional
+from typing import List, Optional
 
 import numpy
 import scipy
@@ -58,9 +58,9 @@ def get_sparse_operator(operator: PauliRepresentation, n_qubits: Optional[int] =
 
     # Construct the Scipy sparse matrix.
     n_hilbert = 2**n_qubits
-    values_list = [[]]
-    row_list = [[]]
-    column_list = [[]]
+    values_list: List[numpy.ndarray] = []
+    row_list: List[numpy.ndarray] = []
+    column_list: List[numpy.ndarray] = []
 
     # Loop through the terms.
     for qubit_term in operator.terms:
