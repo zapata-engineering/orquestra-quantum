@@ -22,6 +22,7 @@ from typing import (
     Dict,
     FrozenSet,
     Hashable,
+    Iterable,
     Iterator,
     List,
     Optional,
@@ -167,9 +168,8 @@ class PauliTerm:
         self.coefficient = complex(1.0 if coefficient is None else coefficient)
 
     @staticmethod
-    def from_list(
-        list_of_terms: List[Tuple[str, int]],
-        coefficient: complex = 1.0,
+    def from_iterable(
+        terms: Iterable[Tuple[int, str]], coefficient: complex = 1.0
     ) -> "PauliTerm":
         """Construct PauliTerm from a list of operators.
 
@@ -179,11 +179,11 @@ class PauliTerm:
         """
 
         ############### Some checks on input first ###############
-        _, idx_list = zip(*list_of_terms)
+        idx_list, _ = zip(*terms)
 
-        if not all([isinstance(op, tuple) for op in list_of_terms]):
+        if not all([isinstance(op, tuple) for op in terms]):
             raise ValueError(
-                "The list can only contain tuples of the form (op, index). If you "
+                "The list can only contain tuples of the form (index, op). If you "
                 "want to initialize from strings, use PauliTerm's constructor."
             )
 
@@ -195,7 +195,7 @@ class PauliTerm:
 
         ##########################################################
 
-        result_dict = {idx: op for op, idx in list_of_terms if op != "I"}
+        result_dict = {idx: op for idx, op in terms if op != "I"}
 
         return PauliTerm(result_dict, coefficient)
 
@@ -536,7 +536,7 @@ class PauliSum:
 
     @property
     def is_constant(self) -> bool:
-        return len(self.terms) == 1 and self.terms[0].is_constant
+        return len(self.terms) == 0 or all([term.is_constant for term in self.terms])
 
     @property
     def n_qubits(self) -> int:

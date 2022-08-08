@@ -6,7 +6,6 @@ from typing import List, Optional
 
 import numpy as np
 
-from ..measurements import ExpectationValues
 from ..utils import ValueEstimate, bin2dec, dec2bin
 from ..wavefunction import Wavefunction
 from ._openfermion_utils.sparse_tools import expectation, get_sparse_operator
@@ -192,7 +191,7 @@ def generate_random_pauliop(
 
 
 def evaluate_operator(
-    operator: PauliRepresentation, expectation_values: ExpectationValues
+    operator: PauliRepresentation, expectation_values
 ) -> ValueEstimate:
     """Evaluate the expectation value of a qubit operator using expectation values for
     the terms.
@@ -218,7 +217,7 @@ def evaluate_operator(
 
 def evaluate_operator_list(
     operator_list: List[PauliRepresentation],
-    expectation_values: ExpectationValues,
+    expectation_values,
 ) -> ValueEstimate:
     """Evaluate the expectation value of an operator list using expectation values for
     the terms. The expectation values should be in the order given by the qubit operator
