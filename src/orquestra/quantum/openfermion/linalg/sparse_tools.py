@@ -172,7 +172,7 @@ def pauli_operator_sparse(qubit_operator: PauliRepresentation, n_qubits=None):
         tensor_factor = 0
         coefficient = qubit_term.coefficient
         sparse_operators = [coefficient]
-        for qubit_num, operator_str in qubit_term.operations:
+        for qubit_num, operator_str in sorted(qubit_term.operations):
 
             # Grow space for missing identity operators.
             if qubit_num > tensor_factor:
