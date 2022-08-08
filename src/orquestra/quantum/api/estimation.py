@@ -9,7 +9,7 @@ import numpy as np
 from orquestra.quantum.circuits import Circuit
 
 from ..measurements import ExpectationValues
-from ..wip.operators import PauliRepresentation
+from ..operators import PauliRepresentation
 from .backend import QuantumBackend
 
 

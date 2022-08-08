@@ -14,8 +14,8 @@ from orquestra.quantum.evolution import (
     time_evolution_derivatives,
     time_evolution_for_term,
 )
+from orquestra.quantum.operators import PauliSum, PauliTerm
 from orquestra.quantum.utils import compare_unitary
-from orquestra.quantum.wip.operators import PauliSum, PauliTerm
 
 TUPLE_TERM_TO_ORQUESTRA_GATE = {
     ((0, "X"), (1, "X")): XX,

@@ -58,7 +58,7 @@ from ..testing.test_cases_for_backend_tests import (
     two_qubit_parametric_gates_amplitudes_test_set,
     two_qubit_parametric_gates_exp_vals_test_set,
 )
-from ..wip.operators import PauliTerm
+from ..operators import PauliTerm
 
 
 def skip_tests_for_excluded_gates(func):

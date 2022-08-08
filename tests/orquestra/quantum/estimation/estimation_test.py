@@ -17,9 +17,9 @@ from orquestra.quantum.estimation import (
     split_estimation_tasks_to_measure,
 )
 from orquestra.quantum.measurements import ExpectationValues, Measurements
+from orquestra.quantum.operators import PauliSum, PauliTerm
 from orquestra.quantum.symbolic_simulator import SymbolicSimulator
 from orquestra.quantum.testing import MockQuantumBackend
-from orquestra.quantum.wip.operators import PauliSum, PauliTerm
 
 
 class TestEstimatorUtils:
@@ -429,7 +429,7 @@ test cases to ensure covariance is being caluclated correctly.
 
 Since we generate the data with MockBackendForTestingCovariancewhenNumberOfShotsIsLow
 the estimation tasks can be arbitrary. They just need a valid circuit, number of shots
-and have 2 terms in the IsingOperator."""
+and have 2 terms in the ising operator."""
 TEST_CASES_NONEIGENSTATES_WITH_LOW_NUMBER_OF_SHOTS = [
     (
         4

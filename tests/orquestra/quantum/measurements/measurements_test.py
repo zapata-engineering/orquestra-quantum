@@ -21,7 +21,7 @@ from orquestra.quantum.utils import (
     convert_tuples_to_bitstrings,
     get_ordered_list_of_bitstrings,
 )
-from orquestra.quantum.wip.operators import PauliTerm
+from orquestra.quantum.operators import PauliTerm
 
 
 def remove_file_if_exists(filename):

@@ -22,7 +22,7 @@ from orquestra.quantum.circuits import RX, RY, RZ, Circuit, H
 
 from ..api.estimation import EstimateExpectationValues, EstimationTask
 from ..symbolic_simulator import SymbolicSimulator
-from ..wip.operators import PauliTerm
+from ..operators import PauliTerm
 
 _backend = SymbolicSimulator(seed=1997)
 

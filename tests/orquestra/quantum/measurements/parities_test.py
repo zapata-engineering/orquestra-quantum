@@ -9,7 +9,7 @@ from orquestra.quantum.measurements import (
     load_parities,
     save_parities,
 )
-from orquestra.quantum.openfermion.ops import IsingOperator
+from orquestra.quantum.operators import PauliSum
 
 
 def remove_file_if_exists(filename):
@@ -21,7 +21,7 @@ def remove_file_if_exists(filename):
 
 def test_parities_io():
     measurements = [(1, 0), (1, 0), (0, 1), (0, 0)]
-    op = IsingOperator("[Z0] + [Z1] + [Z0 Z1]")
+    op = PauliSum("Z0 + Z1 + Z0*Z1")
     parities = get_parities_from_measurements(measurements, op)
     save_parities(parities, "parities.json")
     loaded_parities = load_parities("parities.json")

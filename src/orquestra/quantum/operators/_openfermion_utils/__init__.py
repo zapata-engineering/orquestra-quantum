@@ -1,3 +1,6 @@
+################################################################################
+# © Copyright 2020-2022 Zapata Computing Inc.
+################################################################################
 #   Copyright 2017 The OpenFermion Developers
 #   Modifications copyright 2022 Zapata Computing, Inc. for compatibility reasons.
 #
@@ -13,26 +16,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-import unittest
-
-from orquestra.quantum.openfermion.ops.operators.ising_operator import IsingOperator
-from orquestra.quantum.openfermion.testing.testing_utils import EqualsTester
-
-
-def test_properties():
-    operator = IsingOperator()
-    assert operator.actions == ("Z",)
-    assert operator.action_strings == ("Z",)
-    assert operator.action_before_index
-    assert operator.different_indices_commute
-
-
-class GeneralTest(unittest.TestCase):
-    """General tests."""
-
-    def test_ising_operator(self):
-        equals_tester = EqualsTester(self)
-
-        group = [IsingOperator("Z0 Z3"), IsingOperator([(0, "Z"), (3, "Z")])]
-
-        equals_tester.add_equality_group(*group)
+"""This module contains utilities from openfermion adapted for use with Orquestra's
+PauliTerm and PauliSum classes.
+"""
+from .sparse_tools import expectation, get_sparse_operator

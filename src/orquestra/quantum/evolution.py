@@ -13,7 +13,7 @@ import sympy
 
 from orquestra.quantum import circuits
 from orquestra.quantum.circuits import CNOT, RX, RZ, H
-from orquestra.quantum.wip.operators import PauliRepresentation, PauliTerm
+from orquestra.quantum.operators import PauliRepresentation, PauliTerm
 
 
 def time_evolution(

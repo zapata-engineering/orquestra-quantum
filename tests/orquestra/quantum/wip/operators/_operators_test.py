@@ -5,7 +5,7 @@ from unittest.mock import Mock
 import pytest
 
 from orquestra.quantum.circuits import Circuit, X, Y, Z
-from orquestra.quantum.wip.operators._pauli_operators import PauliSum, PauliTerm
+from orquestra.quantum.operators._pauli_operators import PauliSum, PauliTerm
 
 
 @pytest.fixture
