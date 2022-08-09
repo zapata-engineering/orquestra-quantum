@@ -449,7 +449,10 @@ class TestPauliTermAlgebra:
         assert (
             str(pauli_term.copy(new_coefficient=3.3 + 5.2j)) == "(3.3+5.2j)*X0*Y1*Z12"
         )
-
+    
+    def test_pauliterm_multiply_by_zero(self, pauli_term: PauliTerm):
+        zero_op = pauli_term * 0
+        assert zero_op.coefficient = 0
 
 class TestPauliSumOperations:
     @pytest.fixture
@@ -596,3 +599,7 @@ class TestPauliSumOperations:
         repr_str = str(pauli_sum)
 
         assert all([str(term) in repr_str for term in pauli_sum.terms])
+
+    def test_paulisum_multiply_by_zero(self, pauli_sum: PauliSum):
+        zero_op = pauli_sum * 0
+        assert zero_op == PauliSum()

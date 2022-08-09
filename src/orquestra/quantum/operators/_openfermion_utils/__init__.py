@@ -19,6 +19,6 @@
 """This module contains functions from openfermion adapted for use with Orquestra's
 PauliTerm and PauliSum classes.
 """
-from .config import DATA_DIRECTORY, EQ_TOLERANCE, THIS_DIRECTORY
+from .config import EQ_TOLERANCE
 from .operator_utils import hermitian_conjugated, is_hermitian
 from .sparse_tools import expectation, get_sparse_operator

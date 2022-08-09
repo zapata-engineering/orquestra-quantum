@@ -12,9 +12,7 @@ from ._io import (
     save_operator_set,
 )
 from ._openfermion_utils import (
-    DATA_DIRECTORY,
     EQ_TOLERANCE,
-    THIS_DIRECTORY,
     expectation,
     get_sparse_operator,
     hermitian_conjugated,

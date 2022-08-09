@@ -209,7 +209,8 @@ class PauliTerm:
         The created copy is deep, in particular internal dictionary storing map
         from qubit indices to operators is also copied.
         """
-        new_coefficient = new_coefficient if new_coefficient else self.coefficient
+        if new_coefficient is None:
+            new_coefficient = self.coefficient
 
         return PauliTerm(operator=self._ops, coefficient=new_coefficient)
 
