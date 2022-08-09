@@ -169,7 +169,7 @@ class PauliTerm:
 
     @staticmethod
     def from_iterable(
-        terms: Iterable[Tuple[int, str]], coefficient: complex = 1.0
+        terms: Iterable[Tuple[str, int]], coefficient: complex = 1.0
     ) -> "PauliTerm":
         """Construct PauliTerm from a list of operators.
 
@@ -179,7 +179,7 @@ class PauliTerm:
         """
 
         ############### Some checks on input first ###############
-        idx_list, _ = zip(*terms)
+        _, idx_list = zip(*terms)
 
         if not all([isinstance(op, tuple) for op in terms]):
             raise ValueError(
@@ -195,7 +195,7 @@ class PauliTerm:
 
         ##########################################################
 
-        result_dict = {idx: op for idx, op in terms if op != "I"}
+        result_dict = {idx: op for op, idx in terms if op != "I"}
 
         return PauliTerm(result_dict, coefficient)
 

@@ -25,7 +25,7 @@ def convert_dict_to_op(dictionary: dict) -> PauliSum:
         coefficient = term_dict["coefficient"]["real"]
         if term_dict["coefficient"].get("imag"):
             coefficient += 1j * term_dict["coefficient"]["imag"]
-        full_operator += PauliTerm.from_list(operator, coefficient)
+        full_operator += PauliTerm.from_iterable(operator, coefficient)
 
     return full_operator
 

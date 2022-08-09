@@ -11,7 +11,7 @@ from orquestra.quantum.operators._pauli_operators import PauliSum, PauliTerm
 @pytest.fixture
 def pauli_term():
     correct_list = [("X", 0), ("Y", 1), ("Z", 12)]
-    return PauliTerm.from_list(correct_list, coefficient=2.0)
+    return PauliTerm.from_iterable(correct_list, coefficient=2.0)
 
 
 @pytest.fixture
@@ -145,38 +145,40 @@ class TestPauliTermInitialization:
         assert PauliTerm(str(term)) == term
 
 
-class TestConstructingPauliTermFromList:
+class TestConstructingPauliTermFromIterable:
     @pytest.mark.parametrize(
-        "op_list, coefficient",
+        "ops, coefficient",
         [
             ([("X", 0), ("Y", 1), ("Z", 12)], -0.5),
+            ({("X", 0), ("Y", 1), ("Z", 12)}, -0.5),
         ],
     )
-    def test_term_constructed_from_list_has_expected_operators_and_coefficient(
-        self, op_list, coefficient
+    def test_term_constructed_from_iterable_has_expected_operators_and_coefficient(
+        self, ops, coefficient
     ):
-        term = PauliTerm.from_list(op_list, coefficient)
-        # The reverse (pair[::-1]) is from the fact, that for whatever reason
-        # from_list accepts input in the reverse direction then the
-        # operations_as_set produces it.
-        assert term.operations == frozenset([pair[::-1] for pair in op_list])
+        term = PauliTerm.from_iterable(ops, coefficient)
+        # The reverse (pair[::-1]) is from the fact that from_iterable accepts input in
+        # the reverse direction then the operations produces it.
+        assert term.operations == frozenset([pair[::-1] for pair in ops])
         assert term.coefficient == coefficient
 
-    def test_term_cannot_be_constructed_from_list_of_incorrectly_shaped_tuples(self):
+    def test_term_cannot_be_constructed_from_iterable_of_incorrectly_shaped_tuples(
+        self
+    ):
         with pytest.raises(ValueError) as e:
-            PauliTerm.from_list([("X0")])
+            PauliTerm.from_iterable([("X0")])
 
         assert "list can only contain" in str(e.value)
 
     def test_term_cannot_be_initialized_if_any_index_in_list_is_incorrect(self):
         with pytest.raises(ValueError) as e:
-            PauliTerm.from_list([("X", -1)])
+            PauliTerm.from_iterable([("X", -1)])
 
         assert "Invalid qubit index" in str(e.value)
 
     def test_term_cannot_be_constructed_if_qubit_indices_are_duplicate(self):
         with pytest.raises(ValueError) as e:
-            PauliTerm.from_list([("X", 0), ("Y", 0)])
+            PauliTerm.from_iterable([("X", 0), ("Y", 0)])
         assert "Duplicate" in str(e.value)
 
 
@@ -221,7 +223,7 @@ class TestPauliOperatorProperties:
         [
             PauliTerm("Z0", -2),
             PauliTerm("-0.5 * Z1 * Z3"),
-            PauliTerm.from_list([("Z", 3), ("Z", 4)], 5.0),
+            PauliTerm.from_iterable([("Z", 3), ("Z", 4)], 5.0),
         ],
     )
     def test_term_is_ising_if_it_contains_only_z_operators(self, term):
@@ -452,7 +454,7 @@ class TestPauliTermAlgebra:
     
     def test_pauliterm_multiply_by_zero(self, pauli_term: PauliTerm):
         zero_op = pauli_term * 0
-        assert zero_op.coefficient = 0
+        assert zero_op.coefficient == 0
 
 class TestPauliSumOperations:
     @pytest.fixture
