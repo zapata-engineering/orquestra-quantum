@@ -163,7 +163,7 @@ class TestConstructingPauliTermFromIterable:
         assert term.coefficient == coefficient
 
     def test_term_cannot_be_constructed_from_iterable_of_incorrectly_shaped_tuples(
-        self
+        self,
     ):
         with pytest.raises(ValueError) as e:
             PauliTerm.from_iterable([("X0")])
@@ -451,10 +451,12 @@ class TestPauliTermAlgebra:
         assert (
             str(pauli_term.copy(new_coefficient=3.3 + 5.2j)) == "(3.3+5.2j)*X0*Y1*Z12"
         )
-    
+
     def test_pauliterm_multiply_by_zero(self, pauli_term: PauliTerm):
         zero_op = pauli_term * 0
+        assert isinstance(zero_op, PauliTerm)
         assert zero_op.coefficient == 0
+
 
 class TestPauliSumOperations:
     @pytest.fixture
