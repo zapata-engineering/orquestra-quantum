@@ -14,8 +14,8 @@ from orquestra.quantum.evolution import (
     time_evolution_derivatives,
     time_evolution_for_term,
 )
+from orquestra.quantum.operators import PauliSum, PauliTerm
 from orquestra.quantum.utils import compare_unitary
-from orquestra.quantum.wip.operators import PauliRepresentation, PauliSum, PauliTerm
 
 TUPLE_TERM_TO_ORQUESTRA_GATE = {
     ((0, "X"), (1, "X")): XX,
@@ -27,7 +27,7 @@ TUPLE_TERM_TO_ORQUESTRA_GATE = {
 def _orquestra_exponentiate_qubit_hamiltonian_term(term, time, trotter_order):
     base_exponent = 2 * time / trotter_order / np.pi
 
-    base_gate = TUPLE_TERM_TO_ORQUESTRA_GATE[tuple(term._ops.items())]
+    base_gate = TUPLE_TERM_TO_ORQUESTRA_GATE[tuple(sorted(term.operations))]
     # This introduces a phase to the gate, but that's fine
     # since `compare_unitary` accounts for that
     mat = base_gate(np.pi)(0, 1).lifted_matrix(2)

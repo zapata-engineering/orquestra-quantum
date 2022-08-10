@@ -16,12 +16,12 @@ from orquestra.quantum.measurements import (
     convert_bitstring_to_int,
     get_expectation_value_from_frequencies,
 )
+from orquestra.quantum.operators import PauliTerm
 from orquestra.quantum.utils import (
     RNDSEED,
     convert_tuples_to_bitstrings,
     get_ordered_list_of_bitstrings,
 )
-from orquestra.quantum.wip.operators import PauliTerm
 
 
 def remove_file_if_exists(filename):

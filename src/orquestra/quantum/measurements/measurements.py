@@ -17,7 +17,7 @@ from orquestra.quantum.utils import (
     sample_from_probability_distribution,
 )
 
-from ..wip.operators import PauliRepresentation
+from ..operators import PauliRepresentation
 from .expectation_values import ExpectationValues
 from .parities import check_parity_of_vector
 
@@ -301,10 +301,10 @@ class Measurements:
         Returns:
             expectation values of each term in the operator
         """
-        # We require operator to be IsingOperator because measurements are always
-        # performed in the Z basis, so we need the operator to be Ising (containing only
-        # Z terms). A general Qubit Operator could have X or Y terms which don’t get
-        # directly measured.
+        # We require operator to be ising because measurements are always performed in
+        # the Z basis, so we need the operator to be Ising (containing only Z terms).
+        # A general Qubit Operator could have X or Y terms which don’t get directly
+        # measured.
         if not ising_operator.is_ising:
             raise TypeError("Input operator is not ising.")
 
@@ -315,9 +315,7 @@ class Measurements:
         # Perform weighted average
         expectation_values_list = [
             term.coefficient
-            * get_expectation_value_from_frequencies(
-                term._ops.keys(), bitstring_frequencies
-            )
+            * get_expectation_value_from_frequencies(term.qubits, bitstring_frequencies)
             for term in ising_operator.terms
         ]
         expectation_values = np.array(expectation_values_list)
