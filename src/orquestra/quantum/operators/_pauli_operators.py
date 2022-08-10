@@ -278,7 +278,7 @@ class PauliTerm:
 
         cast_other = cast(PauliTerm, other)
         return np.allclose(self.coefficient, cast_other.coefficient) and (
-            np.isclose(self.coefficient, 0) or self.operations == cast_other.operations
+            np.allclose(self.coefficient, 0) or self.operations == cast_other.operations
         )
 
     def __add__(self, other: Union[PauliRepresentation, complex]) -> "PauliSum":
@@ -445,7 +445,7 @@ class PauliSum:
 
         if isinstance(other, PauliTerm):
             if len(self) == 0:
-                return np.isclose(other.coefficient, 0)
+                return np.allclose(other.coefficient, 0)
             return self == PauliSum([other])
 
         other = cast(PauliSum, other)
