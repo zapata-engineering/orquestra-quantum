@@ -277,8 +277,8 @@ class PauliTerm:
             return other == self
 
         cast_other = cast(PauliTerm, other)
-        return self.operations == cast_other.operations and np.allclose(
-            self.coefficient, cast_other.coefficient
+        return np.allclose(self.coefficient, cast_other.coefficient) and (
+            np.isclose(self.coefficient, 0) or self.operations == cast_other.operations
         )
 
     def __add__(self, other: Union[PauliRepresentation, complex]) -> "PauliSum":
@@ -393,6 +393,7 @@ class PauliSum:
         if isinstance(terms, str):
             terms = [PauliTerm(s.strip()) for s in re.split(r"\+(?![^(]*\))", terms)]
         if terms is None:
+            # If no terms is given, the PauliSum has a value of zero.
             terms = []
 
         if not (
@@ -443,6 +444,8 @@ class PauliSum:
             return self == PauliSum([constant_term])
 
         if isinstance(other, PauliTerm):
+            if len(self) == 0:
+                return np.isclose(other.coefficient, 0)
             return self == PauliSum([other])
 
         other = cast(PauliSum, other)
@@ -533,6 +536,9 @@ class PauliSum:
         return PauliSum(terms)
 
     def __repr__(self):
+        if len(self) == 0:
+            zero_identity_term = PauliTerm("I0", 0)
+            return str(zero_identity_term)
         return " + ".join([str(term) for term in self.terms])
 
     @property

@@ -326,6 +326,26 @@ class TestPauliTermAlgebra:
         with pytest.raises(TypeError):
             pauli_term == "X0*Y1*Z12"
 
+    def test_pauliterm_equality_zero(self, pauli_term: PauliTerm):
+        # Test that various representations of zero are equal
+        zero_paulisum = PauliSum()
+        zero_identity_term = PauliTerm("I0", 0)
+        mul_0 = pauli_term * 0
+        copy_0 = pauli_term.copy(0)
+        other_0 = PauliTerm("X5*Z11", 0)
+        paulisum_with_zero_term = PauliSum([zero_identity_term]).simplify()
+        subtracted = pauli_term - pauli_term
+
+        assert (
+            zero_paulisum
+            == zero_identity_term
+            == mul_0
+            == copy_0
+            == other_0
+            == paulisum_with_zero_term
+            == subtracted
+        )
+
     def test_pauliterm_add(self, pauli_term):
         # Test adding to PauliSum calls function of PauliSum
         old_paulisum_add = PauliSum.__add__
