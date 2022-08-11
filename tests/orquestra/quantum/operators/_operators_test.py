@@ -162,6 +162,17 @@ class TestConstructingPauliTermFromIterable:
         assert term.operations == frozenset([pair[::-1] for pair in ops])
         assert term.coefficient == coefficient
 
+    def test_identity_term_is_constructed_from_empty_iterable(self):
+        term = PauliTerm.from_iterable([])
+        assert term.operations == frozenset()
+        assert term.coefficient == 1.0
+        assert term == PauliTerm.identity()
+
+        term_with_coeff = PauliTerm.from_iterable([], 2.0 + 3.0j)
+        assert term_with_coeff.operations == frozenset()
+        assert term_with_coeff.coefficient == 2.0 + 3.0j
+        assert term_with_coeff == PauliTerm.identity() * (2.0 + 3.0j)
+
     def test_term_cannot_be_constructed_from_iterable_of_incorrectly_shaped_tuples(
         self,
     ):
