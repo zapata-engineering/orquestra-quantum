@@ -179,19 +179,20 @@ class PauliTerm:
         """
 
         ############### Some checks on input first ###############
-        _, idx_list = zip(*terms)
+        if terms:
+            _, idx_list = zip(*terms)
 
-        if not all([isinstance(op, tuple) for op in terms]):
-            raise ValueError(
-                "The list can only contain tuples of the form (index, op). If you "
-                "want to initialize from strings, use PauliTerm's constructor."
-            )
+            if not all([isinstance(op, tuple) for op in terms]):
+                raise ValueError(
+                    "The list can only contain tuples of the form (index, op). If you "
+                    "want to initialize from strings, use PauliTerm's constructor."
+                )
 
-        if len(set(idx_list)) != len(idx_list):
-            raise ValueError(
-                "Duplicate indices used in list. Manually create terms"
-                "and multiply them instead."
-            )
+            if len(set(idx_list)) != len(idx_list):
+                raise ValueError(
+                    "Duplicate indices used in list. Manually create terms"
+                    "and multiply them instead."
+                )
 
         ##########################################################
 
