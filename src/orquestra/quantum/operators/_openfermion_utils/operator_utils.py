@@ -27,11 +27,11 @@ def hermitian_conjugated(operator):
     if isinstance(operator, PauliSum):
         conjugate_operator = PauliSum()
         for term in operator.terms:
-            conjugate_operator += PauliTerm(term._ops, term.coefficient.conjugate())
+            conjugate_operator += term.copy(term.coefficient.conjugate())
 
     # Handle PauliTerm
     elif isinstance(operator, PauliTerm):
-        conjugate_operator = PauliTerm(operator._ops, operator.coefficient.conjugate())
+        conjugate_operator = operator.copy(operator.coefficient.conjugate())
 
     # Handle sparse matrix
     elif isinstance(operator, spmatrix):
