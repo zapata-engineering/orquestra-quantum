@@ -179,7 +179,7 @@ class PauliTerm:
         """
 
         ############### Some checks on input first ###############
-        if len(terms) > 0:
+        if terms:
             _, idx_list = zip(*terms)
 
             if not all([isinstance(op, tuple) for op in terms]):
