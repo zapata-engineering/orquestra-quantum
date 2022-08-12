@@ -74,6 +74,8 @@ XY = make_parametric_gate_prototype("XY", _matrices.xy_matrix, 2)
 
 
 # --- misc ----
+# The Delay gate acts as an identity, however delays further circuit execution
+# on the given qubit by n-units of time.
 Delay = make_parametric_gate_prototype(
     "Delay", _matrices.delay_matrix, 1, is_hermitian=True
 )
