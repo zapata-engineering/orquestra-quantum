@@ -11,11 +11,11 @@ GatePrototype = Callable[..., _gates.Gate]
 GateRef = Union[_gates.Gate, GatePrototype]
 
 
-def make_parametric_gate_prototype(name, matrix_factory, num_qubits) -> GatePrototype:
+def make_parametric_gate_prototype(name, matrix_factory, num_qubits, is_hermitian=False) -> GatePrototype:
     def _factory(*gate_parameters: _gates.Parameter):
         # TODO: check if len(gate_parameters) == len(arguments of matrix_factory)
         return _gates.MatrixFactoryGate(
-            name, matrix_factory, gate_parameters, num_qubits
+            name, matrix_factory, gate_parameters, num_qubits, is_hermitian
         )
 
     return _factory
@@ -69,3 +69,7 @@ XX = make_parametric_gate_prototype("XX", _matrices.xx_matrix, 2)
 YY = make_parametric_gate_prototype("YY", _matrices.yy_matrix, 2)
 ZZ = make_parametric_gate_prototype("ZZ", _matrices.zz_matrix, 2)
 XY = make_parametric_gate_prototype("XY", _matrices.xy_matrix, 2)
+
+
+# --- misc ----
+Delay = make_parametric_gate_prototype("Delay", _matrices.delay_matrix, 1, is_hermitian=True)

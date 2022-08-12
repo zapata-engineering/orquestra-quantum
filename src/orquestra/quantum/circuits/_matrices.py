@@ -219,3 +219,7 @@ def xy_matrix(angle):
             [0, 0, 0, 1],
         ]
     )
+
+
+def delay_matrix(_duration):
+    return i_matrix()
