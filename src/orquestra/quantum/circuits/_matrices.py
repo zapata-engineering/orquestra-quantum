@@ -222,4 +222,6 @@ def xy_matrix(angle):
 
 
 def delay_matrix(_duration):
+    # Note that _duration parameter is not used when constructing the
+    # matrix, because Delay always acts as identity.
     return i_matrix()
