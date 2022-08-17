@@ -28,6 +28,7 @@ ONE_QUBIT_ONE_PARAM_GATES = [
 TWO_QUBITS_NO_PARAMS_GATES = [
     _builtin_gates.CNOT,
     _builtin_gates.CZ,
+    _builtin_gates.ECR,
     _builtin_gates.SWAP,
 ]
 

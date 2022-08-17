@@ -16,6 +16,7 @@ from orquestra.quantum.circuits._builtin_gates import (
     CNOT,
     CPHASE,
     CZ,
+    ECR,
     ISWAP,
     PHASE,
     RX,
@@ -47,7 +48,7 @@ EXAMPLE_OPERATIONS = tuple(
         *[
             gate(qubit1_i, qubit2_i)
             for qubit1_i, qubit2_i in [(0, 1), (1, 0), (0, 5), (4, 2)]
-            for gate in [CNOT, CZ, SWAP, ISWAP]
+            for gate in [CNOT, CZ, ECR, SWAP, ISWAP]
         ],
         *[
             gate(angle)(qubit1_i, qubit2_i)

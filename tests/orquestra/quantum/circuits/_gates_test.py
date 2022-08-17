@@ -30,6 +30,7 @@ GATES_REPRESENTATIVES = [
     _builtin_gates.U3(np.pi, sympy.pi / 2, sympy.Symbol("x")),
     _builtin_gates.CZ,
     _builtin_gates.CNOT,
+    _builtin_gates.ECR,
     _builtin_gates.SWAP,
     _builtin_gates.ISWAP,
     _builtin_gates.XX(sympy.cos(sympy.Symbol("phi"))),
@@ -282,7 +283,9 @@ class TestPowerGate:
             assert power_gate.dagger == gate.dagger.power(exponent)
 
     def test_creating_power_gate_from_power_gate(self, gate, exponent):
-        if len(gate.free_symbols) == 0:
+        # We exclude ECR ** 0.5 gate from this test because it would require computing
+        # ECR ** 0.25, which currently sympy (as of version 1.9) cannot handle.
+        if len(gate.free_symbols) == 0 and (exponent != 0.5 or gate.name != "ECR"):
             power_gate = gate.power(exponent)
             powered_power_gate = power_gate.power(exponent)
             assert powered_power_gate.matrix == power_gate.matrix**exponent

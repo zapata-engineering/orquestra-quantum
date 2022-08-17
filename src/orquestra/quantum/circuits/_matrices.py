@@ -163,6 +163,17 @@ def iswap_matrix():
     return sympy.Matrix([[1, 0, 0, 0], [0, 0, 1j, 0], [0, 1j, 0, 0], [0, 0, 0, 1]])
 
 
+def ecr_matrix():
+    return sympy.Matrix(
+        [
+            [0, 0, 1, 1j],
+            [0, 0, 1j, 1],
+            [1, -1j, 0, 0],
+            [-1j, 1, 0, 0],
+        ]
+    ) / sympy.sqrt(2)
+
+
 # --- parametric two qubit gates ---
 
 

@@ -58,6 +58,7 @@ U3 = make_parametric_gate_prototype("U3", _matrices.u3_matrix, 1)
 
 CNOT = _gates.MatrixFactoryGate("CNOT", _matrices.cnot_matrix, (), 2, is_hermitian=True)
 CZ = _gates.MatrixFactoryGate("CZ", _matrices.cz_matrix, (), 2, is_hermitian=True)
+ECR = _gates.MatrixFactoryGate("ECR", _matrices.ecr_matrix, (), 2, is_hermitian=True)
 SWAP = _gates.MatrixFactoryGate("SWAP", _matrices.swap_matrix, (), 2, is_hermitian=True)
 ISWAP = _gates.MatrixFactoryGate("ISWAP", _matrices.iswap_matrix, (), 2)
 
