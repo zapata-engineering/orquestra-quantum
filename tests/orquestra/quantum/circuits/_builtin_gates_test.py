@@ -32,6 +32,7 @@ class TestBuiltinGatesProperties:
             _builtin_gates.ZZ(0.3),
             _builtin_gates.PHASE(1),
             _builtin_gates.CPHASE(0.1),
+            _builtin_gates.Delay(0.5),
         ],
     )
     def test_gates_matrix_equals_its_adjoint_iff_gate_is_hermitian(self, gate):
