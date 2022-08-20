@@ -1,3 +1,6 @@
+################################################################################
+# © Copyright 2022 Zapata Computing Inc.
+################################################################################
 import json
 from collections import Counter
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Union

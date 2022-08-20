@@ -1,3 +1,6 @@
+################################################################################
+# © Copyright 2022 Zapata Computing Inc.
+################################################################################
 from itertools import product
 from typing import List
 from unittest.mock import Mock

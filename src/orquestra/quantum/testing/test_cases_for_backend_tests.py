@@ -1,5 +1,5 @@
 ################################################################################
-# © Copyright 2021 Zapata Computing Inc.
+# © Copyright 2021-2022 Zapata Computing Inc.
 ################################################################################
 """Test cases have been generated using the code in
 `orquestra.quantum.testing.generate_cases_for_backend.py`.
