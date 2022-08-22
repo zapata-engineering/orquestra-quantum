@@ -6,13 +6,14 @@ from typing import Any, Dict, Optional
 from sympy import Symbol
 
 from orquestra.quantum.api.backend import QuantumSimulator, StateVector
+from orquestra.quantum.api.gate_model_simulator import GateModelSimulator
 from orquestra.quantum.circuits import Circuit, Operation
 from orquestra.quantum.circuits.layouts import CircuitConnectivity
 from orquestra.quantum.measurements import Measurements
 from orquestra.quantum.wavefunction import sample_from_wavefunction
 
 
-class SymbolicSimulator(QuantumSimulator):
+class SymbolicSimulator(GateModelSimulator):
     """A simulator computing wavefunction by consecutive gate matrix multiplication.
 
     Args:
@@ -21,18 +22,15 @@ class SymbolicSimulator(QuantumSimulator):
 
     def __init__(
         self,
-        noise_model: Optional[Any] = None,
-        device_connectivity: Optional[CircuitConnectivity] = None,
+        *,
         seed: Optional[int] = None,
     ):
-        super().__init__(noise_model, device_connectivity)
-        self._seed = seed
+        super().__init__(seed=seed)
 
     def run_circuit_and_measure(
         self,
         circuit: Circuit,
         n_samples: int,
-        symbol_map: Optional[Dict[Symbol, Any]] = None,
     ) -> Measurements:
         """Run a circuit and measure a certain number of bitstrings
 
@@ -40,16 +38,14 @@ class SymbolicSimulator(QuantumSimulator):
             circuit: the circuit to prepare the state
             n_samples: the number of bitstrings to sample
         """
-        wavefunction = self.get_wavefunction(
-            circuit if symbol_map is None else circuit.bind(symbol_map)
-        )
+        wavefunction = self.get_wavefunction(circuit)
 
         if wavefunction.free_symbols:
             raise ValueError(
                 "Cannot sample from wavefunction with symbolic parameters."
             )
 
-        bitstrings = sample_from_wavefunction(wavefunction, n_samples, self._seed)
+        bitstrings = sample_from_wavefunction(wavefunction, n_samples, self.seed)
         return Measurements(bitstrings)
 
     def _get_wavefunction_from_native_circuit(
