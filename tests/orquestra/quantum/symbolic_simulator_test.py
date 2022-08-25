@@ -10,6 +10,7 @@ from orquestra.quantum.api.backend_test import (
     QuantumSimulatorGatesTest,
     QuantumSimulatorTests,
 )
+from orquestra.quantum.api.circuit_runner_contract import CIRCUIT_RUNNER_CONTRACTS
 from orquestra.quantum.circuits import (
     CNOT,
     RX,
@@ -120,3 +121,9 @@ class TestSymbolicSimulator(QuantumSimulatorTests):
 
 class TestSymbolicSimulatorGates(QuantumSimulatorGatesTest):
     pass
+
+
+@pytest.mark.parametrize("contract", CIRCUIT_RUNNER_CONTRACTS)
+def test_symbolic_simulator_fullfills_circuit_runner_contracts(contract):
+    simulator = SymbolicSimulator()
+    assert contract(simulator)
