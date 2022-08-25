@@ -30,10 +30,15 @@ class CircuitRunner(Protocol):
         # TODO: mention that this default implementation is kind of optional.
         samples_per_circuit = (
             len(circuits_batch) * [n_samples]
-            if isinstance(int, n_samples)
+            if isinstance(n_samples, int)
             else n_samples
         )
-        assert len(samples_per_circuit) == len(circuits_batch)
+        if len(samples_per_circuit) != len(circuits_batch):
+            raise ValueError(
+                "Number of samples has to be an integer or a sequence of length "
+                "equal to the length of batch. Length of batch: "
+                f"{len(circuits_batch)}, length of n_samples: {len(n_samples)}."
+            )
         return [
             self.run_and_measure(circuit, n)
             for circuit, n in zip(circuits_batch, samples_per_circuit)
