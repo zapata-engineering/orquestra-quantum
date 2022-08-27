@@ -3,6 +3,7 @@
 ################################################################################
 import json
 import math
+import warnings
 from io import StringIO
 from itertools import product
 from sys import float_info
@@ -424,42 +425,40 @@ class TestSubdistribution:
         [
             (
                 MeasurementOutcomeDistribution(
-                    {"001": 100, "010": 101, "011": 7}, normalize=False
+                    {"001": 0.5, "010": 0.3, "011": 0.2},
                 ),
                 [0, 1, 2],
-                {(0, 0, 1): 100, (0, 1, 0): 101, (0, 1, 1): 7},
+                {(0, 0, 1): 0.5, (0, 1, 0): 0.3, (0, 1, 1): 0.2},
             ),
             (
-                MeasurementOutcomeDistribution(
-                    {"001": 50, "010": 45, "011": 5}, normalize=True
-                ),
+                MeasurementOutcomeDistribution({"001": 50, "010": 45, "011": 5}),
                 [0, 2],
                 {(0, 1): 0.55, (0, 0): 0.45},
             ),
             (
                 MeasurementOutcomeDistribution(
-                    {"001": 100, "010": 101, "011": 7}, normalize=False
+                    {"001": 0.5, "010": 0.3, "011": 0.2},
                 ),
                 [1, 0, 2],
-                {(0, 0, 1): 100, (1, 0, 0): 101, (1, 0, 1): 7},
+                {(0, 0, 1): 0.5, (1, 0, 0): 0.3, (1, 0, 1): 0.2},
             ),
             (
                 MeasurementOutcomeDistribution(
-                    {(0, 0, 1): 100, (0, 1, 0): 101, (0, 1, 1): 7}, normalize=False
+                    {"001": 0.5, "010": 0.3, "011": 0.2},
                 ),
                 [1, 0],
-                {(0, 0): 100, (1, 0): 108},
+                {(0, 0): 0.5, (1, 0): 0.5},
             ),
             (
                 MeasurementOutcomeDistribution(
-                    {"001": 100, "010": 101, "011": 7}, normalize=False
+                    {"001": 0.5, "010": 0.3, "011": 0.2},
                 ),
                 [2, 1, 0],
-                {(1, 0, 0): 100, (0, 1, 0): 101, (1, 1, 0): 7},
+                {(1, 0, 0): 0.5, (0, 1, 0): 0.3, (1, 1, 0): 0.2},
             ),
         ],
     )
-    def test_if_subdistribution_works(
+    def test_simple_subdistributions(
         self, input_distribution, active_qubits, target_dict
     ):
         assert (
