@@ -71,6 +71,9 @@ def time_evolution_for_term(
     if term.is_constant:
         return circuit
 
+    if term.coefficient.imag > 1e-9:
+        raise ValueError("Coefficients of terms must be real for Trotterization.")
+
     for i, qubit_id in enumerate(qubit_indices):
         term_type = term[qubit_id]
         if term_type == "X":
@@ -80,7 +83,7 @@ def time_evolution_for_term(
             base_changes.append(RX(np.pi / 2)(qubit_id))
             base_reversals.append(RX(-np.pi / 2)(qubit_id))
         if i == len(term.operations) - 1:
-            central_gate = RZ(2 * time * term.coefficient)(qubit_id)
+            central_gate = RZ(2 * time * term.coefficient.real)(qubit_id)
         else:
             cnot_gates.append(CNOT(qubit_id, qubit_indices[i + 1]))
 
