@@ -2,15 +2,14 @@
 # © Copyright 2022 Zapata Computing Inc.
 ################################################################################
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Optional, Protocol
 
 import numpy as np
-from typing_extensions import Protocol
 
 from orquestra.quantum.circuits import Circuit
 
 from ..measurements import ExpectationValues
-from ..openfermion import SymbolicOperator
+from ..operators import PauliRepresentation
 from .backend import QuantumBackend
 
 
@@ -26,7 +25,7 @@ class EstimationTask:
             e.g. number of shots or target accuracy.
     """
 
-    operator: SymbolicOperator
+    operator: PauliRepresentation
     circuit: Circuit
     number_of_shots: Optional[int]
 

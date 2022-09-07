@@ -1,16 +1,20 @@
+################################################################################
+# © Copyright 2022 Zapata Computing Inc.
+################################################################################
 import json
 from collections import Counter
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Union
 
 import numpy as np
 
-from orquestra.quantum.openfermion.ops import IsingOperator
 from orquestra.quantum.typing import AnyPath, LoadSource
 from orquestra.quantum.utils import (
     convert_array_to_dict,
     convert_dict_to_array,
     ensure_open,
 )
+
+from ..operators import PauliRepresentation
 
 
 class Parities:
@@ -137,21 +141,21 @@ def check_parity_of_vector(
 
 
 def get_parities_from_measurements(
-    measurements: List[Tuple[int]], ising_operator: IsingOperator
+    measurements: List[Tuple[int]], ising_operator: PauliRepresentation
 ) -> Parities:
     """Get expectation values from bitstrings.
 
     Args:
         measurements (list): the measured bitstrings
-        ising_operator (openfermion.ops.IsingOperator): the operator
+        ising_operator: the operator
 
     Returns:
         orquestra.quantum.measurement.Parities: parities of each term in the operator
     """
 
     # check input format
-    if not isinstance(ising_operator, IsingOperator):
-        raise TypeError("Input operator not openfermion.IsingOperator")
+    if not ising_operator.is_ising:
+        raise TypeError("Input operator is not an ising operator")
 
     # Count number of occurrences of bitstrings
     bitstring_frequencies = Counter(measurements)
@@ -163,8 +167,7 @@ def get_parities_from_measurements(
     # Count parity occurrences
     values = []
     for _, term in enumerate(ising_operator.terms):
-        marked_qubits = [op[0] for op in term]
-        parity = check_parity_of_vector(bitstrings_vector, marked_qubits)
+        parity = check_parity_of_vector(bitstrings_vector, term.qubits)
 
         true_parity_count: int = (parity * bitstring_counts).sum()
         false_parity_count: int = ((1 - parity) * bitstring_counts).sum()
@@ -174,15 +177,12 @@ def get_parities_from_measurements(
     correlations = [np.zeros((len(ising_operator.terms), len(ising_operator.terms), 2))]
     for term1_index, term1 in enumerate(ising_operator.terms):
         for term2_index, term2 in enumerate(ising_operator.terms):
-            marked_qubits_term1 = [op[0] for op in term1]
-            marked_qubits_term2 = [op[0] for op in term2]
 
-            parity1 = check_parity_of_vector(bitstrings_vector, marked_qubits_term1)
-            parity2 = check_parity_of_vector(bitstrings_vector, marked_qubits_term2)
+            parity1 = check_parity_of_vector(bitstrings_vector, term1.qubits)
+            parity2 = check_parity_of_vector(bitstrings_vector, term2.qubits)
 
-            equal_parities = np.abs(
-                parity1 - parity2
-            )  # 0 if parities are equal, 1 otherwise
+            # 0 if parities are equal, 1 otherwise
+            equal_parities = np.abs(parity1 - parity2)
 
             # Counts of bitstrings where parity is equal
             correlations[0][term1_index, term2_index][0] += (

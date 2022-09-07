@@ -14,10 +14,10 @@ from orquestra.quantum.evolution import (
     time_evolution_derivatives,
     time_evolution_for_term,
 )
-from orquestra.quantum.openfermion import QubitOperator
+from orquestra.quantum.operators import PauliSum, PauliTerm
 from orquestra.quantum.utils import compare_unitary
 
-OPENFERMION_TERM_TO_ORQUESTRA_GATE = {
+TUPLE_TERM_TO_ORQUESTRA_GATE = {
     ((0, "X"), (1, "X")): XX,
     ((0, "Y"), (1, "Y")): YY,
     ((0, "Z"), (1, "Z")): ZZ,
@@ -26,12 +26,15 @@ OPENFERMION_TERM_TO_ORQUESTRA_GATE = {
 
 def _orquestra_exponentiate_qubit_hamiltonian_term(term, time, trotter_order):
     base_exponent = 2 * time / trotter_order / np.pi
-    coefficient = list(term.terms.values())[0]
 
-    base_gate = OPENFERMION_TERM_TO_ORQUESTRA_GATE[list(term.terms.keys())[0]]
+    base_gate = TUPLE_TERM_TO_ORQUESTRA_GATE[tuple(sorted(term.operations))]
     # This introduces a phase to the gate, but that's fine
     # since `compare_unitary` accounts for that
     mat = base_gate(np.pi)(0, 1).lifted_matrix(2)
+    if term.coefficient.real == term.coefficient:
+        coefficient = term.coefficient.real
+    else:
+        raise ValueError("Cannot raise matrix to the power of a complex coefficinet")
     zquant_mat = fractional_matrix_power(mat, coefficient * base_exponent)
 
     return zquant_mat
@@ -39,7 +42,7 @@ def _orquestra_exponentiate_qubit_hamiltonian_term(term, time, trotter_order):
 
 def _orquestra_exponentiate_hamiltonian(hamiltonian, time, trotter_order):
     ops = []
-    for term in hamiltonian.get_operators():
+    for term in hamiltonian.terms:
         mat = _orquestra_exponentiate_qubit_hamiltonian_term(term, time, trotter_order)
         ops.append(
             circuits.CustomGateDefinition(
@@ -57,13 +60,13 @@ def _orquestra_exponentiate_hamiltonian(hamiltonian, time, trotter_order):
 @pytest.mark.parametrize(
     "term, time, expected_unitary",
     [
-        (QubitOperator("[X0 X1]"), np.pi, -np.eye(4)),
+        (PauliTerm("X0*X1"), np.pi, -np.eye(4)),
         (
-            QubitOperator("0.5 [Y0 Y1]"),
+            PauliTerm("0.5*Y0*Y1"),
             np.pi,
             np.diag([1j, -1j, -1j, 1j])[::-1],
         ),
-        (QubitOperator("[Z0 Z1]"), np.pi, -np.eye(4)),
+        (PauliTerm("Z0*Z1"), np.pi, -np.eye(4)),
     ],
 )
 class TestTimeEvolutionOfTerm:
@@ -84,18 +87,23 @@ class TestTimeEvolutionOfTerm:
         np.testing.assert_array_almost_equal(actual_unitary, expected_unitary)
 
 
+def test_complex_coefficent_throws_error():
+    with pytest.raises(ValueError):
+        time_evolution_for_term(PauliTerm("X0", 1j), 1)
+
+
 class TestTimeEvolutionOfConstantTerm:
     # This test is added to make sure that constant terms in qubit operators
     # do not cause errors.
     def test_evolving_constant_term_qubit_operator_gives_empty_circuit(self):
-        evolution_circuit = time_evolution_for_term(QubitOperator((), 1), np.pi)
+        evolution_circuit = time_evolution_for_term(PauliTerm.identity() * 3, np.pi)
         assert evolution_circuit == circuits.Circuit()
 
 
 class TestTimeEvolutionOfPauliSum:
     @pytest.fixture
     def hamiltonian(self):
-        return QubitOperator("[X0 X1] + 0.5[Y0 Y1] + 0.3[Z0 Z1]")
+        return PauliSum("X0*X1 + 0.5*Y0*Y1 + 0.3*Z0*Z1")
 
     @pytest.mark.parametrize("time", [0.1, 0.4, 1.0])
     @pytest.mark.parametrize("order", [1, 2, 3])
@@ -200,7 +208,7 @@ class TestGeneratingCircuitSequence:
 class TestTimeEvolutionDerivatives:
     @pytest.fixture
     def hamiltonian(self):
-        return QubitOperator("[X0 X1] + 0.5[Y0 Y1] + 0.3[Z0 Z1]")
+        return PauliSum("X0*X1 + 0.5*Y0*Y1 + 0.3*Z0*Z1")
 
     @pytest.mark.parametrize("time", [0.4, sympy.Symbol("t")])
     def test_gives_correct_number_of_derivatives_and_factors(self, time, hamiltonian):

@@ -6,7 +6,6 @@ import collections
 import json
 import os
 import sys
-import warnings
 from contextlib import contextmanager
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Union
 

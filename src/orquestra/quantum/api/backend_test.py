@@ -43,12 +43,12 @@ import pytest
 
 from orquestra.quantum.api.estimation import EstimationTask
 from orquestra.quantum.circuits import CNOT, Circuit, H, X, builtin_gate_by_name
-from orquestra.quantum.openfermion import QubitOperator
 from orquestra.quantum.wavefunction import Wavefunction
 
 from ..distributions import MeasurementOutcomeDistribution
 from ..estimation import estimate_expectation_values_by_averaging
 from ..measurements import ExpectationValues, Measurements
+from ..operators import PauliTerm
 from ..testing.test_cases_for_backend_tests import (
     one_qubit_non_parametric_gates_amplitudes_test_set,
     one_qubit_non_parametric_gates_exp_vals_test_set,
@@ -210,10 +210,10 @@ class QuantumBackendGatesTests:
 
         circuit = Circuit([gate_1, gate_2])
         operators = [
-            QubitOperator("[]"),
-            QubitOperator("[X0]"),
-            QubitOperator("[Y0]"),
-            QubitOperator("[Z0]"),
+            PauliTerm.identity(),
+            PauliTerm("X0"),
+            PauliTerm("Y0"),
+            PauliTerm("Z0"),
         ]
 
         sigma = 1 / np.sqrt(n_samples)
@@ -246,10 +246,10 @@ class QuantumBackendGatesTests:
 
         circuit = Circuit([gate_1, gate_2])
         operators = [
-            QubitOperator("[]"),
-            QubitOperator("[X0]"),
-            QubitOperator("[Y0]"),
-            QubitOperator("[Z0]"),
+            PauliTerm.identity(),
+            PauliTerm("X0"),
+            PauliTerm("Y0"),
+            PauliTerm("Z0"),
         ]
 
         sigma = 1 / np.sqrt(n_samples)
@@ -293,7 +293,7 @@ class QuantumBackendGatesTests:
 
         for i, operator in enumerate(operators):
             # When
-            operator = QubitOperator(operator)
+            operator = PauliTerm(operator)
             estimation_tasks = [EstimationTask(operator, circuit, n_samples)]
             expectation_values = estimate_expectation_values_by_averaging(
                 backend_for_gates_test, estimation_tasks
@@ -332,7 +332,7 @@ class QuantumBackendGatesTests:
 
         for i, operator in enumerate(operators):
             # When
-            operator = QubitOperator(operator)
+            operator = PauliTerm(operator)
             estimation_tasks = [EstimationTask(operator, circuit, n_samples)]
             expectation_values = estimate_expectation_values_by_averaging(
                 backend_for_gates_test, estimation_tasks
@@ -397,7 +397,7 @@ class QuantumSimulatorTests(QuantumBackendTests):
         wf_simulator.number_of_circuits_run = 0
         wf_simulator.number_of_jobs_run = 0
         circuit = Circuit([H(0), X(1)])
-        operator = QubitOperator("[Z0] + 2[Z1]")
+        operator = PauliTerm("Z0") + PauliTerm("Z1", 2)
         target_expectation_values = ExpectationValues(np.array([0.0, -2.0]))
 
         # When

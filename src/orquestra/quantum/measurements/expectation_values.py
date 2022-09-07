@@ -1,3 +1,6 @@
+################################################################################
+# © Copyright 2022 Zapata Computing Inc.
+################################################################################
 import json
 from typing import Any, Dict, Iterable, List, Optional, Union, cast
 
@@ -19,7 +22,7 @@ class ExpectationValues:
     EstimateExpectationValues Protocol in interfaces/estimation.py.
 
     Args:
-        values: The expectation values of a set of terms in an IsingOperator.
+        values: The expectation values of a set of terms in an ising operator.
         correlations: The expectation values of pairwise products of operators.
             Contains an NxN array for each frame, where N is the number of
             operators in that frame.

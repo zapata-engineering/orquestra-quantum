@@ -1,5 +1,5 @@
 ################################################################################
-# © Copyright 2021 Zapata Computing Inc.
+# © Copyright 2021-2022 Zapata Computing Inc.
 ################################################################################
 """Definition of predefined gate matrices and related utility functions."""
 import numpy as np
@@ -219,3 +219,11 @@ def xy_matrix(angle):
             [0, 0, 0, 1],
         ]
     )
+
+
+def delay_matrix(_duration):
+    # Note that _duration parameter is not used when constructing the
+    # matrix, because Delay always acts as identity.
+    # Therefore, the Delay gate will always evaluate to identity on simulator,
+    # but it will have an effect if used on an actual hardware.
+    return i_matrix()

@@ -22,19 +22,19 @@ from orquestra.quantum.circuits import RX, RY, RZ, Circuit, H
 
 from ..api.estimation import EstimateExpectationValues, EstimationTask
 from ..backends.symbolic_simulator import SymbolicSimulator
-from ..openfermion import IsingOperator
+from ..operators import PauliTerm
 
 _backend = SymbolicSimulator(seed=1997)
 
 _estimation_tasks = [
-    EstimationTask(IsingOperator("Z0"), Circuit([H(0)]), 10000),
+    EstimationTask(PauliTerm("Z0"), Circuit([H(0)]), 10000),
     EstimationTask(
-        IsingOperator("Z0") + IsingOperator("Z1") + IsingOperator("Z2"),
+        PauliTerm("Z0") + PauliTerm("Z1") + PauliTerm("Z2"),
         Circuit([H(0), RX(np.pi / 3)(0), H(2)]),
         10000,
     ),
     EstimationTask(
-        IsingOperator("Z0") + IsingOperator("Z1", 4),
+        PauliTerm("Z0") + PauliTerm("Z1", 4),
         Circuit(
             [
                 RX(np.pi)(0),
@@ -71,12 +71,13 @@ def _validate_order_of_outputs_matches_order_of_inputs(
 
     return all(
         [
-            np.array_equal(
+            np.allclose(
                 expectation_values[i].values,
                 estimator(
                     backend=_backend,
                     estimation_tasks=[task],
                 )[0].values,
+                rtol=0.1,  # 10% tolerance
             )
             for i, task in enumerate(_estimation_tasks)
         ]
@@ -86,10 +87,11 @@ def _validate_order_of_outputs_matches_order_of_inputs(
 def _validate_expectation_value_includes_coefficients(
     estimator: EstimateExpectationValues,
 ):
+    term_coefficient = 19.971997
     estimation_tasks = [
-        EstimationTask(IsingOperator("Z0"), Circuit([RX(np.pi / 3)(0)]), 10000),
+        EstimationTask(PauliTerm("Z0"), Circuit([RX(np.pi / 3)(0)]), 10000),
         EstimationTask(
-            IsingOperator("Z0", 19.971997), Circuit([RX(np.pi / 3)(0)]), 10000
+            PauliTerm("Z0", term_coefficient), Circuit([RX(np.pi / 3)(0)]), 10000
         ),
     ]
 
@@ -98,8 +100,10 @@ def _validate_expectation_value_includes_coefficients(
         estimation_tasks=estimation_tasks,
     )
 
-    return not np.array_equal(
-        expectation_values[0].values, expectation_values[1].values
+    return np.allclose(
+        expectation_values[0].values,
+        expectation_values[1].values / term_coefficient,
+        rtol=0.1,  # 10% tolerance
     )
 
 
@@ -107,9 +111,9 @@ def _validate_constant_terms_are_included_in_output(
     estimator: EstimateExpectationValues,
 ):
     estimation_tasks = [
-        EstimationTask(IsingOperator("Z0"), Circuit([H(0)]), 10000),
+        EstimationTask(PauliTerm("Z0"), Circuit([H(0)]), 10000),
         EstimationTask(
-            IsingOperator("Z0") + IsingOperator("[]", 19.971997),
+            PauliTerm("Z0") + PauliTerm("I0", 19.971997),
             Circuit([H(0)]),
             10000,
         ),

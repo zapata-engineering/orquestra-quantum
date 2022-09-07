@@ -126,6 +126,7 @@ from ._builtin_gates import (
     XY,
     YY,
     ZZ,
+    Delay,
     GatePrototype,
     H,
     I,

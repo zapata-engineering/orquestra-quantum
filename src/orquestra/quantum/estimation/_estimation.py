@@ -9,7 +9,6 @@ import sympy
 from ..api.backend import QuantumBackend, QuantumSimulator
 from ..api.estimation import EstimationTask
 from ..measurements import ExpectationValues, expectation_values_to_real
-from ..openfermion import IsingOperator, change_operator_type
 
 
 def evaluate_estimation_circuits(
@@ -66,9 +65,7 @@ def split_estimation_tasks_to_measure(
     indices_to_measure = []
     indices_not_to_measure = []
     for i, task in enumerate(estimation_tasks):
-        if (
-            len(task.operator.terms) == 1 and () in task.operator.terms.keys()
-        ) or task.number_of_shots == 0:
+        if task.operator.is_constant or task.number_of_shots == 0:
             indices_not_to_measure.append(i)
             estimation_tasks_not_to_measure.append(task)
         else:
@@ -102,16 +99,17 @@ def evaluate_non_measured_estimation_tasks(
 
     expectation_values = []
     for task in estimation_tasks:
-        if len(task.operator.terms) > 1 or () not in task.operator.terms.keys():
+        coefficient: complex
+        if task.operator.is_constant:
+            coefficient = task.operator.terms[0].coefficient
+        else:
             if task.number_of_shots is not None and task.number_of_shots > 0:
                 raise RuntimeError(
-                    "An EstimationTask required shots but was classified as\
-                         a non-measured task"
+                    "An EstimationTask required shots but was classified as "
+                    "a non-measured task"
                 )
             else:
                 coefficient = 0.0
-        else:
-            coefficient = task.operator.terms[()]
 
         expectation_values.append(
             ExpectationValues(
@@ -164,9 +162,7 @@ def estimate_expectation_values_by_averaging(
 
         measured_expectation_values_list = [
             expectation_values_to_real(
-                measurements.get_expectation_values(
-                    change_operator_type(frame_operator, IsingOperator)
-                )
+                measurements.get_expectation_values(frame_operator)
             )
             for frame_operator, measurements in zip(operators, measurements_list)
         ]

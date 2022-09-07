@@ -4,10 +4,9 @@
 name: style
 
 on:
-  # Triggers the workflow on push to main/dev
+  # Triggers the workflow on push to main
   push:
     branches:
-      - dev
       - main
   # Triggers the workflow on any PR
   pull_request:
@@ -23,7 +22,7 @@ jobs:
     # Run jobs for a couple of Python versions.
     strategy:
       matrix:
-        python: [3.7, "3.10"]
+        python: ["3.8", "3.9", "3.10"]
 
     name: Style - Python ${{ matrix.python }}
 
@@ -31,7 +30,7 @@ jobs:
       - uses: actions/checkout@v2
 
       # ------------------------------------------------------------------------
-      # Loads private SSH key to the SSH agent. Allows to install dependencies 
+      # Loads private SSH key to the SSH agent. Allows to install dependencies
       # from private git repos, but requires setting `secrets.SSH_PRIVATE_KEY`
       # in repo settings.
       # ------------------------------------------------------------------------
