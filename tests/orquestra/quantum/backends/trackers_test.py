@@ -7,7 +7,7 @@ from os import remove
 import numpy as np
 import pytest
 
-from orquestra.quantum.backends.symbolic_simulator import SymbolicSimulator
+from orquestra.quantum.backends import SymbolicSimulator
 from orquestra.quantum.backends.trackers import MeasurementTrackingBackend
 from orquestra.quantum.circuits import CNOT, Circuit, H, X
 from orquestra.quantum.distributions import MeasurementOutcomeDistribution
