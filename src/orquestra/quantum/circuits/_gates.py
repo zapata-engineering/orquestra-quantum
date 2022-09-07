@@ -349,7 +349,7 @@ class Dagger(Gate):
 
     @property
     def name(self):
-        return DAGGER_GATE_NAME
+        return self.wrapped_gate.name + "_" + DAGGER_GATE_NAME
 
     def controlled(self, num_control_qubits: int) -> Gate:
         return self.wrapped_gate.controlled(num_control_qubits).dagger
