@@ -2,13 +2,12 @@
 # © Copyright 2020-2022 Zapata Computing Inc.
 ################################################################################
 from orquestra.quantum.api.backend import QuantumBackend
+from orquestra.quantum.backends import SymbolicSimulator
 from orquestra.quantum.circuits import Circuit
 from orquestra.quantum.measurements import Measurements
 
-from .symbolic_simulator import SymbolicSimulator
 
-
-class SymbolicBackend(QuantumBackend):
+class MockQuantumBackend(QuantumBackend):
 
     supports_batching = False
 
@@ -19,6 +18,6 @@ class SymbolicBackend(QuantumBackend):
     def run_circuit_and_measure(
         self, circuit: Circuit, n_samples: int, **kwargs
     ) -> Measurements:
-        super(SymbolicBackend, self).run_circuit_and_measure(circuit, n_samples)
+        super(MockQuantumBackend, self).run_circuit_and_measure(circuit, n_samples)
 
         return self._simulator.run_circuit_and_measure(circuit, n_samples)
