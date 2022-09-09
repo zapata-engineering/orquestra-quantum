@@ -11,9 +11,8 @@ from typing import List, Optional, Tuple, Union
 import numpy as np
 import sympy
 
-from orquestra.quantum import circuits
-from orquestra.quantum.circuits import CNOT, RX, RZ, H
-from orquestra.quantum.operators import PauliRepresentation, PauliTerm
+from .circuits import CNOT, RX, RZ, Circuit, GateOperation, H
+from .operators import PauliRepresentation, PauliTerm
 
 
 def time_evolution(
@@ -21,7 +20,7 @@ def time_evolution(
     time: Union[float, sympy.Expr],
     method: str = "Trotter",
     trotter_order: int = 1,
-) -> circuits.Circuit:
+) -> Circuit:
     """Create a circuit simulating evolution under given Hamiltonian.
 
     Args:
@@ -47,9 +46,7 @@ def time_evolution(
     )
 
 
-def time_evolution_for_term(
-    term: PauliTerm, time: Union[float, sympy.Expr]
-) -> circuits.Circuit:
+def time_evolution_for_term(term: PauliTerm, time: Union[float, sympy.Expr]) -> Circuit:
     """Evolves a Pauli term for a given time and returns a circuit representing it.
     Based on section 4 from https://arxiv.org/abs/1001.3855 .
     Args:
@@ -62,10 +59,10 @@ def time_evolution_for_term(
     base_changes = []
     base_reversals = []
     cnot_gates = []
-    central_gate: Optional[circuits.GateOperation] = None
+    central_gate: Optional[GateOperation] = None
     qubit_indices = sorted(term.qubits)
 
-    circuit = circuits.Circuit()
+    circuit = Circuit()
 
     # If constant term, return empty circuit.
     if term.is_constant:
@@ -110,7 +107,7 @@ def time_evolution_derivatives(
     time: float,
     method: str = "Trotter",
     trotter_order: int = 1,
-) -> Tuple[List[circuits.Circuit], List[float]]:
+) -> Tuple[List[Circuit], List[float]]:
     """Generates derivative circuits for the time evolution operator defined in
     function time_evolution
 
@@ -134,7 +131,7 @@ def time_evolution_derivatives(
 
     for i, term_1 in enumerate(terms):
         for factor in factors:
-            output = circuits.Circuit()
+            output = Circuit()
 
             if term_1.coefficient.real != term_1.coefficient:
                 warnings.warn(
@@ -177,8 +174,8 @@ def time_evolution_derivatives(
 
 
 def _generate_circuit_sequence(
-    repeated_circuit: circuits.Circuit,
-    different_circuit: circuits.Circuit,
+    repeated_circuit: Circuit,
+    different_circuit: Circuit,
     length: int,
     position: int,
 ):
@@ -197,7 +194,7 @@ def _generate_circuit_sequence(
     if position >= length:
         raise ValueError(f"Position {position} should be < {length}")
 
-    return circuits.Circuit(
+    return Circuit(
         list(
             chain.from_iterable(
                 [

@@ -9,12 +9,8 @@ from warnings import warn
 import numpy as np
 from sympy import Matrix, Symbol
 
-from orquestra.quantum.typing import AnyPath, LoadSource, ParameterizedVector
-from orquestra.quantum.utils import (
-    convert_array_to_dict,
-    convert_dict_to_array,
-    ensure_open,
-)
+from .typing import AnyPath, LoadSource, ParameterizedVector
+from .utils import convert_array_to_dict, convert_dict_to_array, ensure_open
 
 
 def _is_number(possible_number):

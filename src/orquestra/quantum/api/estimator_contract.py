@@ -18,10 +18,9 @@ Here is an example of how you would do that:
 
 import numpy as np
 
-from orquestra.quantum.circuits import RX, RY, RZ, Circuit, H
-
 from ..api.estimation import EstimateExpectationValues, EstimationTask
 from ..backends.symbolic_simulator import SymbolicSimulator
+from ..circuits import RX, RY, RZ, Circuit, H
 from ..operators import PauliTerm
 
 _backend = SymbolicSimulator(seed=1997)

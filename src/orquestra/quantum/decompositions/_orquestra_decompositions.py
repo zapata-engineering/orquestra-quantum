@@ -3,13 +3,10 @@
 ################################################################################
 from typing import Iterable, Sequence
 
-from orquestra.quantum.circuits._builtin_gates import RY, RZ
-from orquestra.quantum.circuits._circuit import Circuit
-from orquestra.quantum.circuits._gates import ControlledGate, GateOperation
-from orquestra.quantum.decompositions._decomposition import (
-    DecompositionRule,
-    decompose_operations,
-)
+from ..circuits._builtin_gates import RY, RZ
+from ..circuits._circuit import Circuit
+from ..circuits._gates import ControlledGate, GateOperation
+from ..decompositions._decomposition import DecompositionRule, decompose_operations
 
 
 class U3GateToRotation(DecompositionRule[GateOperation]):

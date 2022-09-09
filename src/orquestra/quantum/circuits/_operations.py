@@ -8,7 +8,7 @@ from typing import Dict, Iterable, Protocol, Tuple, TypeVar
 
 import sympy
 
-from orquestra.quantum.typing import Parameter, ParameterizedVector
+from ..typing import Parameter, ParameterizedVector
 
 T = TypeVar("T", bound="Operation")
 

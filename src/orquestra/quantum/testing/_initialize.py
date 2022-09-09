@@ -4,7 +4,7 @@
 
 import numpy as np
 
-from orquestra.quantum.wavefunction import Wavefunction
+from ..wavefunction import Wavefunction
 
 
 def create_random_wavefunction(n_qubits, seed=None):

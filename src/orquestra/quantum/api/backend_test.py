@@ -41,10 +41,7 @@ from typing import List
 import numpy as np
 import pytest
 
-from orquestra.quantum.api.estimation import EstimationTask
-from orquestra.quantum.circuits import CNOT, Circuit, H, X, builtin_gate_by_name
-from orquestra.quantum.wavefunction import Wavefunction
-
+from ..circuits import CNOT, Circuit, H, X, builtin_gate_by_name
 from ..distributions import MeasurementOutcomeDistribution
 from ..estimation import estimate_expectation_values_by_averaging
 from ..measurements import ExpectationValues, Measurements
@@ -59,6 +56,8 @@ from ..testing.test_cases_for_backend_tests import (
     two_qubit_parametric_gates_amplitudes_test_set,
     two_qubit_parametric_gates_exp_vals_test_set,
 )
+from ..wavefunction import Wavefunction
+from .estimation import EstimationTask
 
 
 def skip_tests_for_excluded_gates(func):

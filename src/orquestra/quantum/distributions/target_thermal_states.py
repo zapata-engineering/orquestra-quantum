@@ -5,8 +5,8 @@ from typing import Dict, List, Tuple, Union
 
 import numpy as np
 
-from orquestra.quantum.distributions import MeasurementOutcomeDistribution
-from orquestra.quantum.utils import (
+from ..distributions import MeasurementOutcomeDistribution
+from ..utils import (
     bin2dec,
     convert_tuples_to_bitstrings,
     dec2bin,

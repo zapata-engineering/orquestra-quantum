@@ -6,8 +6,8 @@ from typing import Any, Dict, Iterable, List, Optional, Union, cast
 
 import numpy as np
 
-from orquestra.quantum.typing import AnyPath, LoadSource
-from orquestra.quantum.utils import (
+from ..typing import AnyPath, LoadSource
+from ..utils import (
     convert_array_to_dict,
     convert_dict_to_array,
     ensure_open,

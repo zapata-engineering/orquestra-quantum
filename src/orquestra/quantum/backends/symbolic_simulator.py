@@ -5,11 +5,11 @@ from typing import Any, Dict, Optional
 
 from sympy import Symbol
 
-from orquestra.quantum.api.backend import QuantumSimulator, StateVector
-from orquestra.quantum.circuits import Circuit, Operation
-from orquestra.quantum.circuits.layouts import CircuitConnectivity
-from orquestra.quantum.measurements import Measurements
-from orquestra.quantum.wavefunction import sample_from_wavefunction
+from ..api.backend import QuantumSimulator, StateVector
+from ..circuits import Circuit, Operation
+from ..circuits.layouts import CircuitConnectivity
+from ..measurements import Measurements
+from ..wavefunction import sample_from_wavefunction
 
 
 class SymbolicSimulator(QuantumSimulator):

@@ -4,10 +4,10 @@
 import json
 from typing import Dict, List, Optional, Sequence
 
-from orquestra.quantum.api.backend import QuantumBackend
-from orquestra.quantum.circuits import Circuit, to_dict
-from orquestra.quantum.distributions import MeasurementOutcomeDistribution
-from orquestra.quantum.measurements import Measurements
+from ..api.backend import QuantumBackend
+from ..circuits import Circuit, to_dict
+from ..distributions import MeasurementOutcomeDistribution
+from ..measurements import Measurements
 
 
 class MeasurementTrackingBackend(QuantumBackend):

@@ -10,9 +10,9 @@ from typing import Dict, Iterable, List, Optional, Sequence, TextIO, Tuple
 
 import numpy as np
 
-from orquestra.quantum.distributions import MeasurementOutcomeDistribution
-from orquestra.quantum.typing import AnyPath
-from orquestra.quantum.utils import (
+from ..distributions import MeasurementOutcomeDistribution
+from ..typing import AnyPath
+from ..utils import (
     convert_tuples_to_bitstrings,
     sample_from_probability_distribution,
 )

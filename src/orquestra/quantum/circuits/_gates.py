@@ -9,8 +9,7 @@ from typing import Callable, Dict, Iterable, Protocol, Tuple, Union, runtime_che
 import numpy as np
 import sympy
 
-from orquestra.quantum.typing import ParameterizedVector
-
+from ..typing import ParameterizedVector
 from ._operations import Parameter, get_free_symbols, sub_symbols
 from ._unitary_tools import _lift_matrix_numpy, _lift_matrix_sympy
 
