@@ -6,7 +6,6 @@ from typing import Any, Dict, List, Tuple
 import rapidjson as json
 
 from ..typing import AnyPath, LoadSource
-
 from ._pauli_operators import PauliRepresentation, PauliSum, PauliTerm
 
 
