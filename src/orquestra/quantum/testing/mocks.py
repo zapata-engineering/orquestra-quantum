@@ -1,10 +1,10 @@
 ################################################################################
 # © Copyright 2020-2022 Zapata Computing Inc.
 ################################################################################
-from orquestra.quantum.api.backend import QuantumBackend
-from orquestra.quantum.circuits import Circuit
-from orquestra.quantum.measurements import Measurements
-from orquestra.quantum.symbolic_simulator import SymbolicSimulator
+from ..api.backend import QuantumBackend
+from ..backends import SymbolicSimulator
+from ..circuits import Circuit
+from ..measurements import Measurements
 
 
 class MockQuantumBackend(QuantumBackend):

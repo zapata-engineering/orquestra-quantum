@@ -35,7 +35,7 @@ from typing import (
 
 import numpy as np
 
-from orquestra.quantum.circuits import Circuit, Operation, builtin_gate_by_name
+from ..circuits import Circuit, Operation, builtin_gate_by_name
 
 PauliRepresentation = Union["PauliTerm", "PauliSum"]
 

@@ -8,8 +8,7 @@ from typing import Dict, Iterable, List, Mapping, Union
 
 import sympy
 
-from orquestra.quantum.typing import DumpTarget, LoadSource
-
+from ..typing import DumpTarget, LoadSource
 from ..utils import ensure_open
 from . import _builtin_gates, _circuit, _gates
 

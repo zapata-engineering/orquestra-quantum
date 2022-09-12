@@ -10,6 +10,7 @@ from orquestra.quantum.api.backend_test import (
     QuantumSimulatorGatesTest,
     QuantumSimulatorTests,
 )
+from orquestra.quantum.backends import SymbolicSimulator
 from orquestra.quantum.circuits import (
     CNOT,
     RX,
@@ -21,7 +22,6 @@ from orquestra.quantum.circuits import (
     MultiPhaseOperation,
     Operation,
 )
-from orquestra.quantum.symbolic_simulator import SymbolicSimulator
 
 
 @pytest.fixture
