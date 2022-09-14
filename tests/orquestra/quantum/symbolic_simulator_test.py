@@ -10,7 +10,8 @@ from orquestra.quantum.api.backend_test import (
     QuantumSimulatorGatesTest,
     QuantumSimulatorTests,
 )
-from orquestra.quantum.api.circuit_runner_contract import CIRCUIT_RUNNER_CONTRACTS
+from orquestra.quantum.api.circuit_runner_contracts import CIRCUIT_RUNNER_CONTRACTS
+from orquestra.quantum.api.gate_model_simulator_contracts import simulator_contracts_for_tolerance
 from orquestra.quantum.circuits import (
     CNOT,
     RX,
