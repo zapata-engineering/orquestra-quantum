@@ -26,6 +26,10 @@ def _circuit_size_by_operations(operations):
 
 
 def _operation_uses_custom_gate(operation):
+    if isinstance(operation.gate, _gates.ControllerGate):
+        return isinstance(operation.gate.wrapped_gate, _gates.MatrixFactoryGate) and isinstance(
+            operation.gate.wrapped_gate.matrix_factory, _gates.CustomGateMatrixFactory
+        )
     return isinstance(operation.gate, _gates.MatrixFactoryGate) and isinstance(
         operation.gate.matrix_factory, _gates.CustomGateMatrixFactory
     )
