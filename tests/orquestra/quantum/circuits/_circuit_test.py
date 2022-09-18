@@ -270,3 +270,21 @@ class TestCircuitInverse:
         circuit = Circuit(operations=[gate])
         with pytest.raises(AttributeError):
             circuit.inverse()
+
+class TestCustomGateCircuit:
+    def test_custom_gate_wrapped_by_controller_gate_circuit(self):
+        g = CustomGateDefinition("P'",
+            sympy.Matrix(
+                [
+                    [-1, 0],
+                    [0, 1],
+                ]
+            ), ())()
+        controlled_qubits = (1,1)
+        c_op = g.controlled(1)(*controlled_qubits)
+        c = Circuit()
+        c += c_op 
+        assert len(c.collect_custom_gate_definitions()) > 0
+
+
+
