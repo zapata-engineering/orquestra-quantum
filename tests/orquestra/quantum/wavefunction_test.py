@@ -15,7 +15,7 @@ from orquestra.quantum.backends import SymbolicSimulator
 from orquestra.quantum.circuits._builtin_gates import RX, RY, U3, H, X
 from orquestra.quantum.circuits._circuit import Circuit
 from orquestra.quantum.testing import create_random_wavefunction
-from orquestra.quantum.utils import RNDSEED, convert_bitstrings_to_tuples
+from orquestra.quantum.utils import RNDSEED, bitstring_to_tuple
 from orquestra.quantum.wavefunction import (
     Wavefunction,
     load_wavefunction,
@@ -317,8 +317,9 @@ def test_imag_wavefunction_io():
 
 def test_sample_from_wavefunction():
     wavefunction = create_random_wavefunction(4, seed=RNDSEED)
+    num_samples = 100000
 
-    samples = sample_from_wavefunction(wavefunction, 10000, seed=RNDSEED)
+    samples = sample_from_wavefunction(wavefunction, num_samples, seed=RNDSEED)
     sampled_dict = Counter(samples)
 
     sampled_probabilities = []
@@ -326,8 +327,8 @@ def test_sample_from_wavefunction():
         bitstring = format(num, "b")
         while len(bitstring) < wavefunction.n_qubits:
             bitstring = "0" + bitstring
-        measurement = convert_bitstrings_to_tuples([bitstring])[0]
-        sampled_probabilities.append(sampled_dict[measurement] / 10000)
+        measurement = bitstring_to_tuple(bitstring)[::-1]
+        sampled_probabilities.append(sampled_dict[measurement] / num_samples)
 
     probabilities = wavefunction.get_probabilities()
     for sampled_prob, exact_prob in zip(sampled_probabilities, probabilities):

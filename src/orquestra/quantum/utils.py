@@ -7,6 +7,7 @@ import json
 import os
 import sys
 from contextlib import contextmanager
+from functools import lru_cache
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Union
 
 import numpy as np
@@ -215,16 +216,21 @@ def convert_bitstrings_to_tuples(bitstrings: Iterable[str]) -> List[Tuple[int, .
     Returns:
         A list of tuples
     """
-    # Convert from bitstrings to tuple format
-    measurements: List[Tuple[int, ...]] = []
-    for bitstring in bitstrings:
-
-        measurement: Tuple[int, ...] = ()
-        for char in bitstring:
-            measurement = measurement + (int(char),)
-
-        measurements.append(measurement)
+    measurements = [bitstring_to_tuple(bitstring) for bitstring in bitstrings]
     return measurements
+
+
+@lru_cache()
+def bitstring_to_tuple(bitstring: str) -> Tuple[int, ...]:
+    """Given a bitstring, convert it to tuple format
+
+    Args:
+        bitstring (string): the measured bitstring
+    Returns:
+        A tuple of 0s and 1s
+    """
+    measurement = tuple(int(bit) for bit in bitstring[::-1])
+    return measurement
 
 
 def convert_tuples_to_bitstrings(tuples: List[Tuple[int]]) -> List[str]:
@@ -236,9 +242,20 @@ def convert_tuples_to_bitstrings(tuples: List[Tuple[int]]) -> List[str]:
     Returns:
         A list of bitstrings
     """
-    # Convert from tuples to bitstrings
-    bitstrings = ["".join(map(str, tup)) for tup in tuples]
+    bitstrings = [tuple_to_bitstring(tup) for tup in tuples]
     return bitstrings
+
+
+@lru_cache()
+def tuple_to_bitstring(tup: Tuple[int, ...]) -> str:
+    """Given a tuple, convert to an equivalent string.
+
+    Args:
+        tup (tuple): the measurement tuple
+    Returns:
+        A string with binary digits
+    """
+    return "".join(map(str, tup))
 
 
 class ValueEstimate(float):
