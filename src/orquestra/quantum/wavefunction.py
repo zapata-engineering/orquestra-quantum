@@ -275,10 +275,18 @@ def sample_from_wavefunction(
     if n_samples < 1:
         raise ValueError("Must sample from wavefunction at least once.")
     rng = np.random.default_rng(seed)
-    outcomes_str, probabilities_np = zip(*wavefunction.get_outcome_probs().items())
+    outcome_strings, probabilities_np = zip(*wavefunction.get_outcome_probs().items())
     probabilities = [
         x[0] if isinstance(x, (list, np.ndarray)) else x for x in list(probabilities_np)
     ]
-    samples_ndarray = rng.choice(a=outcomes_str, size=n_samples, p=probabilities)
-    samples = [tuple(int(y) for y in list(x)[::-1]) for x in list(samples_ndarray)]
+    # accelerate sampling by smartly choosing when formatting of samples is done
+    if len(wavefunction) < n_samples:
+        outcome_tuples: List[Union[Tuple[int, ...], int]]
+        outcome_tuples = [tuple(int(c) for c in s[::-1]) for s in outcome_strings]
+        outcome_tuples += [0]  # adding non tuple forces rng.choice to return tuples
+        probabilities += [0]  # need to add corresponding probability of 0
+        samples = rng.choice(a=outcome_tuples, size=n_samples, p=probabilities).tolist()
+    else:
+        samples_ndarray = rng.choice(a=outcome_strings, size=n_samples, p=probabilities)
+        samples = [tuple(int(y) for y in list(x)[::-1]) for x in list(samples_ndarray)]
     return samples
