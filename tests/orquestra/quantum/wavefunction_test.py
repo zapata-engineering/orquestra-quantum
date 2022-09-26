@@ -5,7 +5,6 @@
 import os
 from collections import Counter
 from math import sqrt
-from time import time
 
 import numpy as np
 import pytest
@@ -376,14 +375,3 @@ def test_sample_from_wavefunction_fails_for_invalid_n_samples(n_samples):
     wavefunction = Wavefunction(amplitudes)
     with pytest.raises(ValueError):
         sample_from_wavefunction(wavefunction, n_samples)
-
-
-def test_sample_from_wavefunction_is_efficient_for_high_n_samples():
-    n_qubits = 4
-    amplitudes = [0] * (2**n_qubits)
-    amplitudes[1] = 1
-    wavefunction = Wavefunction(amplitudes)
-    start = time()
-    sample_from_wavefunction(wavefunction, 500000)
-    end = time()
-    assert end - start < 0.05
