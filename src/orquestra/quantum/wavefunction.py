@@ -10,7 +10,12 @@ import numpy as np
 from sympy import Matrix, Symbol
 
 from .typing import AnyPath, LoadSource, ParameterizedVector
-from .utils import convert_array_to_dict, convert_dict_to_array, ensure_open
+from .utils import (
+    convert_array_to_dict,
+    convert_bitstrings_to_tuples,
+    convert_dict_to_array,
+    ensure_open,
+)
 
 
 def _is_number(possible_number):
@@ -281,12 +286,12 @@ def sample_from_wavefunction(
     ]
     # accelerate sampling by smartly choosing when formatting of samples is done
     if len(wavefunction) < n_samples:
-        outcome_tuples: List[Union[Tuple[int, ...], int]]
-        outcome_tuples = [tuple(int(c) for c in s[::-1]) for s in outcome_strings]
+        outcome_tuples: List[Union[Tuple[int, ...], int]] = []
+        outcome_tuples += convert_bitstrings_to_tuples(outcome_strings)
         outcome_tuples += [0]  # adding non tuple forces rng.choice to return tuples
         probabilities += [0]  # need to add corresponding probability of 0
         samples = rng.choice(a=outcome_tuples, size=n_samples, p=probabilities).tolist()
     else:
-        samples_ndarray = rng.choice(a=outcome_strings, size=n_samples, p=probabilities)
-        samples = [tuple(int(y) for y in list(x)[::-1]) for x in list(samples_ndarray)]
+        string_samples = rng.choice(a=outcome_strings, size=n_samples, p=probabilities)
+        samples = convert_bitstrings_to_tuples(string_samples)
     return samples

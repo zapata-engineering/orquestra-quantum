@@ -312,7 +312,7 @@ def test_scale_and_discretize(values, total, expected_result):
 def test_ordered_bitstring(num_qubits):
     bitstrings = get_ordered_list_of_bitstrings(num_qubits)
     expected_bitstrings = convert_tuples_to_bitstrings(
-        [dec2bin(integer, num_qubits) for integer in range(2**num_qubits)]
+        [tuple(dec2bin(integer, num_qubits)) for integer in range(2**num_qubits)]
     )
     assert np.all(expected_bitstrings == bitstrings)
     assert np.all([len(bitstring) == num_qubits for bitstring in bitstrings])
