@@ -35,7 +35,7 @@ from typing import (
 
 import numpy as np
 
-from ..circuits import Circuit, Operation, builtin_gate_by_name
+from orquestra.quantum.circuits import Circuit, Operation, builtin_gate_by_name
 
 PauliRepresentation = Union["PauliTerm", "PauliSum"]
 
@@ -541,6 +541,9 @@ class PauliSum:
             zero_identity_term = PauliTerm("I0", 0)
             return str(zero_identity_term)
         return " + ".join([str(term) for term in self.terms])
+
+    def __hash__(self):
+        return hash(tuple(self.terms))
 
     @property
     def is_constant(self) -> bool:

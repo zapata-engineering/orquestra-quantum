@@ -2,6 +2,7 @@
 # © Copyright 2021-2022 Zapata Computing Inc.
 ################################################################################
 import json
+from functools import lru_cache
 from math import log2
 from typing import Any, Dict, List, Optional, Sequence, Set, Tuple, Union
 from warnings import warn
@@ -214,12 +215,16 @@ def flip_wavefunction(wavefunction: Wavefunction):
 
 
 def flip_amplitudes(amplitudes: Union[Sequence[complex], np.ndarray]) -> np.ndarray:
-    number_of_states = len(amplitudes)
-    ordering = [
+    ordering = _get_ordering(len(amplitudes))
+    return np.array([amplitudes[i] for i in ordering])
+
+
+@lru_cache(maxsize=8)
+def _get_ordering(number_of_states: int) -> List[int]:
+    return [
         _flip_bits(n, number_of_states.bit_length() - 1)
         for n in range(number_of_states)
     ]
-    return np.array([amplitudes[i] for i in ordering])
 
 
 def _flip_bits(n, num_bits):
