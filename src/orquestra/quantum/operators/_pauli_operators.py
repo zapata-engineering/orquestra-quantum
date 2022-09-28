@@ -542,6 +542,9 @@ class PauliSum:
             return str(zero_identity_term)
         return " + ".join([str(term) for term in self.terms])
 
+    def __hash__(self):
+        return hash(tuple(self.terms))
+
     @property
     def is_constant(self) -> bool:
         return len(self.terms) == 0 or all([term.is_constant for term in self.terms])
