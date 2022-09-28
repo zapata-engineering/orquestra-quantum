@@ -219,7 +219,7 @@ def flip_amplitudes(amplitudes: Union[Sequence[complex], np.ndarray]) -> np.ndar
     return np.array([amplitudes[i] for i in ordering])
 
 
-@lru_cache(maxsize=8)
+@lru_cache()
 def _get_ordering(number_of_states: int) -> List[int]:
     return [
         _flip_bits(n, number_of_states.bit_length() - 1)
