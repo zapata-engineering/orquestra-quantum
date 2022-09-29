@@ -6,9 +6,10 @@ import re
 from functools import singledispatch
 from typing import Dict, Iterable, List, Mapping, Union
 
+import numpy as np
 import sympy
 
-from ..typing import DumpTarget, LoadSource
+from ..typing import MATRIX_TYPES, DumpTarget, LoadSource
 from ..utils import ensure_open
 from . import _builtin_gates, _circuit, _gates
 
@@ -45,16 +46,21 @@ def builtin_gate_by_name(name):
     return _builtin_gates.builtin_gate_by_name(name)
 
 
-def _matrix_to_json(matrix: sympy.Matrix):
-    return [
-        [serialize_expr(element) for element in matrix.row(row_i)]
-        for row_i in range(matrix.shape[0])
-    ]
+def _matrix_to_json(matrix: MATRIX_TYPES) -> MATRIX_TYPES:
+    if isinstance(matrix, sympy.Matrix):
+        return [
+            [serialize_expr(element) for element in matrix.row(row_i)]
+            for row_i in range(matrix.shape[0])
+        ]
+    elif isinstance(matrix, np.ndarray):
+        return matrix.tolist()
+    else:
+        raise TypeError(f"Unexpected type of matrix: {type(matrix)}")
 
 
 def _matrix_from_json(
     json_rows: List[List[str]], symbols_names: Iterable[str]
-) -> sympy.Matrix:
+) -> MATRIX_TYPES:
     return sympy.Matrix(
         [
             [deserialize_expr(element, symbols_names) for element in json_row]

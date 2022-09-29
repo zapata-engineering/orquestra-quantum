@@ -6,9 +6,9 @@ from functools import reduce, singledispatch
 from itertools import groupby
 from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Union
 
-import numpy as np
 import sympy
 
+from ..typing import MATRIX_TYPES
 from . import _gates, _operations
 
 
@@ -115,7 +115,7 @@ class Circuit:
             unique_operation_dict.values(), key=operator.attrgetter("gate_name")
         )
 
-    def to_unitary(self) -> Union[np.ndarray, sympy.Matrix]:
+    def to_matrix(self) -> MATRIX_TYPES:
         """Create a unitary matrix describing Circuit's action.
 
         For performance reasons, this method will construct numpy matrix if circuit does

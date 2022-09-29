@@ -73,7 +73,7 @@ class TestTimeEvolutionOfTerm:
     def test_evolving_pauli_term_with_numerical_time_gives_correct_unitary(
         self, term, time, expected_unitary
     ):
-        actual_unitary = time_evolution_for_term(term, time).to_unitary()
+        actual_unitary = time_evolution_for_term(term, time).to_matrix()
         np.testing.assert_array_almost_equal(actual_unitary, expected_unitary)
 
     def test_evolving_pauli_term_with_symbolic_time_gives_correct_unitary(
@@ -83,7 +83,7 @@ class TestTimeEvolutionOfTerm:
         symbol_map = {time_symbol: time}
         evolution_circuit = time_evolution_for_term(term, time_symbol)
 
-        actual_unitary = evolution_circuit.bind(symbol_map).to_unitary()
+        actual_unitary = evolution_circuit.bind(symbol_map).to_matrix()
         np.testing.assert_array_almost_equal(actual_unitary, expected_unitary)
 
 
@@ -114,8 +114,8 @@ class TestTimeEvolutionOfPauliSum:
             hamiltonian, time, order
         )
 
-        reference_unitary = expected_orquestra_circuit.to_unitary()
-        unitary = time_evolution(hamiltonian, time, trotter_order=order).to_unitary()
+        reference_unitary = expected_orquestra_circuit.to_matrix()
+        unitary = time_evolution(hamiltonian, time, trotter_order=order).to_matrix()
 
         assert compare_unitary(unitary, reference_unitary, tol=1e-10)
 
@@ -131,12 +131,12 @@ class TestTimeEvolutionOfPauliSum:
             hamiltonian, time_value, order
         )
 
-        reference_unitary = expected_orquestra_circuit.to_unitary()
+        reference_unitary = expected_orquestra_circuit.to_matrix()
 
         unitary = (
             time_evolution(hamiltonian, time_symbol, trotter_order=order)
             .bind(symbols_map)
-            .to_unitary()
+            .to_matrix()
         )
 
         assert compare_unitary(unitary, reference_unitary, tol=1e-10)

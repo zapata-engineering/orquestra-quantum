@@ -61,7 +61,7 @@ class TestDecompositionOfU3Gates:
         decomposed_circuit = decompose_orquestra_circuit(circuit, DECOMPOSITION_RULES)
 
         assert _is_scaled_identity(
-            circuit.to_unitary() @ np.linalg.inv(decomposed_circuit.to_unitary()),
+            circuit.to_matrix() @ np.linalg.inv(decomposed_circuit.to_matrix()),
         )
 
     @pytest.mark.parametrize(

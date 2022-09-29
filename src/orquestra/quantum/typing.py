@@ -36,6 +36,8 @@ DumpTarget = Union[Writeable, AnyPath]
 
 Specs = Union[str, Dict]
 
+MATRIX_TYPES = Union[np.ndarray, sympy.Matrix]
+
 
 Parameter = Union[sympy.Symbol, Number]
 ParameterizedVector = Union[Sequence[Parameter], np.ndarray]

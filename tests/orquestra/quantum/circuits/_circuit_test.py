@@ -246,7 +246,7 @@ class TestCircuitInverse:
         self, circuit
     ):
         assert np.allclose(
-            np.array((circuit + circuit.inverse()).to_unitary()),
+            np.array((circuit + circuit.inverse()).to_matrix()),
             np.eye(2**circuit.n_qubits),
         )
 

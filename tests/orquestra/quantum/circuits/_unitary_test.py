@@ -49,7 +49,7 @@ class TestCreatingUnitaryFromCircuit:
     def test_without_free_params_gives_the_same_result_as_cirq(
         self, circuit, unitary_index, cirq_unitaries
     ):
-        orquestra_unitary = circuit.to_unitary()
+        orquestra_unitary = circuit.to_matrix()
 
         assert isinstance(
             orquestra_unitary, np.ndarray
@@ -66,8 +66,8 @@ class TestCreatingUnitaryFromCircuit:
         )
 
         symbols_map = {theta: 0.1, gamma: 0.5}
-        parameterized_unitary = circuit.to_unitary()
-        unitary = circuit.bind(symbols_map).to_unitary()
+        parameterized_unitary = circuit.to_matrix()
+        unitary = circuit.bind(symbols_map).to_matrix()
 
         np.testing.assert_array_almost_equal(
             np.array(parameterized_unitary.subs(symbols_map), dtype=complex), unitary

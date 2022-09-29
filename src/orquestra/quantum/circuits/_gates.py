@@ -9,7 +9,7 @@ from typing import Callable, Dict, Iterable, Protocol, Tuple, Union, runtime_che
 import numpy as np
 import sympy
 
-from ..typing import ParameterizedVector
+from ..typing import MATRIX_TYPES, ParameterizedVector
 from ._operations import Parameter, get_free_symbols, sub_symbols
 from ._unitary_tools import _lift_matrix_numpy, _lift_matrix_sympy
 
@@ -73,7 +73,7 @@ class Gate(Protocol):
         raise NotImplementedError()
 
     @property
-    def matrix(self) -> sympy.Matrix:
+    def matrix(self) -> MATRIX_TYPES:
         """Unitary matrix describing gate's action on state vector.
 
         We need it to be able to implement .propagate() on the operation class.
@@ -188,13 +188,13 @@ class MatrixFactoryGate:
     """
 
     name: str
-    matrix_factory: Callable[..., sympy.Matrix]
+    matrix_factory: Callable[..., MATRIX_TYPES]
     params: Tuple[Parameter, ...]
     num_qubits: int
     is_hermitian: bool = False
 
     @property
-    def matrix(self) -> sympy.Matrix:
+    def matrix(self) -> MATRIX_TYPES:
         """Unitary matrix defining action of this gate.
 
         This is a computed property using `self.matrix_factory` called with parameters
@@ -335,8 +335,15 @@ class Dagger(Gate):
     wrapped_gate: Gate
 
     @property
-    def matrix(self) -> sympy.Matrix:
-        return self.wrapped_gate.matrix.adjoint()
+    def matrix(self) -> MATRIX_TYPES:
+        if isinstance(self.wrapped_gate.matrix, sympy.Matrix):
+            return self.wrapped_gate.matrix.adjoint()
+        elif isinstance(self.wrapped_gate.matrix, np.ndarray):
+            return self.wrapped_gate.matrix.conj().T
+        else:
+            raise TypeError(
+                f"Unexpected type of matrix: {type(self.wrapped_gate.matrix)}"
+            )
 
     @property
     def params(self) -> Tuple[Parameter, ...]:
@@ -385,8 +392,15 @@ class Exponential(Gate):
             )
 
     @property
-    def matrix(self) -> sympy.Matrix:
-        return self.wrapped_gate.matrix.exp()
+    def matrix(self) -> MATRIX_TYPES:
+        if isinstance(self.wrapped_gate.matrix, sympy.Matrix):
+            return self.wrapped_gate.matrix.exp()
+        elif isinstance(self.wrapped_gate.matrix, np.ndarray):
+            return np.exp(self.wrapped_gate.matrix)
+        else:
+            raise TypeError(
+                f"Unexpected type of matrix: {type(self.wrapped_gate.matrix)}"
+            )
 
     @property
     def params(self) -> Tuple[Parameter, ...]:
@@ -452,7 +466,7 @@ class Power(Gate):
         return self.wrapped_gate.num_qubits
 
     @property
-    def matrix(self) -> sympy.Matrix:
+    def matrix(self) -> MATRIX_TYPES:
         return self.wrapped_gate.matrix**self.exponent
 
     def controlled(self, num_control_qubits: int) -> "Gate":
@@ -492,7 +506,7 @@ class CustomGateMatrixFactory:
     gate_definition: "CustomGateDefinition"
 
     @property
-    def matrix(self) -> sympy.Matrix:
+    def matrix(self) -> MATRIX_TYPES:
         return self.gate_definition.matrix
 
     @property
@@ -500,9 +514,14 @@ class CustomGateMatrixFactory:
         return self.gate_definition.params_ordering
 
     def __call__(self, *gate_params):
-        return self.matrix.subs(
-            {symbol: arg for symbol, arg in zip(self.params_ordering, gate_params)}
-        )
+        if isinstance(self.matrix, sympy.Matrix):
+            return self.matrix.subs(
+                {symbol: arg for symbol, arg in zip(self.params_ordering, gate_params)}
+            )
+        elif isinstance(self.matrix, np.ndarray):
+            return self.matrix
+        else:
+            raise TypeError(f"Matricies of type {type(self.matrix)} are not supported")
 
     def __eq__(self, other):
         if type(self) != type(other):
@@ -538,7 +557,7 @@ class CustomGateDefinition:
     """
 
     gate_name: str
-    matrix: sympy.Matrix
+    matrix: MATRIX_TYPES
     params_ordering: Tuple[sympy.Symbol, ...]
 
     def __post_init__(self):

@@ -43,11 +43,11 @@ class TestCreateLayerOfGates:
             for i in range(n_qubits):
                 target_circuit += RY(*params[i])(i)
 
-            u_orquestra = target_circuit.to_unitary()
+            u_orquestra = target_circuit.to_matrix()
 
             # When
             circuit = create_layer_of_gates(n_qubits, gate, params)
-            unitary = circuit.to_unitary()
+            unitary = circuit.to_matrix()
 
             # Then
             assert compare_unitary(unitary, u_orquestra, tol=1e-10)
@@ -77,10 +77,10 @@ class TestApplyGateToQubits:
         should_circuit = base_circuit
         for qubit in qubit_indices:
             should_circuit += test_gate(qubit)
-        should_unitary = should_circuit.to_unitary()
+        should_unitary = should_circuit.to_matrix()
 
         is_circuit = apply_gate_to_qubits(base_circuit, qubit_indices, test_gate)
-        is_unitary = is_circuit.to_unitary()
+        is_unitary = is_circuit.to_matrix()
 
         assert compare_unitary(should_unitary, is_unitary, tol=1e-10)
 
@@ -96,12 +96,12 @@ class TestApplyGateToQubits:
         should_circuit = base_circuit
         for qubit, parameter in zip(qubit_indices, parameters):
             should_circuit += test_gate(*parameter)(qubit)
-        should_unitary = should_circuit.to_unitary()
+        should_unitary = should_circuit.to_matrix()
 
         is_circuit = apply_gate_to_qubits(
             base_circuit, qubit_indices, test_gate, parameters
         )
-        is_unitary = is_circuit.to_unitary()
+        is_unitary = is_circuit.to_matrix()
 
         assert compare_unitary(should_unitary, is_unitary, tol=1e-10)
 

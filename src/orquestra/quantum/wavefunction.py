@@ -220,16 +220,22 @@ def flip_wavefunction(wavefunction: Wavefunction):
 
 
 def flip_amplitudes(amplitudes: Union[Sequence[complex], np.ndarray]) -> np.ndarray:
-    ordering = _get_ordering(len(amplitudes))
-    return np.array([amplitudes[i] for i in ordering])
+    num_bits = len(amplitudes).bit_length() - 1
+    ordering = _get_ordering(num_bits)
+    if isinstance(amplitudes, np.ndarray):
+        return amplitudes[ordering]
+    else:
+        return np.array([amplitudes[i] for i in ordering])
 
 
 @lru_cache()
-def _get_ordering(number_of_states: int) -> List[int]:
-    return [
-        _flip_bits(n, number_of_states.bit_length() - 1)
-        for n in range(number_of_states)
-    ]
+def _get_ordering(num_bits: int) -> np.ndarray:
+    return (
+        np.arange(2**num_bits)
+        .reshape(num_bits * [2])
+        .transpose(*reversed(range(num_bits)))
+        .reshape(2**num_bits)
+    )
 
 
 def _flip_bits(n, num_bits):
