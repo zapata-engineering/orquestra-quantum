@@ -255,10 +255,11 @@ class TestCircuitInverse:
         circuit_inverse = circuit.inverse()
         assert circuit_inverse == circuit
 
-    def test_inverting_a_circuit_without_dagger_fails(self):
+    @pytest.mark.parametrize("matrix_type", [np.array, sympy.Matrix])
+    def test_inverting_a_circuit_without_dagger_fails(self, matrix_type):
         custom_a = CustomGateDefinition(
             gate_name="custom_a",
-            matrix=sympy.Matrix(
+            matrix=matrix_type(
                 [
                     [-1, 0],
                     [0, 1],

@@ -492,7 +492,7 @@ class Power(Gate):
         return self.wrapped_gate.replace_params(new_params).power(self.exponent)
 
 
-def _n_qubits(matrix):
+def _n_qubits(matrix) -> int:
     n_qubits = math.floor(math.log2(matrix.shape[0]))
     if 2**n_qubits != matrix.shape[0] or 2**n_qubits != matrix.shape[1]:
         raise ValueError("Gate's matrix has to be square with dimension 2^N")
@@ -610,5 +610,7 @@ def _are_matrix_elements_equal(element, another_element):
 def _are_matrices_equal(matrix, another_matrix):
     return all(
         _are_matrix_elements_equal(element, another_element)
-        for element, another_element in zip(matrix, another_matrix)
+        for element, another_element in zip(
+            sympy.Matrix(matrix), sympy.Matrix(another_matrix)
+        )
     )

@@ -40,7 +40,18 @@ CUSTOM_U_GATE = _gates.CustomGateDefinition(
 
 
 # Based on ZQS-811 bug report
-CUSTOM_SGD_GATE = _gates.CustomGateDefinition(
+NUMPY_CUSTOM_SGD_GATE = _gates.CustomGateDefinition(
+    gate_name="SGD",
+    matrix=np.array(
+        [
+            [1.0, 0],
+            [0, -1.0j],
+        ],
+        dtype=complex,
+    ),
+    params_ordering=tuple(),
+)
+SYMPY_CUSTOM_SGD_GATE = _gates.CustomGateDefinition(
     gate_name="SGD",
     matrix=sympy.Matrix(
         [
@@ -78,7 +89,8 @@ EXAMPLE_CIRCUITS = [
     ),
     _circuit.Circuit(
         operations=[
-            CUSTOM_SGD_GATE()(3),
+            SYMPY_CUSTOM_SGD_GATE()(3),
+            NUMPY_CUSTOM_SGD_GATE()(3),
         ],
     ),
     _circuit.Circuit(
@@ -184,7 +196,10 @@ class TestCustomGateDefinitionSerialization:
         [
             _gates.CustomGateDefinition(
                 "V", sympy.Matrix([[THETA, GAMMA], [-GAMMA, THETA]]), (THETA, GAMMA)
-            )
+            ),
+            _gates.CustomGateDefinition(
+                "V", sympy.Matrix([[0, 1], [-1, 0]]), (THETA, GAMMA)
+            ),
         ],
     )
     def test_roundtrip_gives_back_same_def(self, gate_def):

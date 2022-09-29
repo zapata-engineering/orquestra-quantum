@@ -17,6 +17,17 @@ from orquestra.quantum.evolution import (
 from orquestra.quantum.operators import PauliSum, PauliTerm
 from orquestra.quantum.utils import compare_unitary
 
+
+@pytest.fixture(
+    params=[
+        np.array,
+        sympy.Matrix,
+    ]
+)
+def matrix_type(request):
+    return request.param
+
+
 TUPLE_TERM_TO_ORQUESTRA_GATE = {
     ((0, "X"), (1, "X")): XX,
     ((0, "Y"), (1, "Y")): YY,
@@ -40,14 +51,14 @@ def _orquestra_exponentiate_qubit_hamiltonian_term(term, time, trotter_order):
     return zquant_mat
 
 
-def _orquestra_exponentiate_hamiltonian(hamiltonian, time, trotter_order):
+def _orquestra_exponentiate_hamiltonian(hamiltonian, time, trotter_order, matrix_type):
     ops = []
     for term in hamiltonian.terms:
         mat = _orquestra_exponentiate_qubit_hamiltonian_term(term, time, trotter_order)
         ops.append(
             circuits.CustomGateDefinition(
                 gate_name="custom_a",
-                matrix=sympy.Matrix(mat),
+                matrix=matrix_type(mat),
                 params_ordering=(),
             )()(0, 1)
         )
@@ -108,10 +119,10 @@ class TestTimeEvolutionOfPauliSum:
     @pytest.mark.parametrize("time", [0.1, 0.4, 1.0])
     @pytest.mark.parametrize("order", [1, 2, 3])
     def test_evolution_with_numerical_time_produces_correct_result(
-        self, hamiltonian, time, order
+        self, hamiltonian, time, order, matrix_type
     ):
         expected_orquestra_circuit = _orquestra_exponentiate_hamiltonian(
-            hamiltonian, time, order
+            hamiltonian, time, order, matrix_type
         )
 
         reference_unitary = expected_orquestra_circuit.to_matrix()
@@ -122,13 +133,13 @@ class TestTimeEvolutionOfPauliSum:
     @pytest.mark.parametrize("time_value", [0.1, 0.4, 1.0])
     @pytest.mark.parametrize("order", [1, 2, 3])
     def test_time_evolution_with_symbolic_time_produces_correct_unitary(
-        self, hamiltonian, time_value, order
+        self, hamiltonian, time_value, order, matrix_type
     ):
         time_symbol = sympy.Symbol("t")
         symbols_map = {time_symbol: time_value}
 
         expected_orquestra_circuit = _orquestra_exponentiate_hamiltonian(
-            hamiltonian, time_value, order
+            hamiltonian, time_value, order, matrix_type
         )
 
         reference_unitary = expected_orquestra_circuit.to_matrix()
