@@ -73,6 +73,7 @@ def skip_tests_for_excluded_gates(func):
     return _wrapper
 
 
+@pytest.mark.skip
 class QuantumBackendTests:
     def test_run_circuit_and_measure_correct_indexing(self, backend):
 

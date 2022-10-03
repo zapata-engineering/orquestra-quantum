@@ -2,14 +2,25 @@
 # © Copyright 2022 Zapata Computing Inc.
 ################################################################################
 
-from typing import Protocol, Iterable, List, Union
+from typing import Protocol, Iterable, List, Union, Optional
 from ..circuits import Circuit
 from ..measurements import Measurements
 from .circuit_runner import CircuitRunner
 from abc import ABC, abstractmethod
 
 
-class GateModelDevice(ABC, CircuitRunner):
+class GateModelDevice(Protocol, CircuitRunner):
+
+    @property
+    def n_jobs_executed(self) -> int:
+        pass
+
+    @property
+    def n_circuits_executed(self) -> int:
+        pass
+
+
+class BaseGateModelDevice(ABC, GateModelDevice):
 
     supports_batching: bool = False
     batch_size: Optional[int] = None

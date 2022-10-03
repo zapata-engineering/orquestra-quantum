@@ -6,6 +6,7 @@ from typing import List
 from orquestra.quantum.api.backend import QuantumSimulator
 from orquestra.quantum.api.estimation import EstimationTask
 from orquestra.quantum.api.estimator_contract import ESTIMATOR_CONTRACTS
+from orquestra.quantum.api.gate_model_simulator import WavefunctionSimulator
 from orquestra.quantum.estimation import calculate_exact_expectation_values
 from orquestra.quantum.measurements import ExpectationValues
 
@@ -31,7 +32,7 @@ def test_each_task_returns_one_expecation_value_test():
 
 def test_order_of_outputs_matches_order_of_inputs_test():
     def malicious_calculate_expectation_values(
-        backend: QuantumSimulator, estimation_tasks: List[EstimationTask]
+        backend: WavefunctionSimulator, estimation_tasks: List[EstimationTask]
     ) -> List[ExpectationValues]:
         correct_output = calculate_exact_expectation_values(
             backend=backend, estimation_tasks=estimation_tasks

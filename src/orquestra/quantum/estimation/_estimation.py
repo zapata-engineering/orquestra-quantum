@@ -6,8 +6,10 @@ from typing import Dict, List, Optional, Tuple, cast
 import numpy as np
 import sympy
 
-from ..api.backend import QuantumBackend, QuantumSimulator
+from ..api.backend import QuantumSimulator
+from ..api.circuit_runner import CircuitRunner
 from ..api.estimation import EstimationTask
+from ..api.gate_model_simulator import WavefunctionSimulator
 from ..measurements import ExpectationValues, expectation_values_to_real
 
 
@@ -123,7 +125,7 @@ def evaluate_non_measured_estimation_tasks(
 
 
 def estimate_expectation_values_by_averaging(
-    backend: QuantumBackend,
+    backend: CircuitRunner,
     estimation_tasks: List[EstimationTask],
 ) -> List[ExpectationValues]:
     """Basic method for estimating expectation values for list of estimation tasks.
@@ -156,7 +158,7 @@ def estimate_expectation_values_by_averaging(
                 for e in estimation_tasks_to_measure
             ]
         )
-        measurements_list = backend.run_circuitset_and_measure(
+        measurements_list = backend.run_batch_and_measure(
             circuits, shots_per_circuit
         )
 
@@ -187,7 +189,7 @@ def estimate_expectation_values_by_averaging(
 
 
 def calculate_exact_expectation_values(
-    backend: QuantumSimulator,
+    backend: WavefunctionSimulator,
     estimation_tasks: List[EstimationTask],
 ) -> List[ExpectationValues]:
     """Calculates exact expectation values using built-in method of a provided backend.
@@ -202,4 +204,4 @@ def calculate_exact_expectation_values(
         )
         for estimation_task in estimation_tasks
     ]
-    return expectation_values_list
+    return [ExpectationValues(val) for val in expectation_values_list]
