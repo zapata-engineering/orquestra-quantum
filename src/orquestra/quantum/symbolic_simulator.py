@@ -3,14 +3,9 @@
 ################################################################################
 from typing import Any, Dict, Optional
 
-from sympy import Symbol
-
 from orquestra.quantum.api.backend import StateVector
-from orquestra.quantum.api.gate_model_simulator import BaseWavefunctionSimulator
+from orquestra.quantum.api.simulator import BaseWavefunctionSimulator
 from orquestra.quantum.circuits import Circuit, Operation
-from orquestra.quantum.circuits.layouts import CircuitConnectivity
-from orquestra.quantum.measurements import Measurements
-from orquestra.quantum.wavefunction import sample_from_wavefunction
 
 
 class SymbolicSimulator(BaseWavefunctionSimulator):

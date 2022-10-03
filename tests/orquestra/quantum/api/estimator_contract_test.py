@@ -6,7 +6,7 @@ from typing import List
 from orquestra.quantum.api.backend import QuantumSimulator
 from orquestra.quantum.api.estimation import EstimationTask
 from orquestra.quantum.api.estimator_contract import ESTIMATOR_CONTRACTS
-from orquestra.quantum.api.gate_model_simulator import WavefunctionSimulator
+from orquestra.quantum.api.simulator import WavefunctionSimulator
 from orquestra.quantum.estimation import calculate_exact_expectation_values
 from orquestra.quantum.measurements import ExpectationValues
 

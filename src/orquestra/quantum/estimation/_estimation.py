@@ -9,7 +9,7 @@ import sympy
 from ..api.backend import QuantumSimulator
 from ..api.circuit_runner import CircuitRunner
 from ..api.estimation import EstimationTask
-from ..api.gate_model_simulator import WavefunctionSimulator
+from ..api.simulator import WavefunctionSimulator
 from ..measurements import ExpectationValues, expectation_values_to_real
 
 
