@@ -5,19 +5,20 @@ import json
 from typing import Dict, List, Optional, Sequence
 
 from .api.backend import QuantumBackend
+from .api.circuit_runner import CircuitRunner, BaseCircuitRunner
 from .circuits import Circuit, to_dict
 from .distributions import MeasurementOutcomeDistribution
 from .measurements import Measurements
 
 
-class MeasurementTrackingBackend(QuantumBackend):
+class MeasurementTrackingBackend(BaseCircuitRunner):
     """A wrapper class for a backend that tracks all measurements. The measurements
     are stored in the raw_circuit_data variable as a list of measurement objects.
     """
 
     def __init__(
         self,
-        inner_backend: QuantumBackend,
+        inner_backend: CircuitRunner,
         raw_data_file_name: str,
         record_bitstrings: Optional[bool] = False,
     ):
@@ -31,24 +32,24 @@ class MeasurementTrackingBackend(QuantumBackend):
         """
         super().__init__()
         self.record_bitstrings: Optional[bool] = record_bitstrings
-        self.inner_backend: QuantumBackend = inner_backend
+        self.inner_backend: CircuitRunner = inner_backend
         self.raw_data: List[Dict] = []
         self.type: str = inner_backend.__class__.__name__
         self.raw_data_file_name = raw_data_file_name
 
-    def run_circuit_and_measure(self, circuit: Circuit, n_samples: int) -> Measurements:
+    def _run_and_measure(self, circuit: Circuit, n_samples: int) -> Measurements:
         """Method for executing the circuit and measuring the outcome.
 
         Args:
             circuit: quantum circuit to be executed.
             n_samples: The number of samples to collect.
         """
-        measurement = self.inner_backend.run_circuit_and_measure(circuit, n_samples)
+        measurement = self.inner_backend.run_and_measure(circuit, n_samples)
         self.record_raw_measurement_data(circuit, measurement)
         self.save_raw_data()
         return measurement
 
-    def run_circuitset_and_measure(
+    def run_batch_and_measure(
         self, circuits: Sequence[Circuit], n_samples: Sequence[int]
     ) -> List[Measurements]:
         """Run a set of circuits and measure a certain number of bitstrings.
@@ -57,7 +58,9 @@ class MeasurementTrackingBackend(QuantumBackend):
             circuits: The circuits to execute.
             n_samples: The number of samples to collect for each circuit.
         """
-        measurements = self.inner_backend.run_circuitset_and_measure(
+        self._n_circuits_executed += len(circuits)
+        self._n_jobs_executed += 1
+        measurements = self.inner_backend.run_batch_and_measure(
             circuits, n_samples
         )
         for circuit, measurement in zip(circuits, measurements):
