@@ -95,10 +95,13 @@ class _ValidateRunBatchAndMeasure:
                 )
             )
 
-        return (
-            _when_n_samples_is_different_for_each_circuit() and
+        # We make sure to run each subtest, otherwise short-circuiting of
+        # circuits might result in missing some errors
+        subtests = [
+            _when_n_samples_is_different_for_each_circuit(),
             _when_n_samples_is_the_same_for_each_circuit()
-        )
+        ]
+        return all(subtests)
 
     @staticmethod
     def returns_bitstrings_with_length_equal_to_number_of_qubits_in_circuit(

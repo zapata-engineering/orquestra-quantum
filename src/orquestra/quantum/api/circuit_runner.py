@@ -40,6 +40,8 @@ class BaseCircuitRunner(ABC, CircuitRunner):
         self._n_jobs_executed= 0
 
     def run_and_measure(self, circuit: Circuit, n_samples: int) -> Measurements:
+        if n_samples <= 0:
+            raise ValueError(f"Number of samples has to be positive, got {n_samples}")
         result = self._run_and_measure(circuit, n_samples)
         self._n_circuits_executed += 1
         self._n_jobs_executed += 1
@@ -59,14 +61,21 @@ class BaseCircuitRunner(ABC, CircuitRunner):
                 "equal to the length of batch. Length of batch: "
                 f"{len(circuits_batch)}, length of n_samples: {len(n_samples)}."
             )
-        return [
-            self.run_and_measure(circuit, n)
-            for circuit, n in zip(circuits_batch, samples_per_circuit)
-        ]
+        if any(n <= 0 for n in samples_per_circuit):
+            raise ValueError(f"All numbers of samples have to be positive. Got: {n_samples}")
+
+        return self._run_batch_and_measure(circuits_batch, samples_per_circuit)
 
     @abstractmethod
     def _run_and_measure(self, circuit: Circuit, n_samples: int) -> Measurements:
         pass
+
+    def _run_batch_and_measure(self, batch: Sequence[Circuit], samples_per_circuit: Sequence[int]):
+        """Here we might assume that the input is correct."""
+        return [
+            self.run_and_measure(circuit, n)
+            for circuit, n in zip(batch, samples_per_circuit)
+        ]
 
     @property
     def n_jobs_executed(self) -> int:
