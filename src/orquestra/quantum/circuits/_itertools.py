@@ -1,6 +1,10 @@
+from collections import Counter
+from functools import reduce
 from itertools import islice
 from math import ceil
 from typing import Sequence, Tuple, TypeVar, Iterable
+
+from orquestra.quantum.measurements import Measurements
 
 T = TypeVar("T")
 
@@ -62,16 +66,14 @@ def split_into_batches(
 
     if max_batch_size <= 0:
         raise ValueError(
-            "Max circuits per batch has to be positive, got "
-            f"{max_batch_size}"
+            "Max circuits per batch has to be positive, got " f"{max_batch_size}"
         )
 
     return (
         (circuits_chunk, max(samples_chunk))
-        for circuits_chunk, samples_chunk in
-        zip(
+        for circuits_chunk, samples_chunk in zip(
             _iterate_in_batches(circuits, max_batch_size),
-            _iterate_in_batches(n_samples_per_circuit, max_batch_size)
+            _iterate_in_batches(n_samples_per_circuit, max_batch_size),
         )
     )
 
@@ -79,17 +81,15 @@ def split_into_batches(
 def _expand_sample_size(n_samples, max_sample_size):
     multiplicities = ceil(n_samples / max_sample_size)
     new_n_samples = (
-        multiplicities * (max_sample_size,) if n_samples % max_sample_size == 0
-        else
-        (multiplicities-1) * (max_sample_size,) + (n_samples % max_sample_size,)
+        multiplicities * (max_sample_size,)
+        if n_samples % max_sample_size == 0
+        else (multiplicities - 1) * (max_sample_size,) + (n_samples % max_sample_size,)
     )
     return new_n_samples, multiplicities
 
 
 def expand_sample_sizes(
-    circuits: Sequence[T],
-    n_samples_per_circuit: Sequence[int],
-    max_sample_size: int
+    circuits: Sequence[T], n_samples_per_circuit: Sequence[int], max_sample_size: int
 ) -> Tuple[Sequence[T], Sequence[int], Sequence[int]]:
     """Expand sample sizes for each circuit to fit maximum sample size.
 
@@ -126,3 +126,53 @@ def expand_sample_sizes(
     ]
 
     return new_circuits, new_n_samples, multiplicities
+
+
+def _combine_measurements(first: Measurements, second: Measurements) -> Measurements:
+    counts_first, counts_second = first.get_counts(), second.get_counts()
+    result = Counter(counts_first)
+    for bitstring, count in counts_second.items():
+        result[bitstring] += count
+    return Measurements.from_counts(dict(result))
+
+
+def combine_measurements(
+    all_measurements: Sequence[Measurements], multiplicities: Sequence[int]
+):
+    """Combine (aggregate) measurements of the same circuits run several times.
+
+    Suppose multiplicities is a list [1, 2 ,3]. Then, the all_measurements should
+    be a sequence of 1+2+3=6 elements m0,m1,m2,m3,m4,m5, and the results will
+    contain three Measurements objects M0, M1, M2 s.t.
+
+    - M0 is equivalent to M0 (up to bitstring ordering)
+    - M1 comprises combined m1 and m2
+    - M2 comprises combined m3, m4 and m5
+
+    Args:
+        all_measurements: sequence of measurements containing measurements
+          gathered from some, possibly duplicated, circuits. The Measurement
+          objects corresponding to the same circuit should be placed next to
+          each other. Should have the same length as sum(multiplicities).
+        multiplicities: sequence of positive integers marking groups of
+          consecutive measurements corresponding to the same circuit. For
+          instance, multiplicities [1, 2, 3] mean that first group of
+          measurements comprises 1 Measurement, second group comprises 2
+          consecutive Measurements, third group contains 3 consecutive
+          Measurements and so on.
+    Returns:
+        Sequence of combined measurements of length equal len(multiplicities)
+    Raises:
+        ValueError: if len(all_measurements != sum(multiplicities)
+    """
+    if len(all_measurements) != (sum_multiplicities := sum(multiplicities)):
+        raise ValueError(
+            "Mismatch between multiplicities and number of measurements to combine. "
+            f"Got {len(all_measurements)} Measurements objects to combine "
+            f"but multiplicities sum to {sum_multiplicities}"
+        )
+    measurements_it = iter(all_measurements)
+    return [
+        reduce(_combine_measurements, islice(measurements_it, multiplicity))
+        for multiplicity in multiplicities
+    ]
