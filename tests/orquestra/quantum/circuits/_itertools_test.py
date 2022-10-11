@@ -93,15 +93,14 @@ class TestExpandingSampleSizes:
 class TestCombiningMeasurements:
     def test_raises_error_when_multiplicities_dont_match_measurements(self):
         multiplicities = [1, 2, 3, 2, 2]
-        measurements = [
-            Measurements.from_counts({"00": 20, "11": 10}) for _ in range(5)
-        ]  # Clearly a mismatch, we should have 10 Measurements object
+        # Clearly a mismatch, we should have 10 Measurements object
+        measurements = [{"00": 20, "11": 10} for _ in range(5)]
 
         with pytest.raises(ValueError):
             combine_measurements(measurements, multiplicities)
 
     @pytest.mark.parametrize(
-        "raw_counts, multiplicities, combined_counts",
+        "all_counts, multiplicities, combined_counts",
         [
             ([{"00": 10}], [1], [{"00": 10}]),
             (
@@ -131,17 +130,12 @@ class TestCombiningMeasurements:
         ],
     )
     def test_counts_of_combined_measurements_are_correct(
-        self, raw_counts, multiplicities, combined_counts
+        self, all_counts, multiplicities, combined_counts
     ):
-        all_measurements = [Measurements.from_counts(counts) for counts in raw_counts]
-        expected_result = [
-            Measurements.from_counts(counts) for counts in combined_counts
-        ]
-
         assert all(
-            combined.get_counts() == expected.get_counts()
-            for combined, expected in zip(
-                combine_measurements(all_measurements, multiplicities),
-                expected_result,
+            actual == expected
+            for actual, expected in zip(
+                combine_measurements(all_counts, multiplicities),
+                combined_counts,
             )
         )

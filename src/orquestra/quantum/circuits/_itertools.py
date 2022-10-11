@@ -2,7 +2,7 @@ from collections import Counter
 from functools import reduce
 from itertools import islice
 from math import ceil
-from typing import Sequence, Tuple, TypeVar, Iterable
+from typing import Sequence, Tuple, TypeVar, Iterable, Dict
 
 from orquestra.quantum.measurements import Measurements
 
@@ -128,26 +128,25 @@ def expand_sample_sizes(
     return new_circuits, new_n_samples, multiplicities
 
 
-def _combine_measurements(first: Measurements, second: Measurements) -> Measurements:
-    counts_first, counts_second = first.get_counts(), second.get_counts()
-    result = Counter(counts_first)
-    for bitstring, count in counts_second.items():
+def _combine_measurements(first: Dict[str, int], second: Dict[str, int]) -> Dict[str, int]:
+    result = Counter(first)
+    for bitstring, count in second.items():
         result[bitstring] += count
-    return Measurements.from_counts(dict(result))
+    return dict(result)
 
 
 def combine_measurements(
-    all_measurements: Sequence[Measurements], multiplicities: Sequence[int]
-):
+    all_measurements: Sequence[Dict[str, int]], multiplicities: Sequence[int]
+) -> Sequence[Dict[str, int]]:
     """Combine (aggregate) measurements of the same circuits run several times.
 
     Suppose multiplicities is a list [1, 2 ,3]. Then, the all_measurements should
     be a sequence of 1+2+3=6 elements m0,m1,m2,m3,m4,m5, and the results will
-    contain three Measurements objects M0, M1, M2 s.t.
+    contain three dictionaries M0, M1, M2 s.t.
 
-    - M0 is equivalent to M0 (up to bitstring ordering)
-    - M1 comprises combined m1 and m2
-    - M2 comprises combined m3, m4 and m5
+    - M0 contains counts from m0 only
+    - M1 comprises combined counts from m1 and m2
+    - M2 comprises combined counts from m3, m4 and m5
 
     Args:
         all_measurements: sequence of measurements containing measurements
