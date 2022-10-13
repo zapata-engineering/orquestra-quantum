@@ -551,7 +551,9 @@ class PauliSum:
 
     @property
     def constant_value(self) -> Union[int, float]:
-        return sum([term.coefficient for term in self.terms if term.is_constant])
+        return sum(
+            [term.coefficient for term in self.terms if term.is_constant]  # type:ignore
+        )
 
     @property
     def n_qubits(self) -> int:
