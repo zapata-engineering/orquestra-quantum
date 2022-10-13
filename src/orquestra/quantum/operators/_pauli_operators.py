@@ -550,6 +550,10 @@ class PauliSum:
         return len(self.terms) == 0 or all([term.is_constant for term in self.terms])
 
     @property
+    def constant_value(self) -> Union[int, float]:
+        return sum([term.coefficient for term in self.terms if term.is_constant])
+
+    @property
     def n_qubits(self) -> int:
         """Number of qubits used in this PauliSum.
 

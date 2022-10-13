@@ -641,3 +641,14 @@ class TestPauliSumOperations:
     def test_paulisum_multiply_by_zero(self, pauli_sum: PauliSum):
         zero_op = pauli_sum * 0
         assert zero_op == PauliSum()
+
+    def test_paulisum_constant_value_zero(self, pauli_sum):
+        assert 0 == pauli_sum.constant_value
+
+    def test_paulisum_constant(self, pauli_sum):
+        pauli_sum = pauli_sum + 10
+        assert 10 == pauli_sum.constant_value
+
+    def test_paulisum_identity_operator(self, pauli_sum):
+        pauli_sum = pauli_sum + 10 * PauliTerm("I0")
+        assert 10 == pauli_sum.constant_value
