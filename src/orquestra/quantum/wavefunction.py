@@ -224,14 +224,15 @@ def flip_amplitudes(amplitudes: Union[Sequence[complex], np.ndarray]) -> np.ndar
     ordering = _get_ordering(number_of_states)
     return np.asarray(amplitudes)[ordering]
 
+
 @lru_cache
 def _get_ordering(number_of_states: int) -> np.ndarray:
     num_bits = number_of_states.bit_length() - 1
     ordering = (
-        np.arange(2 ** num_bits)
+        np.arange(2**num_bits)
         .reshape(num_bits * [2])
         .transpose(*reversed(range(num_bits)))
-        .reshape(2 ** num_bits)
+        .reshape(2**num_bits)
     )
     return ordering
 
