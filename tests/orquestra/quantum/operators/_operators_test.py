@@ -22,6 +22,13 @@ def pauli_sum():
     return 0.5 * PauliTerm("X0") + 0.5j * PauliTerm("Y0")
 
 
+@pytest.fixture(
+    params=[10, -10, 0.5, -0.5],
+)
+def get_constant(request):
+    return request.param
+
+
 class TestPauliTermInitialization:
     @pytest.mark.parametrize(
         "operator_dict, coefficient",
@@ -643,12 +650,14 @@ class TestPauliSumOperations:
         assert zero_op == PauliSum()
 
     def test_paulisum_constant_value_zero(self, pauli_sum):
-        assert 0 == pauli_sum.constant_value
+        assert pauli_sum.constant_value == 0
 
-    def test_paulisum_constant(self, pauli_sum):
-        pauli_sum = pauli_sum + 10
-        assert 10 == pauli_sum.constant_value
+    def test_paulisum_constant(self, pauli_sum, get_constant):
+        constant = get_constant
+        pauli_sum = pauli_sum + constant
+        assert constant == pauli_sum.constant_value
 
-    def test_paulisum_identity_operator(self, pauli_sum):
-        pauli_sum = pauli_sum + 10 * PauliTerm("I0")
-        assert 10 == pauli_sum.constant_value
+    def test_paulisum_identity_operator(self, pauli_sum, get_constant):
+        constant = get_constant
+        pauli_sum = pauli_sum + get_constant * PauliTerm("I0")
+        assert constant == pauli_sum.constant_value
