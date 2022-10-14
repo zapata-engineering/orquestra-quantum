@@ -551,7 +551,7 @@ class PauliSum:
         return len(self.terms) == 0 or all([term.is_constant for term in self.terms])
 
     @property
-    def constant_value(self) -> Union[Number, complex]:
+    def constant_term(self) -> Union[Number, complex]:
         return sum([term.coefficient for term in self.terms if term.is_constant])
 
     @property
