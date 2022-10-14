@@ -17,6 +17,7 @@ import re
 import warnings
 from collections import OrderedDict
 from itertools import chain, product
+from numbers import Number
 from typing import (
     Any,
     Dict,
@@ -550,10 +551,8 @@ class PauliSum:
         return len(self.terms) == 0 or all([term.is_constant for term in self.terms])
 
     @property
-    def constant_value(self) -> Union[int, float]:
-        return sum(
-            [term.coefficient for term in self.terms if term.is_constant]  # type:ignore
-        )
+    def constant_value(self) -> Union[Number, complex]:
+        return sum([term.coefficient for term in self.terms if term.is_constant])
 
     @property
     def n_qubits(self) -> int:
