@@ -4,7 +4,6 @@
 import json
 from typing import Dict, List, Optional, Sequence
 
-from .api.backend import QuantumBackend
 from .api.circuit_runner import BaseCircuitRunner, CircuitRunner
 from .circuits import Circuit, to_dict
 from .distributions import MeasurementOutcomeDistribution

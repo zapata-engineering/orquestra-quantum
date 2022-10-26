@@ -38,9 +38,14 @@ class BaseWavefunctionSimulator(BaseCircuitRunner, WavefunctionSimulator):
         self.seed = seed
 
     def run_and_measure(self, circuit: Circuit, n_samples: int) -> Measurements:
-        return self._run_and_measure(circuit, n_samples)
+        if n_samples <= 0:
+            raise ValueError(f"Number of samples has to be positive, got {n_samples}")
+        result = self._run_and_measure(circuit, n_samples)
+        return result
 
     def _run_and_measure(self, circuit: Circuit, n_samples: int) -> Measurements:
+        if circuit.free_symbols:
+            raise ValueError("Cannot sample from circuit with unbound free symbols")
         wavefunction = self.get_wavefunction(circuit)
         return Measurements(
             sample_from_wavefunction(wavefunction, n_samples, self.seed)

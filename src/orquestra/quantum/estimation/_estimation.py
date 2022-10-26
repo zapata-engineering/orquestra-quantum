@@ -6,7 +6,6 @@ from typing import Dict, List, Optional, Tuple, cast
 import numpy as np
 import sympy
 
-from ..api.backend import QuantumSimulator
 from ..api.circuit_runner import CircuitRunner
 from ..api.estimation import EstimationTask
 from ..api.wavefunction_simulator import WavefunctionSimulator

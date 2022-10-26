@@ -7,10 +7,10 @@ from typing import List, Optional, Protocol
 import numpy as np
 
 from orquestra.quantum.circuits import Circuit
+from . import CircuitRunner
 
 from ..measurements import ExpectationValues
 from ..operators import PauliRepresentation
-from .backend import QuantumBackend
 
 
 @dataclass(frozen=True)
@@ -53,7 +53,7 @@ class EstimateExpectationValues(Protocol):
     """
 
     def __call__(
-        self, backend: QuantumBackend, estimation_tasks: List[EstimationTask]
+        self, runner: CircuitRunner, estimation_tasks: List[EstimationTask]
     ) -> List[ExpectationValues]:
         """Estimate expectation values using given backend."""
 
