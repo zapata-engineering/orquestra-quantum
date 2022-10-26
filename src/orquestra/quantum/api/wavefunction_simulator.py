@@ -20,7 +20,6 @@ from .backend import StateVector
 
 
 class WavefunctionSimulator(CircuitRunner, Protocol):
-
     def get_wavefunction(
         self, circuit: Circuit, initial_state: Optional[StateVector] = None
     ) -> Wavefunction:
@@ -85,7 +84,6 @@ class BaseWavefunctionSimulator(BaseCircuitRunner, WavefunctionSimulator):
         # numerical inaccuracy.
         return get_expectation_value(operator, wavefunction).real
 
-    @abstractmethod
     def is_natively_supported(self, operation: Operation) -> bool:
         return isinstance(operation, GateOperation)
 
