@@ -15,9 +15,8 @@ from ..distributions import (
 from ..measurements import Measurements
 from ..operators import PauliRepresentation, get_expectation_value
 from ..wavefunction import Wavefunction, sample_from_wavefunction
+from ..typing import StateVector
 
-# TODO: Statevector definition should be moved to typing (I think?)
-from .backend import StateVector
 from .circuit_runner import BaseCircuitRunner, CircuitRunner
 
 

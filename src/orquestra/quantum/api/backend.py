@@ -17,10 +17,11 @@ from ..distributions import (
 )
 from ..measurements import ExpectationValues, Measurements, expectation_values_to_real
 from ..operators import PauliRepresentation, get_expectation_value
+from ..typing import StateVector
+
 
 # Note that in particular Wavefunction is a StateVector. However, for performance
 # reasons QuantumSimulator uses numpy arrays internally.
-StateVector = Union[Sequence[complex], np.ndarray]
 
 
 class QuantumBackend(ABC):
