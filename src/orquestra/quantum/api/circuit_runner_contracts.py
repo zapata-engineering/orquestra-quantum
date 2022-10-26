@@ -72,8 +72,8 @@ class _ValidateRunBatchAndMeasure:
         )
 
     @staticmethod
-    def returns_number_of_measurements_less_or_equal_to_n_samples(
-        runner: CircuitRunner
+    def returns_number_of_measurements_greater_or_equal_to_n_samples(
+        runner: CircuitRunner,
     ):
         def _when_n_samples_is_the_same_for_each_circuit():
             return all(
