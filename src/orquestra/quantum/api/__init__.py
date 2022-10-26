@@ -1,3 +1,3 @@
 from .backend import QuantumBackend
-from .circuit_runner import CircuitRunner, BaseCircuitRunner
+from .circuit_runner import BaseCircuitRunner, CircuitRunner
 from .estimation import EstimationTask

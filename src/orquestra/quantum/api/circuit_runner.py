@@ -2,10 +2,11 @@
 # © Copyright 2022 Zapata Computing Inc.
 ################################################################################
 from abc import ABC, abstractmethod
-from typing import Protocol, Sequence, List, Union, Optional
+from typing import List, Optional, Protocol, Sequence, Union
+
 from ..circuits import Circuit
-from ..measurements import Measurements
 from ..distributions import MeasurementOutcomeDistribution
+from ..measurements import Measurements
 
 
 class CircuitRunner(Protocol):

@@ -3,9 +3,8 @@
 ################################################################################
 import numpy as np
 
+from ..circuits import CNOT, RX, RY, RZ, Circuit, H
 from .circuit_runner import CircuitRunner
-from ..circuits import RX, RY, RZ, Circuit, H, CNOT
-
 
 _example_circuits = (
     Circuit([RY(np.pi / 5)(0)]),

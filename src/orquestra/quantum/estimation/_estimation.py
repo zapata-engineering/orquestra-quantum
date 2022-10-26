@@ -149,7 +149,7 @@ def estimate_expectation_values_by_averaging(
         estimation_tasks_not_to_measure
     )
 
-    if estimation_tasks_to_measure == []:
+    if not estimation_tasks_to_measure:
         measured_expectation_values_list = []
     else:
         circuits, operators, shots_per_circuit = zip(

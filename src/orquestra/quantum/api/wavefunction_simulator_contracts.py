@@ -20,8 +20,7 @@
 import numpy as np
 
 from orquestra.quantum.api.wavefunction_simulator import WavefunctionSimulator
-from orquestra.quantum.circuits import Circuit, H, CNOT
-
+from orquestra.quantum.circuits import CNOT, Circuit, H
 
 _example_circuits = [
     Circuit([H(0)]),

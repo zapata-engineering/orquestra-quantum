@@ -2,7 +2,7 @@ from collections import Counter
 from functools import reduce
 from itertools import islice
 from math import ceil
-from typing import Sequence, Tuple, TypeVar, Iterable, Dict
+from typing import Dict, Iterable, Sequence, Tuple, TypeVar
 
 from orquestra.quantum.measurements import Measurements
 

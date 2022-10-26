@@ -2,21 +2,23 @@
 # © Copyright 2022 Zapata Computing Inc.
 ################################################################################
 
-import numpy as np
-from typing import Protocol, Optional
-from ..circuits import Circuit, split_circuit, Operation, GateOperation
-from ..measurements import Measurements
-from .circuit_runner import CircuitRunner, BaseCircuitRunner
 from abc import abstractmethod
-from ..wavefunction import sample_from_wavefunction, Wavefunction
-from ..operators import PauliRepresentation, get_expectation_value
+from typing import Optional, Protocol
+
+import numpy as np
+
+from ..circuits import Circuit, GateOperation, Operation, split_circuit
 from ..distributions import (
     MeasurementOutcomeDistribution,
     create_bitstring_distribution_from_probability_distribution,
 )
+from ..measurements import Measurements
+from ..operators import PauliRepresentation, get_expectation_value
+from ..wavefunction import Wavefunction, sample_from_wavefunction
 
 # TODO: Statevector definition should be moved to typing (I think?)
 from .backend import StateVector
+from .circuit_runner import BaseCircuitRunner, CircuitRunner
 
 
 class WavefunctionSimulator(CircuitRunner, Protocol):
