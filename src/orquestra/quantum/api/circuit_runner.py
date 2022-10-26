@@ -74,7 +74,7 @@ class BaseCircuitRunner(ABC, CircuitRunner):
     def _run_batch_and_measure(
         self, batch: Sequence[Circuit], samples_per_circuit: Sequence[int]
     ):
-        """Here we might assume that the input is correct."""
+        """Here we might assume that the input is correct, since checks are performed in `run_batch_and_measure`."""
         return [
             self.run_and_measure(circuit, n)
             for circuit, n in zip(batch, samples_per_circuit)
