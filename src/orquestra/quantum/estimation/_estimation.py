@@ -9,7 +9,7 @@ import sympy
 from ..api.backend import QuantumSimulator
 from ..api.circuit_runner import CircuitRunner
 from ..api.estimation import EstimationTask
-from ..api.simulator import WavefunctionSimulator
+from ..api.wavefunction_simulator import WavefunctionSimulator
 from ..measurements import ExpectationValues, expectation_values_to_real
 
 
@@ -158,9 +158,7 @@ def estimate_expectation_values_by_averaging(
                 for e in estimation_tasks_to_measure
             ]
         )
-        measurements_list = backend.run_batch_and_measure(
-            circuits, shots_per_circuit
-        )
+        measurements_list = backend.run_batch_and_measure(circuits, shots_per_circuit)
 
         measured_expectation_values_list = [
             expectation_values_to_real(

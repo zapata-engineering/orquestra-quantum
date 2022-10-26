@@ -60,9 +60,7 @@ class MeasurementTrackingBackend(BaseCircuitRunner):
         """
         self._n_circuits_executed += len(circuits)
         self._n_jobs_executed += 1
-        measurements = self.inner_backend.run_batch_and_measure(
-            circuits, n_samples
-        )
+        measurements = self.inner_backend.run_batch_and_measure(circuits, n_samples)
         for circuit, measurement in zip(circuits, measurements):
             self.record_raw_measurement_data(circuit, measurement)
         self.save_raw_data()

@@ -4,7 +4,7 @@
 from typing import Any, Dict, Optional
 
 from orquestra.quantum.api.backend import StateVector
-from orquestra.quantum.api.simulator import BaseWavefunctionSimulator
+from orquestra.quantum.api.wavefunction_simulator import BaseWavefunctionSimulator
 from orquestra.quantum.circuits import Circuit, Operation
 
 
