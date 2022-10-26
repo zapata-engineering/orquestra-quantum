@@ -55,7 +55,7 @@ class TestMeasurementTrackingBackend:
 
         # When
         with pytest.raises(ValueError):
-            backend.run_circuit_and_measure(circuit, n_samples)
+            backend.run_and_measure(circuit, n_samples)
             # Cleanup
             remove(backend.raw_data_file_name)
 
@@ -76,13 +76,7 @@ class TestMeasurementTrackingBackend:
                 counts = measurements.get_counts()
                 assert max(counts, key=counts.get) == "001"
             assert backend.inner_backend.n_circuits_executed == number_of_circuits
-
-            if backend.inner_backend.supports_batching:
-                assert backend.inner_backend.number_of_jobs_run == int(
-                    np.ceil(number_of_circuits / backend.inner_backend.batch_size)
-                )
-            else:
-                assert backend.inner_backend.number_of_jobs_run == number_of_circuits
+            assert backend.inner_backend.n_jobs_executed <= number_of_circuits
         finally:
             # Cleanup
             remove(backend.raw_data_file_name)
@@ -140,7 +134,7 @@ class TestMeasurementTrackingBackend:
     def test_serialization_of_measurement_data_from_circuit(self, backend):
         try:
             # When
-            backend.run_circuit_and_measure(Circuit([X(0), X(0)]), n_samples=10)
+            backend.run_and_measure(Circuit([X(0), X(0)]), n_samples=10)
             with open(backend.raw_data_file_name) as f:
                 data = load(f)
 
@@ -183,7 +177,7 @@ class TestMeasurementTrackingBackend:
 
         try:
             # When
-            backend.run_circuit_and_measure(Circuit([X(0), X(0)]), n_samples=10)
+            backend.run_and_measure(Circuit([X(0), X(0)]), n_samples=10)
             f = open(backend.raw_data_file_name)
             data = load(f)
 
@@ -251,10 +245,8 @@ class TestMeasurementTrackingBackend:
 
         try:
             # When
-            backend.run_circuit_and_measure(Circuit([X(0), X(0)]), n_samples=10)
-            measurement = backend_2.run_circuit_and_measure(
-                Circuit([X(0)]), n_samples=10
-            )
+            backend.run_and_measure(Circuit([X(0), X(0)]), n_samples=10)
+            measurement = backend_2.run_and_measure(Circuit([X(0)]), n_samples=10)
             with open(backend.raw_data_file_name) as f:
                 data = load(f)
 

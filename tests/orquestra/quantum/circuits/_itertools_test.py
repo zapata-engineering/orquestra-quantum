@@ -1,11 +1,11 @@
 import pytest
 
-from orquestra.quantum.circuits import H, CNOT, X
+from orquestra.quantum.circuits import CNOT, H, X
 from orquestra.quantum.circuits._circuit import Circuit
 from orquestra.quantum.circuits._itertools import (
-    split_into_batches,
+    combine_measurement_counts,
     expand_sample_sizes,
-    combine_measurements,
+    split_into_batches,
 )
 from orquestra.quantum.measurements import Measurements
 
@@ -97,7 +97,7 @@ class TestCombiningMeasurements:
         measurements = [{"00": 20, "11": 10} for _ in range(5)]
 
         with pytest.raises(ValueError):
-            combine_measurements(measurements, multiplicities)
+            combine_measurement_counts(measurements, multiplicities)
 
     @pytest.mark.parametrize(
         "all_counts, multiplicities, combined_counts",
@@ -135,7 +135,7 @@ class TestCombiningMeasurements:
         assert all(
             actual == expected
             for actual, expected in zip(
-                combine_measurements(all_counts, multiplicities),
+                combine_measurement_counts(all_counts, multiplicities),
                 combined_counts,
             )
         )
