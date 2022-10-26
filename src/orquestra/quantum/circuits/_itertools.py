@@ -128,14 +128,16 @@ def expand_sample_sizes(
     return new_circuits, new_n_samples, multiplicities
 
 
-def _combine_measurements(first: Dict[str, int], second: Dict[str, int]) -> Dict[str, int]:
+def _combine_measurements(
+    first: Dict[str, int], second: Dict[str, int]
+) -> Dict[str, int]:
     result = Counter(first)
     for bitstring, count in second.items():
         result[bitstring] += count
     return dict(result)
 
 
-def combine_measurements(
+def combine_measurement_counts(
     all_measurements: Sequence[Dict[str, int]], multiplicities: Sequence[int]
 ) -> Sequence[Dict[str, int]]:
     """Combine (aggregate) measurements of the same circuits run several times.

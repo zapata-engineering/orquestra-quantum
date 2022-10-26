@@ -9,7 +9,6 @@ from ..distributions import MeasurementOutcomeDistribution
 
 
 class CircuitRunner(Protocol):
-
     def run_and_measure(self, circuit: Circuit, n_samples: int) -> Measurements:
         pass
 
@@ -33,11 +32,10 @@ class CircuitRunner(Protocol):
 
 
 class BaseCircuitRunner(ABC, CircuitRunner):
-
     def __init__(self):
         super().__init__()
         self._n_circuits_executed = 0
-        self._n_jobs_executed= 0
+        self._n_jobs_executed = 0
 
     def run_and_measure(self, circuit: Circuit, n_samples: int) -> Measurements:
         if n_samples <= 0:
@@ -62,7 +60,9 @@ class BaseCircuitRunner(ABC, CircuitRunner):
                 f"{len(circuits_batch)}, length of n_samples: {len(n_samples)}."
             )
         if any(n <= 0 for n in samples_per_circuit):
-            raise ValueError(f"All numbers of samples have to be positive. Got: {n_samples}")
+            raise ValueError(
+                f"All numbers of samples have to be positive. Got: {n_samples}"
+            )
 
         return self._run_batch_and_measure(circuits_batch, samples_per_circuit)
 
@@ -70,7 +70,9 @@ class BaseCircuitRunner(ABC, CircuitRunner):
     def _run_and_measure(self, circuit: Circuit, n_samples: int) -> Measurements:
         pass
 
-    def _run_batch_and_measure(self, batch: Sequence[Circuit], samples_per_circuit: Sequence[int]):
+    def _run_batch_and_measure(
+        self, batch: Sequence[Circuit], samples_per_circuit: Sequence[int]
+    ):
         """Here we might assume that the input is correct."""
         return [
             self.run_and_measure(circuit, n)
