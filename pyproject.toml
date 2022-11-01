@@ -19,10 +19,7 @@ explicit_package_bases = true
 # If your repo has a different layout you can add the appropriate paths
 # by setting MYPYPATH env variable.
 mypy_path = "src"
-exclude = [
-    "^src/orquestra/quantum/openfermion/$",
-    "^tests/orquestra/quantum/openfermion_tests/$"
-]
+exclude = []
 
 [[tool.mypy.overrides]]
 module = [
