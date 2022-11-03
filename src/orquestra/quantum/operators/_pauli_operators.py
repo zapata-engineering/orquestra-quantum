@@ -259,7 +259,9 @@ class PauliTerm:
             yield self[i], i
 
     def __hash__(self) -> int:
-        assert isinstance(self.coefficient, complex)
+        if not isinstance(self.coefficient, complex):
+            coefficient_real = self.coefficient
+            coefficient_imag = 0
         return hash(
             (
                 round(self.coefficient.real * HASH_PRECISION),
