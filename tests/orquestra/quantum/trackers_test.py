@@ -26,7 +26,7 @@ class TestMeasurementTrackingBackend:
     Then we check that serialization performs as expected.
     """
 
-    def test_run_circuit_and_measure_correct_indexing(self, backend):
+    def test_run_and_measure_correct_indexing(self, backend):
         # Note: this test may fail with noisy devices
         # Given
         circuit = Circuit([X(0), X(0), X(1), X(1), X(2)])
@@ -47,9 +47,7 @@ class TestMeasurementTrackingBackend:
             remove(backend.raw_data_file_name)
 
     @pytest.mark.parametrize("n_samples", [-1, 0])
-    def test_run_circuit_and_measure_fails_for_invalid_n_samples(
-        self, backend, n_samples
-    ):
+    def test_run_and_measure_fails_for_invalid_n_samples(self, backend, n_samples):
         # Given
         circuit = Circuit([X(0), X(0), X(1), X(1), X(2)])
 

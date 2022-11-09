@@ -21,7 +21,7 @@ from orquestra.quantum.estimation import (
 from orquestra.quantum.measurements import ExpectationValues, Measurements
 from orquestra.quantum.operators import PauliSum, PauliTerm
 from orquestra.quantum.symbolic_simulator import SymbolicSimulator
-from orquestra.quantum.testing import MockQuantumBackend
+from orquestra.quantum.testing import MockCircuitRunner
 
 
 class TestEstimatorUtils:
@@ -645,7 +645,7 @@ class TestBasicEstimationMethods:
     def test_calculate_exact_expectation_values_fails_with_non_simulator(
         self, estimation_tasks
     ):
-        backend = MockQuantumBackend()
+        backend = MockCircuitRunner()
         with pytest.raises(AttributeError):
             _ = calculate_exact_expectation_values(backend, estimation_tasks)
 

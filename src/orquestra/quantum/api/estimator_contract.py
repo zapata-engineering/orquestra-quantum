@@ -53,7 +53,7 @@ def _validate_each_task_returns_one_expecation_value(
 ):
     # When
     expectation_values = estimator(
-        backend=_backend,
+        runner=_backend,
         estimation_tasks=_estimation_tasks,
     )
 
@@ -65,7 +65,7 @@ def _validate_order_of_outputs_matches_order_of_inputs(
     estimator: EstimateExpectationValues,
 ):
     expectation_values = estimator(
-        backend=_backend,
+        runner=_backend,
         estimation_tasks=_estimation_tasks,
     )
 
@@ -74,7 +74,7 @@ def _validate_order_of_outputs_matches_order_of_inputs(
             np.allclose(
                 expectation_values[i].values,
                 estimator(
-                    backend=_backend,
+                    runner=_backend,
                     estimation_tasks=[task],
                 )[0].values,
                 rtol=0.1,  # 10% tolerance
@@ -96,7 +96,7 @@ def _validate_expectation_value_includes_coefficients(
     ]
 
     expectation_values = estimator(
-        backend=_backend,
+        runner=_backend,
         estimation_tasks=estimation_tasks,
     )
 
@@ -120,7 +120,7 @@ def _validate_constant_terms_are_included_in_output(
     ]
 
     expectation_values = estimator(
-        backend=_backend,
+        runner=_backend,
         estimation_tasks=estimation_tasks,
     )
 

@@ -189,6 +189,35 @@ class _ValidateMeasurementOutcomeDistribution:
         return True
 
 
+def strict_runner_returns_number_of_measurements_greater_or_equal_to_n_samples(
+    runner: CircuitRunner,
+):
+    def _when_n_samples_is_the_same_for_each_circuit():
+        return all(
+            len(measurements.bitstrings) == 10
+            for measurements in runner.run_batch_and_measure(
+                _EXAMPLE_CIRCUITS, n_samples=10
+            )
+        )
+
+    def _when_n_samples_is_different_for_each_circuit():
+        return all(
+            len(measurement.bitstrings) == n_samples
+            for measurement, n_samples in zip(
+                runner.run_batch_and_measure(_EXAMPLE_CIRCUITS, _EXAMPLE_N_SAMPLES),
+                _EXAMPLE_N_SAMPLES,
+            )
+        )
+
+    # We make sure to run each subtest, otherwise short-circuiting of
+    # circuits might result in missing some errors
+    subtests = [
+        _when_n_samples_is_different_for_each_circuit(),
+        _when_n_samples_is_the_same_for_each_circuit(),
+    ]
+    return all(subtests)
+
+
 CIRCUIT_RUNNER_CONTRACTS = [
     _ValidateRunAndMeasure.returns_number_of_measurements_greater_or_equal_to_n_samples,
     _ValidateRunAndMeasure.returns_bitstrings_with_length_equal_to_number_of_qubits_in_circuit,
@@ -200,4 +229,13 @@ CIRCUIT_RUNNER_CONTRACTS = [
     _ValidateRunBatchAndMeasure.raises_value_error_if_len_of_n_samples_does_not_match_len_of_batch,
     _ValidateMeasurementOutcomeDistribution.returns_distribution_with_number_of_bits_same_as_circuit_n_qubits,
     _ValidateMeasurementOutcomeDistribution.raises_value_error_if_n_samples_is_nonpositive,
+]
+
+
+# This set of contracts is meant to be used for runners that return exactly the
+# requested number of samples when running circuits. For context: some circuit
+# runners return number of samples larger than the requested one, usually
+# as a result of batching.
+STRICT_CIRCUIT_RUNNER_CONTRACTS = [
+    strict_runner_returns_number_of_measurements_greater_or_equal_to_n_samples
 ]
