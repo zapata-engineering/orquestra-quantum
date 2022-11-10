@@ -11,7 +11,7 @@ from .measurements import Measurements
 
 
 class MeasurementTrackingBackend(BaseCircuitRunner):
-    """A wrapper class for a backend that tracks all measurements. The measurements
+    """A wrapper class for a runner that tracks all measurements. The measurements
     are stored in the raw_circuit_data variable as a list of measurement objects.
     """
 
@@ -21,7 +21,7 @@ class MeasurementTrackingBackend(BaseCircuitRunner):
         raw_data_file_name: str,
         record_bitstrings: Optional[bool] = False,
     ):
-        """Create a wrapper backend around inner_backend that keeps track of all the
+        """Create a wrapper runner around inner_backend that keeps track of all the
         measurement data collected during an experiment.
 
         Args:

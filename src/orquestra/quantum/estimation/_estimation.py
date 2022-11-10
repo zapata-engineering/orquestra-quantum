@@ -50,7 +50,7 @@ def split_estimation_tasks_to_measure(
 
     Returns:
         estimation_tasks_to_measure: A new list of estimation tasks that only
-            contains the ones that should actually be submitted to the backend
+            contains the ones that should actually be submitted to the runner
         estimation_tasks_not_to_measure: A new list of estimation tasks that
             contains the EstimationTasks with only constant terms or with
             0 shot
@@ -133,7 +133,7 @@ def estimate_expectation_values_by_averaging(
     measurements.
 
     Args:
-        backend: backend used for executing circuits
+        backend: runner used for executing circuits
         estimation_tasks: list of estimation tasks
     """
 
@@ -189,10 +189,10 @@ def calculate_exact_expectation_values(
     backend: WavefunctionSimulator,
     estimation_tasks: List[EstimationTask],
 ) -> List[ExpectationValues]:
-    """Calculates exact expectation values using built-in method of a provided backend.
+    """Calculates exact expectation values using built-in method of a provided runner.
 
     Args:
-        backend: backend used for executing circuits
+        backend: runner used for executing circuits
         estimation_tasks: list of estimation tasks
     """
     expectation_values_list = [
