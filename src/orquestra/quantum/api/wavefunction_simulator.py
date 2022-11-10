@@ -14,9 +14,8 @@ from ..distributions import (
 )
 from ..measurements import Measurements
 from ..operators import PauliRepresentation, get_expectation_value
-from ..wavefunction import Wavefunction, sample_from_wavefunction
 from ..typing import StateVector
-
+from ..wavefunction import Wavefunction, sample_from_wavefunction
 from .circuit_runner import BaseCircuitRunner, CircuitRunner
 
 
