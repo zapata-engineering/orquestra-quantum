@@ -83,7 +83,7 @@ class BaseWavefunctionSimulator(BaseCircuitRunner, WavefunctionSimulator):
 
     def get_exact_expectation_values(
         self, circuit: Circuit, operator: PauliRepresentation
-    ) -> complex:
+    ) -> float:
         wavefunction = self.get_wavefunction(circuit)
         # Casting to real, because any non-zero imaginary part must mean some
         # numerical inaccuracy.
