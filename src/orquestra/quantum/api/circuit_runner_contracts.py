@@ -219,16 +219,16 @@ def strict_runner_returns_number_of_measurements_greater_or_equal_to_n_samples(
 
 
 CIRCUIT_RUNNER_CONTRACTS = [
-    _ValidateRunAndMeasure.returns_number_of_measurements_greater_or_equal_to_n_samples,
-    _ValidateRunAndMeasure.returns_bitstrings_with_length_equal_to_number_of_qubits_in_circuit,
-    _ValidateRunAndMeasure.raises_value_error_if_n_samples_is_nonpositive,
-    _ValidateRunBatchAndMeasure.returns_number_of_measurements_greater_or_equal_to_n_samples,
-    _ValidateRunBatchAndMeasure.returns_bitstrings_with_length_equal_to_number_of_qubits_in_circuit,
-    _ValidateRunBatchAndMeasure.returns_measurement_object_for_each_circuit_in_batch,
-    _ValidateRunBatchAndMeasure.raises_value_error_if_n_samples_is_nonpositive,
-    _ValidateRunBatchAndMeasure.raises_value_error_if_len_of_n_samples_does_not_match_len_of_batch,
-    _ValidateMeasurementOutcomeDistribution.returns_distribution_with_number_of_bits_same_as_circuit_n_qubits,
-    _ValidateMeasurementOutcomeDistribution.raises_value_error_if_n_samples_is_nonpositive,
+    _ValidateRunAndMeasure.returns_number_of_measurements_greater_or_equal_to_n_samples,  # noqa: E501
+    _ValidateRunAndMeasure.returns_bitstrings_with_length_equal_to_number_of_qubits_in_circuit,  # noqa: E501
+    _ValidateRunAndMeasure.raises_value_error_if_n_samples_is_nonpositive,  # noqa: E501
+    _ValidateRunBatchAndMeasure.returns_number_of_measurements_greater_or_equal_to_n_samples,  # noqa: E501
+    _ValidateRunBatchAndMeasure.returns_bitstrings_with_length_equal_to_number_of_qubits_in_circuit,  # noqa: E501
+    _ValidateRunBatchAndMeasure.returns_measurement_object_for_each_circuit_in_batch,  # noqa: E501
+    _ValidateRunBatchAndMeasure.raises_value_error_if_n_samples_is_nonpositive,  # noqa: E501
+    _ValidateRunBatchAndMeasure.raises_value_error_if_len_of_n_samples_does_not_match_len_of_batch,  # noqa: E501
+    _ValidateMeasurementOutcomeDistribution.returns_distribution_with_number_of_bits_same_as_circuit_n_qubits,  # noqa: E501
+    _ValidateMeasurementOutcomeDistribution.raises_value_error_if_n_samples_is_nonpositive,  # noqa: E501
 ]
 
 
