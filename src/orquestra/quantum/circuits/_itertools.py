@@ -9,7 +9,7 @@ from orquestra.quantum.measurements import Measurements
 T = TypeVar("T")
 
 
-def _iterate_in_batches(items: Iterable[T], batch_size: int) -> Iterable[Tuple[T]]:
+def _iterate_in_batches(items: Iterable[T], batch_size: int) -> Iterable[Tuple[T, ...]]:
     it = iter(items)
     while chunk := tuple(islice(it, batch_size)):
         yield chunk

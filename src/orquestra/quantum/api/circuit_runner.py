@@ -58,7 +58,8 @@ class BaseCircuitRunner(ABC, CircuitRunner):
             raise ValueError(
                 "Number of samples has to be an integer or a sequence of length "
                 "equal to the length of batch. Length of batch: "
-                f"{len(circuits_batch)}, length of n_samples: {len(n_samples)}."
+                f"{len(circuits_batch)}, length of n_samples: "
+                f"{len(samples_per_circuit)}."
             )
         if any(n <= 0 for n in samples_per_circuit):
             raise ValueError(
@@ -92,5 +93,10 @@ class BaseCircuitRunner(ABC, CircuitRunner):
     def get_measurement_outcome_distribution(
         self, circuit: Circuit, n_samples: Optional[int]
     ) -> MeasurementOutcomeDistribution:
+        if n_samples is None:
+            raise ValueError(
+                "This runner needs n_samples to compute measurement outcome"
+                "distribution"
+            )
         measurements = self.run_and_measure(circuit, n_samples)
         return measurements.get_distribution()

@@ -121,5 +121,5 @@ def simulator_contracts_for_tolerance(atol=1e-7):
             atol
         ),
         _verify_computing_wavefunction_increases_number_of_jobs_and_circuits_executed,
-        _verify_computing_expectation_values_increases_number_of_jobs_and_circuits_executed,   # noqa: E501
+        _verify_computing_expectation_values_increases_number_of_jobs_and_circuits_executed,  # noqa: E501
     ]

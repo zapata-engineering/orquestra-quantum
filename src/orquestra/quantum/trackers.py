@@ -2,7 +2,7 @@
 # © Copyright 2021-2022 Zapata Computing Inc.
 ################################################################################
 import json
-from typing import Dict, List, Optional, Sequence
+from typing import Dict, List, Optional, Sequence, Union
 
 from .api.circuit_runner import BaseCircuitRunner, CircuitRunner
 from .circuits import Circuit, to_dict
@@ -49,7 +49,7 @@ class MeasurementTrackingBackend(BaseCircuitRunner):
         return measurement
 
     def run_batch_and_measure(
-        self, circuits: Sequence[Circuit], n_samples: Sequence[int]
+        self, circuits: Sequence[Circuit], n_samples: Union[int, Sequence[int]]
     ) -> List[Measurements]:
         """Run a set of circuits and measure a certain number of bitstrings.
 
@@ -89,7 +89,7 @@ class MeasurementTrackingBackend(BaseCircuitRunner):
         self.raw_data.append(raw_data_dict)
 
     def get_measurement_outcome_distribution(
-        self, circuit: Circuit, n_samples: int
+        self, circuit: Circuit, n_samples: Optional[int]
     ) -> MeasurementOutcomeDistribution:
         """Calculates a measurement outcome distribution.
 

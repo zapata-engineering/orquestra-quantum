@@ -201,4 +201,4 @@ def calculate_exact_expectation_values(
         )
         for estimation_task in estimation_tasks
     ]
-    return [ExpectationValues(val) for val in expectation_values_list]
+    return [ExpectationValues(np.asarray([val])) for val in expectation_values_list]

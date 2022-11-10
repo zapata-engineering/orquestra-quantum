@@ -6,7 +6,7 @@ from orquestra.quantum.measurements import Measurements
 from orquestra.quantum.symbolic_simulator import SymbolicSimulator
 
 
-class MockQuantumBackend:
+class MockCircuitRunner:
 
     supports_batching = False
 
@@ -14,9 +14,7 @@ class MockQuantumBackend:
         super().__init__()
         self._simulator = SymbolicSimulator()
 
-    def run_circuit_and_measure(
+    def run_and_measure(
         self, circuit: Circuit, n_samples: int, **kwargs
     ) -> Measurements:
-        super(MockQuantumBackend, self).run_circuit_and_measure(circuit, n_samples)
-
-        return self._simulator.run_circuit_and_measure(circuit, n_samples)
+        return self._simulator.run_and_measure(circuit, n_samples)
