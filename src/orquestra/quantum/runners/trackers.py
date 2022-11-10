@@ -4,10 +4,10 @@
 import json
 from typing import Dict, List, Optional, Sequence, Union
 
-from .api.circuit_runner import BaseCircuitRunner, CircuitRunner
-from .circuits import Circuit, to_dict
-from .distributions import MeasurementOutcomeDistribution
-from .measurements import Measurements
+from ..api.circuit_runner import BaseCircuitRunner, CircuitRunner
+from ..circuits import Circuit, to_dict
+from ..distributions import MeasurementOutcomeDistribution
+from ..measurements import Measurements
 
 
 class MeasurementTrackingBackend(BaseCircuitRunner):

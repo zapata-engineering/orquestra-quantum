@@ -7,7 +7,7 @@ import random
 
 import numpy as np
 
-from orquestra.quantum.distributions import MeasurementOutcomeDistribution
+from ..distributions import MeasurementOutcomeDistribution
 
 
 def get_bars_and_stripes_target_distribution(

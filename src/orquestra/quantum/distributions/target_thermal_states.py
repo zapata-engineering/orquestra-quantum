@@ -5,12 +5,12 @@ from typing import Dict, List, Tuple, Union
 
 import numpy as np
 
-from orquestra.quantum.distributions import MeasurementOutcomeDistribution
-from orquestra.quantum.utils import (
+from ..distributions import MeasurementOutcomeDistribution
+from ..utils import (
     bin2dec,
-    convert_tuples_to_bitstrings,
     dec2bin,
     sample_from_probability_distribution,
+    tuple_to_bitstring,
 )
 
 
@@ -112,9 +112,7 @@ def get_thermal_target_measurement_outcome_distribution(
         boltzmann_factor = np.exp(energy * beta)
         partition_function += boltzmann_factor
 
-        binary_bitstring = convert_tuples_to_bitstrings(
-            [dec2bin(spin, n_spins)]  # type: ignore
-        )[0]
+        binary_bitstring = tuple_to_bitstring(tuple(dec2bin(spin, n_spins)))
         distribution[binary_bitstring] = boltzmann_factor
 
     normalized_distribution: Dict[Union[str, Tuple[int, ...]], float] = {
@@ -155,9 +153,7 @@ def get_thermal_sampled_distribution(
 
     sample_distribution_dict: Dict[Union[str, Tuple[int, ...]], float] = {}
     for spin in range(int(2**n_spins)):
-        binary_bitstring = convert_tuples_to_bitstrings(
-            [dec2bin(spin, n_spins)]  # type: ignore
-        )[0]
+        binary_bitstring = tuple_to_bitstring(tuple(dec2bin(spin, n_spins)))
         sample_distribution_dict[binary_bitstring] = histogram_samples[spin]
 
     return MeasurementOutcomeDistribution(sample_distribution_dict)

@@ -20,7 +20,7 @@ from orquestra.quantum.estimation import (
 )
 from orquestra.quantum.measurements import ExpectationValues, Measurements
 from orquestra.quantum.operators import PauliSum, PauliTerm
-from orquestra.quantum.symbolic_simulator import SymbolicSimulator
+from orquestra.quantum.runners.symbolic_simulator import SymbolicSimulator
 from orquestra.quantum.testing import MockCircuitRunner
 
 
@@ -408,12 +408,12 @@ TEST_CASES_NONEIGENSTATES = [
             EstimationTask(
                 PauliTerm("Z0"),
                 circuit=Circuit([H(0)]),
-                number_of_shots=1000,
+                number_of_shots=10000,
             ),
             EstimationTask(
                 PauliTerm("Z0", coefficient=-2),
                 circuit=Circuit([RY(np.pi / 4)(0)]),
-                number_of_shots=1000,
+                number_of_shots=10000,
             ),
         ],
         [

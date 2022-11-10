@@ -3,7 +3,7 @@
 ################################################################################
 from orquestra.quantum.circuits import Circuit
 from orquestra.quantum.measurements import Measurements
-from orquestra.quantum.symbolic_simulator import SymbolicSimulator
+from orquestra.quantum.runners.symbolic_simulator import SymbolicSimulator
 
 
 class MockCircuitRunner:

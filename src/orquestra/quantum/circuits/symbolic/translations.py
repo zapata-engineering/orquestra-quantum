@@ -1,5 +1,5 @@
 ################################################################################
-# © Copyright 2021 Zapata Computing Inc.
+# © Copyright 2021-2022 Zapata Computing Inc.
 ################################################################################
 """Utilities related to translation of symbolic expressions."""
 from functools import singledispatch

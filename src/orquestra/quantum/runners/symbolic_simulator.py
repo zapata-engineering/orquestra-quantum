@@ -1,12 +1,12 @@
 ################################################################################
 # © Copyright 2021-2022 Zapata Computing Inc.
 ################################################################################
-from typing import Any, Dict, Optional
+from typing import Optional
 
 from orquestra.quantum.api.wavefunction_simulator import BaseWavefunctionSimulator
 from orquestra.quantum.circuits import Circuit, Operation
 
-from .typing import StateVector
+from ..typing import StateVector
 
 
 class SymbolicSimulator(BaseWavefunctionSimulator):

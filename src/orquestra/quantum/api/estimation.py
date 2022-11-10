@@ -6,8 +6,7 @@ from typing import List, Optional, Protocol
 
 import numpy as np
 
-from orquestra.quantum.circuits import Circuit
-
+from ..circuits import Circuit
 from ..measurements import ExpectationValues
 from ..operators import PauliRepresentation
 from . import CircuitRunner

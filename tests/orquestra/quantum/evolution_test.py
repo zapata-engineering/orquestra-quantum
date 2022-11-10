@@ -87,6 +87,11 @@ class TestTimeEvolutionOfTerm:
         np.testing.assert_array_almost_equal(actual_unitary, expected_unitary)
 
 
+def test_complex_coefficent_throws_error():
+    with pytest.raises(ValueError):
+        time_evolution_for_term(PauliTerm("X0", 1j), 1)
+
+
 class TestTimeEvolutionOfConstantTerm:
     # This test is added to make sure that constant terms in qubit operators
     # do not cause errors.

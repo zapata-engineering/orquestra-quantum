@@ -1,3 +1,6 @@
+################################################################################
+# © Copyright 2022 Zapata Computing Inc.
+################################################################################
 from itertools import product
 from typing import List
 from unittest.mock import Mock
@@ -638,3 +641,16 @@ class TestPauliSumOperations:
     def test_paulisum_multiply_by_zero(self, pauli_sum: PauliSum):
         zero_op = pauli_sum * 0
         assert zero_op == PauliSum()
+
+    def test_paulisum_constant_term_zero(self, pauli_sum):
+        assert pauli_sum.constant_term == 0
+
+    @pytest.mark.parametrize("constant_term", [10, -10, 0.5, -0.5])
+    def test_paulisum_constant(self, pauli_sum, constant_term):
+        pauli_sum = pauli_sum + constant_term
+        assert pauli_sum.constant_term == constant_term
+
+    @pytest.mark.parametrize("constant_term", [10, -10, 0.5, -0.5])
+    def test_paulisum_identity_operator(self, pauli_sum, constant_term):
+        pauli_sum = pauli_sum + constant_term * PauliTerm("I0")
+        assert pauli_sum.constant_term == constant_term

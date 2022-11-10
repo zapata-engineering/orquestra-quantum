@@ -2,6 +2,7 @@
 # © Copyright 2021-2022 Zapata Computing Inc.
 ################################################################################
 import json
+from functools import lru_cache
 from math import log2
 from typing import Any, Dict, List, Optional, Sequence, Set, Tuple, Union
 from warnings import warn
@@ -9,9 +10,10 @@ from warnings import warn
 import numpy as np
 from sympy import Matrix, Symbol
 
-from orquestra.quantum.typing import AnyPath, LoadSource, ParameterizedVector
-from orquestra.quantum.utils import (
+from .typing import AnyPath, LoadSource, ParameterizedVector
+from .utils import (
     convert_array_to_dict,
+    convert_bitstrings_to_tuples,
     convert_dict_to_array,
     ensure_open,
 )
@@ -219,15 +221,20 @@ def flip_wavefunction(wavefunction: Wavefunction):
 
 def flip_amplitudes(amplitudes: Union[Sequence[complex], np.ndarray]) -> np.ndarray:
     number_of_states = len(amplitudes)
-    ordering = [
-        _flip_bits(n, number_of_states.bit_length() - 1)
-        for n in range(number_of_states)
-    ]
-    return np.array([amplitudes[i] for i in ordering])
+    ordering = _get_ordering(number_of_states)
+    return np.asarray(amplitudes)[ordering]
 
 
-def _flip_bits(n, num_bits):
-    return int(bin(n)[2:].zfill(num_bits)[::-1], 2)
+@lru_cache
+def _get_ordering(number_of_states: int) -> np.ndarray:
+    num_bits = number_of_states.bit_length() - 1
+    ordering = (
+        np.arange(2**num_bits)
+        .reshape(num_bits * [2])
+        .transpose(*reversed(range(num_bits)))
+        .reshape(2**num_bits)
+    )
+    return ordering
 
 
 def load_wavefunction(file: LoadSource) -> Wavefunction:
@@ -279,10 +286,18 @@ def sample_from_wavefunction(
     if n_samples < 1:
         raise ValueError("Must sample from wavefunction at least once.")
     rng = np.random.default_rng(seed)
-    outcomes_str, probabilities_np = zip(*wavefunction.get_outcome_probs().items())
+    outcome_strings, probabilities_np = zip(*wavefunction.get_outcome_probs().items())
     probabilities = [
         x[0] if isinstance(x, (list, np.ndarray)) else x for x in list(probabilities_np)
     ]
-    samples_ndarray = rng.choice(a=outcomes_str, size=n_samples, p=probabilities)
-    samples = [tuple(int(y) for y in list(x)[::-1]) for x in list(samples_ndarray)]
+    # accelerate sampling by smartly choosing when formatting of samples is done
+    if len(wavefunction) < n_samples:
+        outcome_tuples: List[Union[Tuple[int, ...], int]] = []
+        outcome_tuples += convert_bitstrings_to_tuples(outcome_strings)
+        outcome_tuples += [0]  # adding non tuple forces rng.choice to return tuples
+        probabilities += [0]  # need to add corresponding probability of 0
+        samples = rng.choice(a=outcome_tuples, size=n_samples, p=probabilities).tolist()
+    else:
+        string_samples = rng.choice(a=outcome_strings, size=n_samples, p=probabilities)
+        samples = convert_bitstrings_to_tuples(string_samples)
     return samples

@@ -19,10 +19,7 @@ explicit_package_bases = true
 # If your repo has a different layout you can add the appropriate paths
 # by setting MYPYPATH env variable.
 mypy_path = "src"
-exclude = [
-    "^src/orquestra/quantum/openfermion/$",
-    "^tests/orquestra/quantum/openfermion_tests/$"
-]
+exclude = []
 
 [[tool.mypy.overrides]]
 module = [
@@ -49,10 +46,7 @@ exclude_lines = [
 [tool.pytest.ini_options]
 log_level="INFO"
 
-[tool.black]
-exclude = '(src/orquestra/quantum/openfermion|tests/orquestra/quantum/openfermion_tests)'
 
 [tool.flake8]
 ignore = ['E203', 'E266', 'F401', 'W605']
 max-line-length = 88
-exclude = ['src/orquestra/quantum/openfermion/', 'tests/orquestra/quantum/openfermion_tests/']

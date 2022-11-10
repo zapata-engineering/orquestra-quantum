@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Dict
 from .clipped_negative_log_likelihood import compute_clipped_negative_log_likelihood
 
 if TYPE_CHECKING:
-    from orquestra.quantum.distributions import MeasurementOutcomeDistribution
+    from ..distributions import MeasurementOutcomeDistribution
 
 
 def compute_jensen_shannon_divergence(

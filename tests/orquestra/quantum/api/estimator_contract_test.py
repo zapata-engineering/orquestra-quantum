@@ -15,10 +15,10 @@ _good_estimator = calculate_exact_expectation_values
 
 def test_each_task_returns_one_expecation_value_test():
     def malicious_calculate_expectation_values(
-        backend: WavefunctionSimulator, estimation_tasks: List[EstimationTask]
+        runner: WavefunctionSimulator, estimation_tasks: List[EstimationTask]
     ) -> List[ExpectationValues]:
         correct_output = calculate_exact_expectation_values(
-            backend=backend, estimation_tasks=estimation_tasks
+            runner=runner, estimation_tasks=estimation_tasks
         )
 
         return correct_output[:-1]
@@ -31,10 +31,10 @@ def test_each_task_returns_one_expecation_value_test():
 
 def test_order_of_outputs_matches_order_of_inputs_test():
     def malicious_calculate_expectation_values(
-        backend: WavefunctionSimulator, estimation_tasks: List[EstimationTask]
+        runner: WavefunctionSimulator, estimation_tasks: List[EstimationTask]
     ) -> List[ExpectationValues]:
         correct_output = calculate_exact_expectation_values(
-            backend=backend, estimation_tasks=estimation_tasks
+            runner=runner, estimation_tasks=estimation_tasks
         )
 
         correct_output[0], correct_output[-1] = correct_output[-1], correct_output[0]
@@ -49,10 +49,10 @@ def test_order_of_outputs_matches_order_of_inputs_test():
 
 def test_expectation_value_includes_coefficients_test():
     def malicious_calculate_expectation_values(
-        backend: WavefunctionSimulator, estimation_tasks: List[EstimationTask]
+        runner: WavefunctionSimulator, estimation_tasks: List[EstimationTask]
     ) -> List[ExpectationValues]:
         correct_output = calculate_exact_expectation_values(
-            backend=backend, estimation_tasks=estimation_tasks
+            runner=runner, estimation_tasks=estimation_tasks
         )
 
         correct_output[1] = correct_output[0]
@@ -67,10 +67,10 @@ def test_expectation_value_includes_coefficients_test():
 
 def test_constant_terms_are_included_in_output_test():
     def malicious_calculate_expectation_values(
-        backend: WavefunctionSimulator, estimation_tasks: List[EstimationTask]
+        runner: WavefunctionSimulator, estimation_tasks: List[EstimationTask]
     ) -> List[ExpectationValues]:
         correct_output = calculate_exact_expectation_values(
-            backend=backend, estimation_tasks=estimation_tasks
+            runner=runner, estimation_tasks=estimation_tasks
         )
 
         correct_output[1] = correct_output[0]

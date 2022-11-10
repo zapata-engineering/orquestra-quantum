@@ -1,3 +1,6 @@
+################################################################################
+# © Copyright 2022 Zapata Computing Inc.
+################################################################################
 from .expectation_values import (
     ExpectationValues,
     concatenate_expectation_values,

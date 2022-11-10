@@ -12,7 +12,7 @@ from orquestra.quantum.api.wavefunction_simulator_contracts import (
     simulator_contracts_for_tolerance,
 )
 from orquestra.quantum.circuits import U3, XX, Circuit
-from orquestra.quantum.symbolic_simulator import SymbolicSimulator
+from orquestra.quantum.runners.symbolic_simulator import SymbolicSimulator
 
 
 @pytest.fixture

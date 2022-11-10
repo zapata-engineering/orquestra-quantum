@@ -9,8 +9,8 @@ import pytest
 
 from orquestra.quantum.circuits import CNOT, Circuit, H, X
 from orquestra.quantum.distributions import MeasurementOutcomeDistribution
-from orquestra.quantum.symbolic_simulator import SymbolicSimulator
-from orquestra.quantum.trackers import MeasurementTrackingBackend
+from orquestra.quantum.runners import SymbolicSimulator
+from orquestra.quantum.runners.trackers import MeasurementTrackingBackend
 
 
 @pytest.fixture(scope="function")

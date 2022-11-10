@@ -8,8 +8,7 @@ from typing import Dict, Iterable, List, Mapping, Union
 
 import sympy
 
-from orquestra.quantum.typing import DumpTarget, LoadSource
-
+from ..typing import DumpTarget, LoadSource
 from ..utils import ensure_open
 from . import _builtin_gates, _circuit, _gates
 
@@ -245,7 +244,7 @@ def _special_gate_from_dict(dict_, custom_gate_defs) -> _gates.Gate:
         wrapped_gate = _gate_from_dict(dict_["wrapped_gate"], custom_gate_defs)
         return _gates.ControlledGate(wrapped_gate, dict_["num_control_qubits"])
 
-    elif dict_["name"] == _gates.DAGGER_GATE_NAME:
+    elif dict_["name"].endswith(_gates.DAGGER_GATE_NAME):
         wrapped_gate = _gate_from_dict(dict_["wrapped_gate"], custom_gate_defs)
         return _gates.Dagger(wrapped_gate)
 

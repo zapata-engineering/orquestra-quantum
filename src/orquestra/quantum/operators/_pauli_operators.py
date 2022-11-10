@@ -17,6 +17,7 @@ import re
 import warnings
 from collections import OrderedDict
 from itertools import chain, product
+from numbers import Number
 from typing import (
     Any,
     Dict,
@@ -35,7 +36,7 @@ from typing import (
 
 import numpy as np
 
-from orquestra.quantum.circuits import Circuit, Operation, builtin_gate_by_name
+from ..circuits import Circuit, Operation, builtin_gate_by_name
 
 PauliRepresentation = Union["PauliTerm", "PauliSum"]
 
@@ -258,11 +259,16 @@ class PauliTerm:
             yield self[i], i
 
     def __hash__(self) -> int:
-        assert isinstance(self.coefficient, complex)
+        if isinstance(self.coefficient, complex):
+            coefficient_real = self.coefficient.real
+            coefficient_imag = self.coefficient.imag
+        else:
+            coefficient_real = self.coefficient
+            coefficient_imag = 0
         return hash(
             (
-                round(self.coefficient.real * HASH_PRECISION),
-                round(self.coefficient.imag * HASH_PRECISION),
+                round(coefficient_real * HASH_PRECISION),
+                round(coefficient_imag * HASH_PRECISION),
                 self.operations,
             )
         )
@@ -542,9 +548,16 @@ class PauliSum:
             return str(zero_identity_term)
         return " + ".join([str(term) for term in self.terms])
 
+    def __hash__(self):
+        return hash(tuple(self.terms))
+
     @property
     def is_constant(self) -> bool:
         return len(self.terms) == 0 or all([term.is_constant for term in self.terms])
+
+    @property
+    def constant_term(self) -> Union[Number, complex]:
+        return sum([term.coefficient for term in self.terms if term.is_constant])
 
     @property
     def n_qubits(self) -> int:

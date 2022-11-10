@@ -124,7 +124,7 @@ def evaluate_non_measured_estimation_tasks(
 
 
 def estimate_expectation_values_by_averaging(
-    backend: CircuitRunner,
+    runner: CircuitRunner,
     estimation_tasks: List[EstimationTask],
 ) -> List[ExpectationValues]:
     """Basic method for estimating expectation values for list of estimation tasks.
@@ -133,7 +133,7 @@ def estimate_expectation_values_by_averaging(
     measurements.
 
     Args:
-        backend: runner used for executing circuits
+        runner: runner used for executing circuits
         estimation_tasks: list of estimation tasks
     """
 
@@ -157,7 +157,7 @@ def estimate_expectation_values_by_averaging(
                 for e in estimation_tasks_to_measure
             ]
         )
-        measurements_list = backend.run_batch_and_measure(circuits, shots_per_circuit)
+        measurements_list = runner.run_batch_and_measure(circuits, shots_per_circuit)
 
         measured_expectation_values_list = [
             expectation_values_to_real(
@@ -186,17 +186,17 @@ def estimate_expectation_values_by_averaging(
 
 
 def calculate_exact_expectation_values(
-    backend: WavefunctionSimulator,
+    runner: WavefunctionSimulator,
     estimation_tasks: List[EstimationTask],
 ) -> List[ExpectationValues]:
     """Calculates exact expectation values using built-in method of a provided runner.
 
     Args:
-        backend: runner used for executing circuits
+        runner: runner used for executing circuits
         estimation_tasks: list of estimation tasks
     """
     expectation_values_list = [
-        backend.get_exact_expectation_values(
+        runner.get_exact_expectation_values(
             estimation_task.circuit, estimation_task.operator
         )
         for estimation_task in estimation_tasks
