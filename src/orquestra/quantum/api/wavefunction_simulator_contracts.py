@@ -117,9 +117,14 @@ def simulator_contracts_for_tolerance(atol=1e-7):
     return [
         _verify_wavefunction_returned_by_simulator_has_correct_length,
         _verify_wavefunction_returned_by_simulator_has_correct_coefficients(atol),
+        _verify_computing_wavefunction_increases_number_of_jobs_and_circuits_executed,
+        _verify_computing_expectation_values_increases_number_of_jobs_and_circuits_executed,  # noqa: E501
+    ]
+
+
+def simulator_contracts_with_nontrivial_initial_state(atol=1e-7):
+    return [
         _verify_simulator_takes_into_account_initial_state_when_computing_wavefunction(
             atol
         ),
-        _verify_computing_wavefunction_increases_number_of_jobs_and_circuits_executed,
-        _verify_computing_expectation_values_increases_number_of_jobs_and_circuits_executed,  # noqa: E501
     ]
