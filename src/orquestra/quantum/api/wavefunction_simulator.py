@@ -27,7 +27,7 @@ class WavefunctionSimulator(CircuitRunner, Protocol):
 
     def get_exact_expectation_values(
         self, circuit: Circuit, operator: PauliRepresentation
-    ) -> complex:
+    ) -> float:
         pass
 
 
