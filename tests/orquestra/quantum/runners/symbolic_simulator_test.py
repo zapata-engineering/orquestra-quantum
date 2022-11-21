@@ -10,6 +10,7 @@ from orquestra.quantum.api.circuit_runner_contracts import (
 )
 from orquestra.quantum.api.wavefunction_simulator_contracts import (
     simulator_contracts_for_tolerance,
+    simulator_gate_compatibility_contracts,
 )
 from orquestra.quantum.circuits import U3, XX, Circuit
 from orquestra.quantum.runners.symbolic_simulator import SymbolicSimulator
@@ -59,5 +60,11 @@ def test_symbolic_simulator_fulfills_simulator_contracts(contract):
 
 @pytest.mark.parametrize("contract", STRICT_CIRCUIT_RUNNER_CONTRACTS)
 def test_symbolic_simulator_fulfills_strict_circuit_runnner(contract):
+    simulator = SymbolicSimulator()
+    assert contract(simulator)
+
+
+@pytest.mark.parametrize("contract", simulator_gate_compatibility_contracts())
+def test_symbolic_simulator_uses_correct_gate_definitionscontract(contract):
     simulator = SymbolicSimulator()
     assert contract(simulator)

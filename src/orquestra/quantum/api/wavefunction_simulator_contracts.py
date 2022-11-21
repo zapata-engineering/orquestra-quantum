@@ -1,7 +1,23 @@
 ################################################################################
 # © Copyright 2022 Zapata Computing Inc.
 ################################################################################
+from functools import partial
+from itertools import chain
 
+# Test values of expectation values
+# Number of circuits run increases
+# Number of jobs_executed increases
+import numpy as np
+
+from ..circuits import CNOT, Circuit, H, X, builtin_gate_by_name
+from ..operators import PauliTerm
+from ..testing.test_cases_for_backend_tests import (
+    one_qubit_non_parametric_gates_amplitudes_test_set,
+    one_qubit_parametric_gates_amplitudes_test_set,
+    two_qubit_non_parametric_gates_amplitudes_test_set,
+    two_qubit_parametric_gates_amplitudes_test_set,
+)
+from .wavefunction_simulator import WavefunctionSimulator
 
 # Length of wavefunction matches 2 ** number_of_quits
 # Test values of specific wavefunction
@@ -14,14 +30,6 @@
 # Number of circuits run increases
 # Number of jobs_executed increases
 
-# Test values of expectation values
-# Number of circuits run increases
-# Number of jobs_executed increases
-import numpy as np
-
-from orquestra.quantum.api.wavefunction_simulator import WavefunctionSimulator
-from orquestra.quantum.circuits import CNOT, Circuit, H, X
-from orquestra.quantum.operators import PauliTerm
 
 _EXAMPLE_CIRCUITS = [
     Circuit([H(0)]),
@@ -113,6 +121,78 @@ def _verify_computing_expectation_values_increases_number_of_jobs_and_circuits_e
     )
 
 
+def _verify_gate_compatibility(simulator, circuit, target_amplitudes, atol):
+    wavefunction = simulator.get_wavefunction(circuit)
+
+    return np.allclose(wavefunction.amplitudes, target_amplitudes, atol=atol)
+
+
+def _one_qubit_nonparametric_gate_test_cases(gates_to_exclude):
+    return [
+        (
+            Circuit(
+                [
+                    builtin_gate_by_name(initial_gate)(0),
+                    builtin_gate_by_name(tested_gate)(0),
+                ]
+            ),
+            target_amplitudes,
+        )
+        for initial_gate, tested_gate, target_amplitudes in one_qubit_non_parametric_gates_amplitudes_test_set  # noqa: E501
+        if tested_gate not in gates_to_exclude
+    ]
+
+
+def _two_qubit_nonparametric_gate_test_cases(gates_to_exclude):
+    return [
+        (
+            Circuit(
+                [
+                    builtin_gate_by_name(initial_gates[0])(0),
+                    builtin_gate_by_name(initial_gates[1])(1),
+                    builtin_gate_by_name(tested_gate)(0, 1),
+                ]
+            ),
+            target_amplitudes,
+        )
+        for initial_gates, tested_gate, target_amplitudes in two_qubit_non_parametric_gates_amplitudes_test_set  # noqa: E501
+        if tested_gate not in gates_to_exclude
+    ]
+
+
+def _one_qubit_parametric_gate_test_cases(gates_to_exclude):
+    return [
+        (
+            Circuit(
+                [
+                    builtin_gate_by_name(initial_gate)(0),
+                    builtin_gate_by_name(tested_gate)(*params)(0),
+                ]
+            ),
+            target_amplitudes,
+        )
+        for initial_gate, tested_gate, params, target_amplitudes in one_qubit_parametric_gates_amplitudes_test_set  # noqa: E501
+        if tested_gate not in gates_to_exclude
+    ]
+
+
+def _two_qubit_parametric_gate_test_cases(gates_to_exclude):
+    return [
+        (
+            Circuit(
+                [
+                    builtin_gate_by_name(initial_gates[0])(0),
+                    builtin_gate_by_name(initial_gates[1])(1),
+                    builtin_gate_by_name(tested_gate)(*params)(0, 1),
+                ]
+            ),
+            target_amplitudes,
+        )
+        for initial_gates, tested_gate, params, target_amplitudes in two_qubit_parametric_gates_amplitudes_test_set  # noqa: E501
+        if tested_gate not in gates_to_exclude
+    ]
+
+
 def simulator_contracts_for_tolerance(atol=1e-7):
     return [
         _verify_wavefunction_returned_by_simulator_has_correct_length,
@@ -127,4 +207,22 @@ def simulator_contracts_with_nontrivial_initial_state(atol=1e-7):
         _verify_simulator_takes_into_account_initial_state_when_computing_wavefunction(
             atol
         ),
+    ]
+
+
+def simulator_gate_compatibility_contracts(atol=1e-7, gates_to_exclude=None):
+    gates_to_exclude = [] if gates_to_exclude is None else gates_to_exclude
+
+    return [
+        partial(
+            _verify_gate_compatibility,
+            circuit=circuit,
+            target_amplitudes=target_amplitudes,
+            atol=atol,
+        )
+        for circuit, target_amplitudes in chain(
+            _one_qubit_nonparametric_gate_test_cases(gates_to_exclude),
+            _two_qubit_nonparametric_gate_test_cases(gates_to_exclude),
+            _one_qubit_parametric_gate_test_cases(gates_to_exclude),
+        )
     ]
