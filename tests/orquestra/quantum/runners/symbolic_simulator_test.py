@@ -7,6 +7,7 @@ import sympy
 from orquestra.quantum.api.circuit_runner_contracts import (
     CIRCUIT_RUNNER_CONTRACTS,
     STRICT_CIRCUIT_RUNNER_CONTRACTS,
+    circuit_runner_gate_compatibility_contracts,
 )
 from orquestra.quantum.api.wavefunction_simulator_contracts import (
     simulator_contracts_for_tolerance,
@@ -64,7 +65,13 @@ def test_symbolic_simulator_fulfills_strict_circuit_runnner(contract):
     assert contract(simulator)
 
 
-@pytest.mark.parametrize("contract", simulator_gate_compatibility_contracts())
-def test_symbolic_simulator_uses_correct_gate_definitionscontract(contract):
-    simulator = SymbolicSimulator()
-    assert contract(simulator)
+class TestSymbolicSimulatorUsesCorrectGateDefinitions:
+    @pytest.mark.parametrize("contract", simulator_gate_compatibility_contracts())
+    def test_using_target_amplitudes(self, contract):
+        simulator = SymbolicSimulator()
+        assert contract(simulator)
+
+    @pytest.mark.parametrize("contract", circuit_runner_gate_compatibility_contracts())
+    def test_using_expectation_values(self, contract):
+        simulator = SymbolicSimulator()
+        assert contract(simulator)

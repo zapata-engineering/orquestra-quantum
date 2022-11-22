@@ -1,9 +1,25 @@
 ################################################################################
 # © Copyright 2022 Zapata Computing Inc.
 ################################################################################
-import numpy as np
+from functools import partial
+from itertools import chain
+from typing import List, Tuple
 
-from ..circuits import CNOT, RX, RY, RZ, Circuit, H
+import numpy as np
+import pytest
+
+from orquestra.quantum.operators import PauliRepresentation, PauliSum
+
+from ..circuits import CNOT, RX, RY, RZ, Circuit, H, builtin_gate_by_name
+from ..estimation import estimate_expectation_values_by_averaging
+from ..operators import PauliTerm
+from ..testing.test_cases_for_backend_tests import (
+    one_qubit_non_parametric_gates_exp_vals_test_set,
+    one_qubit_parametric_gates_exp_vals_test_set,
+    two_qubit_non_parametric_gates_exp_vals_test_set,
+    two_qubit_parametric_gates_exp_vals_test_set,
+)
+from . import EstimationTask
 from .circuit_runner import CircuitRunner
 
 _EXAMPLE_CIRCUITS = (
@@ -218,6 +234,173 @@ def strict_runner_returns_number_of_measurements_greater_or_equal_to_n_samples(
     return all(subtests)
 
 
+# This code is temporarily copied from orquestra-vqa to facilitate estimating
+# expectation values of non-ising operators. It should be removed once we
+# decide what to do with the gate-compatibility contracts.
+
+
+def get_context_selection_circuit_for_group(
+    qubit_operator: PauliRepresentation,
+) -> Tuple[Circuit, PauliSum]:
+    """Get the context selection circuit for measuring the expectation value
+    of a group of co-measurable Pauli terms.
+    Args:
+        qubit_operator: operator representing group of co-measurable Pauli term
+    """
+    context_selection_circuit = Circuit()
+    transformed_operator = PauliSum([])
+    context: List[Tuple[str, int]] = []
+
+    for term in qubit_operator.terms:
+        term_operator = PauliTerm.identity()
+        for qubit, operator in term.operations:
+            for existing_qubit, existing_operator in context:
+                if existing_qubit == qubit and existing_operator != operator:
+                    raise ValueError("Terms are not co-measurable")
+            if (operator, qubit) not in context:
+                context.append((operator, qubit))
+            product = term_operator * PauliTerm({qubit: "Z"})
+            assert isinstance(product, PauliTerm)
+            term_operator = product
+        transformed_operator += term_operator * term.coefficient
+
+    for factor in context:
+        if factor[0] == "X":
+            context_selection_circuit += RY(-np.pi / 2)(factor[1])
+        elif factor[0] == "Y":
+            context_selection_circuit += RX(np.pi / 2)(factor[1])
+
+    return context_selection_circuit, transformed_operator
+
+
+def perform_context_selection(
+    estimation_tasks: List[EstimationTask],
+) -> List[EstimationTask]:
+    """Changes the circuits in estimation tasks to involve context selection.
+    Args:
+        estimation_tasks: list of estimation tasks
+    """
+    output_estimation_tasks = []
+    for estimation_task in estimation_tasks:
+        (
+            context_selection_circuit,
+            frame_operator,
+        ) = get_context_selection_circuit_for_group(estimation_task.operator)
+        frame_circuit = estimation_task.circuit + context_selection_circuit
+        new_estimation_task = EstimationTask(
+            frame_operator, frame_circuit, estimation_task.number_of_shots
+        )
+        output_estimation_tasks.append(new_estimation_task)
+    return output_estimation_tasks
+
+
+# ----- End of code copied from orquestra-vqa
+
+
+def _verify_expectation_value_by_averaging(
+    runner, circuit, operator, target_value, n_samples, exp_val_spread
+):
+    estimation_tasks = perform_context_selection(
+        [EstimationTask(operator, circuit, n_samples)]
+    )
+
+    calculated_value = estimate_expectation_values_by_averaging(
+        runner, estimation_tasks
+    )
+
+    sigma = 1 / np.sqrt(n_samples)
+
+    return calculated_value[0].values[0] == pytest.approx(
+        target_value, abs=exp_val_spread * sigma * 3
+    )
+
+
+def _one_qubit_nonparametric_gate_test_cases(gates_to_exclude):
+    operators = [
+        PauliTerm.identity(),
+        PauliTerm("X0"),
+        PauliTerm("Y0"),
+        PauliTerm("Z0"),
+    ]
+    return [
+        (
+            Circuit(
+                [
+                    builtin_gate_by_name(initial_gate)(0),
+                    builtin_gate_by_name(tested_gate)(0),
+                ]
+            ),
+            operator,
+            target_value,
+        )
+        for initial_gate, tested_gate, target_values in one_qubit_non_parametric_gates_exp_vals_test_set  # noqa: E501
+        for operator, target_value in zip(operators, target_values)
+        if tested_gate not in gates_to_exclude
+    ]
+
+
+def _one_qubit_parametric_gate_test_cases(gates_to_exclude):
+    operators = [
+        PauliTerm.identity(),
+        PauliTerm("X0"),
+        PauliTerm("Y0"),
+        PauliTerm("Z0"),
+    ]
+    return [
+        (
+            Circuit(
+                [
+                    builtin_gate_by_name(initial_gate)(0),
+                    builtin_gate_by_name(tested_gate)(*params)(0),
+                ]
+            ),
+            operator,
+            target_value,
+        )
+        for initial_gate, tested_gate, params, target_values in one_qubit_parametric_gates_exp_vals_test_set  # noqa: E501
+        for operator, target_value in zip(operators, target_values)
+        if tested_gate not in gates_to_exclude
+    ]
+
+
+def _two_qubit_nonparametric_gate_test_cases(gates_to_exclude):
+    return [
+        (
+            Circuit(
+                [
+                    builtin_gate_by_name(initial_gates[0])(0),
+                    builtin_gate_by_name(initial_gates[1])(1),
+                    builtin_gate_by_name(tested_gate)(0, 1),
+                ]
+            ),
+            PauliTerm(operator),
+            target_value,
+        )
+        for initial_gates, tested_gate, operators, target_values in two_qubit_non_parametric_gates_exp_vals_test_set  # noqa: E501
+        for operator, target_value in zip(operators, target_values)
+        if tested_gate not in gates_to_exclude
+    ]
+
+
+def _two_qubit_parametric_gate_test_cases(gates_to_exclude):
+    return [
+        (
+            Circuit(
+                [
+                    builtin_gate_by_name(initial_gates[0])(0),
+                    builtin_gate_by_name(initial_gates[1])(1),
+                    builtin_gate_by_name(tested_gate)(*params)(0, 1),
+                ]
+            ),
+            PauliTerm(operator),
+            target_value,
+        )
+        for initial_gates, tested_gate, operators, params, target_values in two_qubit_parametric_gates_exp_vals_test_set  # noqa: E501
+        for operator, target_value in zip(operators, target_values)
+        if tested_gate not in gates_to_exclude
+    ]
+
+
 CIRCUIT_RUNNER_CONTRACTS = [
     _ValidateRunAndMeasure.returns_number_of_measurements_greater_or_equal_to_n_samples,  # noqa: E501
     _ValidateRunAndMeasure.returns_bitstrings_with_length_equal_to_number_of_qubits_in_circuit,  # noqa: E501
@@ -239,3 +422,26 @@ CIRCUIT_RUNNER_CONTRACTS = [
 STRICT_CIRCUIT_RUNNER_CONTRACTS = [
     strict_runner_returns_number_of_measurements_greater_or_equal_to_n_samples
 ]
+
+
+def circuit_runner_gate_compatibility_contracts(
+    exp_val_spread=1.0, gates_to_exclude=None
+):
+    gates_to_exclude = [] if gates_to_exclude is None else gates_to_exclude
+    n_samples = 1000
+
+    return [
+        partial(
+            _verify_expectation_value_by_averaging,
+            circuit=circuit,
+            operator=operator,
+            target_value=target_value,
+            n_samples=n_samples,
+            exp_val_spread=exp_val_spread,
+        )
+        for circuit, operator, target_value in chain(
+            _one_qubit_nonparametric_gate_test_cases(gates_to_exclude),
+            _one_qubit_parametric_gate_test_cases(gates_to_exclude),
+            _two_qubit_nonparametric_gate_test_cases(gates_to_exclude),
+        )
+    ]
