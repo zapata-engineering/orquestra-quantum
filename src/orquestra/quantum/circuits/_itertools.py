@@ -4,8 +4,6 @@ from itertools import islice
 from math import ceil
 from typing import Dict, Iterable, Sequence, Tuple, TypeVar
 
-from orquestra.quantum.measurements import Measurements
-
 T = TypeVar("T")
 
 
