@@ -73,5 +73,5 @@ class TestSymbolicSimulatorUsesCorrectGateDefinitions:
 
     @pytest.mark.parametrize("contract", circuit_runner_gate_compatibility_contracts())
     def test_using_expectation_values(self, contract):
-        simulator = SymbolicSimulator()
+        simulator = SymbolicSimulator(seed=1234)
         assert contract(simulator)
