@@ -166,7 +166,7 @@ class PauliTerm:
         self._ops: Dict[int, str] = {
             idx: op for idx, op in operator.items() if op != "I"
         }
-        self.coefficient = complex(1.0 if coefficient is None else coefficient)
+        self.coefficient = 1.0 if coefficient is None else coefficient
 
     @staticmethod
     def from_iterable(

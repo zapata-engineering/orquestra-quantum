@@ -83,12 +83,6 @@ class TestPauliTermInitialization:
         assert term.coefficient == coefficient
         assert term.qubits == frozenset(qubit_indices)
 
-    @pytest.mark.parametrize("coefficient", [2.0, -1, 0.1j, 2 - 3j, 2.1 + 3.7j])
-    def test_coefficient_of_pauli_term_is_always_coerced_to_complex(self, coefficient):
-        term = PauliTerm("X0", coefficient)
-        assert term.coefficient == coefficient
-        assert isinstance(term.coefficient, complex)
-
     @pytest.mark.parametrize(
         "pauli_str, expected_ops",
         [
@@ -471,7 +465,7 @@ class TestPauliTermAlgebra:
 
     def test_pauliterm_repr(self, pauli_term: PauliTerm):
         # Check identity is printed correctly (integer coefficients)
-        assert str(PauliTerm.identity()) == "(1+0j)*I"
+        assert str(PauliTerm.identity()) == "1.0*I"
 
         # Check identity is printed correctly (decimal coefficients)
         assert (
@@ -479,7 +473,7 @@ class TestPauliTermAlgebra:
         )
 
         # Check Pauli Term is printed correctly (integer coefficients)
-        assert str(pauli_term) == "(2+0j)*X0*Y1*Z12"
+        assert str(pauli_term) == "2.0*X0*Y1*Z12"
 
         # Check Pauli Term is printed correctly (decimal coefficients)
         assert (
