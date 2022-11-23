@@ -4,9 +4,6 @@
 from functools import partial
 from itertools import chain
 
-# Test values of expectation values
-# Number of circuits run increases
-# Number of jobs_executed increases
 import numpy as np
 
 from ..circuits import CNOT, Circuit, H, X, builtin_gate_by_name
@@ -18,18 +15,6 @@ from ..testing.test_cases_for_backend_tests import (
     two_qubit_parametric_gates_amplitudes_test_set,
 )
 from .wavefunction_simulator import WavefunctionSimulator
-
-# Length of wavefunction matches 2 ** number_of_quits
-# Test values of specific wavefunction
-# - for default initial state
-# - for initial some specific initial state
-# Number of circuits run increases
-# Number of jobs_executed increases
-
-# Test distribution values for some specific case
-# Number of circuits run increases
-# Number of jobs_executed increases
-
 
 _EXAMPLE_CIRCUITS = [
     Circuit([H(0)]),
