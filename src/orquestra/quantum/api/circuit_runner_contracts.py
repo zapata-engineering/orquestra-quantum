@@ -196,7 +196,7 @@ class _ValidateMeasurementOutcomeDistribution:
         return True
 
 
-def strict_runner_returns_number_of_measurements_greater_or_equal_to_n_samples(
+def strict_runner_returns_number_of_measurements_equal_to_n_samples(
     runner: CircuitRunner,
 ):
     def _when_n_samples_is_the_same_for_each_circuit():
@@ -413,7 +413,7 @@ CIRCUIT_RUNNER_CONTRACTS = [
 # runners return number of samples larger than the requested one, usually
 # as a result of batching.
 STRICT_CIRCUIT_RUNNER_CONTRACTS = [
-    strict_runner_returns_number_of_measurements_greater_or_equal_to_n_samples
+    strict_runner_returns_number_of_measurements_equal_to_n_samples
 ]
 
 
