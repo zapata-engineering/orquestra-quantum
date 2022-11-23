@@ -225,6 +225,7 @@ def strict_runner_returns_number_of_measurements_greater_or_equal_to_n_samples(
     return all(subtests)
 
 
+# TODO: remove this code when it is no longer needed
 # This code is temporarily copied from orquestra-vqa to facilitate estimating
 # expectation values of non-ising operators. It should be removed once we
 # decide what to do with the gate-compatibility contracts.
