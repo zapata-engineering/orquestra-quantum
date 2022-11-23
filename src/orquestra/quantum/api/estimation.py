@@ -9,7 +9,7 @@ import numpy as np
 from ..circuits import Circuit
 from ..measurements import ExpectationValues
 from ..operators import PauliRepresentation
-from .backend import QuantumBackend
+from . import CircuitRunner
 
 
 @dataclass(frozen=True)
@@ -52,9 +52,9 @@ class EstimateExpectationValues(Protocol):
     """
 
     def __call__(
-        self, backend: QuantumBackend, estimation_tasks: List[EstimationTask]
+        self, runner: CircuitRunner, estimation_tasks: List[EstimationTask]
     ) -> List[ExpectationValues]:
-        """Estimate expectation values using given backend."""
+        """Estimate expectation values using given runner."""
 
 
 class EstimationTasksFactory(Protocol):

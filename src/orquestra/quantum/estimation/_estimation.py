@@ -6,8 +6,9 @@ from typing import Dict, List, Optional, Tuple, cast
 import numpy as np
 import sympy
 
-from ..api.backend import QuantumBackend, QuantumSimulator
+from ..api.circuit_runner import CircuitRunner
 from ..api.estimation import EstimationTask
+from ..api.wavefunction_simulator import WavefunctionSimulator
 from ..measurements import ExpectationValues, expectation_values_to_real
 
 
@@ -49,7 +50,7 @@ def split_estimation_tasks_to_measure(
 
     Returns:
         estimation_tasks_to_measure: A new list of estimation tasks that only
-            contains the ones that should actually be submitted to the backend
+            contains the ones that should actually be submitted to the runner
         estimation_tasks_not_to_measure: A new list of estimation tasks that
             contains the EstimationTasks with only constant terms or with
             0 shot
@@ -123,7 +124,7 @@ def evaluate_non_measured_estimation_tasks(
 
 
 def estimate_expectation_values_by_averaging(
-    backend: QuantumBackend,
+    runner: CircuitRunner,
     estimation_tasks: List[EstimationTask],
 ) -> List[ExpectationValues]:
     """Basic method for estimating expectation values for list of estimation tasks.
@@ -132,7 +133,7 @@ def estimate_expectation_values_by_averaging(
     measurements.
 
     Args:
-        backend: backend used for executing circuits
+        runner: runner used for executing circuits
         estimation_tasks: list of estimation tasks
     """
 
@@ -147,7 +148,7 @@ def estimate_expectation_values_by_averaging(
         estimation_tasks_not_to_measure
     )
 
-    if estimation_tasks_to_measure == []:
+    if not estimation_tasks_to_measure:
         measured_expectation_values_list = []
     else:
         circuits, operators, shots_per_circuit = zip(
@@ -156,9 +157,7 @@ def estimate_expectation_values_by_averaging(
                 for e in estimation_tasks_to_measure
             ]
         )
-        measurements_list = backend.run_circuitset_and_measure(
-            circuits, shots_per_circuit
-        )
+        measurements_list = runner.run_batch_and_measure(circuits, shots_per_circuit)
 
         measured_expectation_values_list = [
             expectation_values_to_real(
@@ -187,19 +186,19 @@ def estimate_expectation_values_by_averaging(
 
 
 def calculate_exact_expectation_values(
-    backend: QuantumSimulator,
+    runner: WavefunctionSimulator,
     estimation_tasks: List[EstimationTask],
 ) -> List[ExpectationValues]:
-    """Calculates exact expectation values using built-in method of a provided backend.
+    """Calculates exact expectation values using built-in method of a provided runner.
 
     Args:
-        backend: backend used for executing circuits
+        runner: runner used for executing circuits
         estimation_tasks: list of estimation tasks
     """
     expectation_values_list = [
-        backend.get_exact_expectation_values(
+        runner.get_exact_expectation_values(
             estimation_task.circuit, estimation_task.operator
         )
         for estimation_task in estimation_tasks
     ]
-    return expectation_values_list
+    return [ExpectationValues(np.asarray([val])) for val in expectation_values_list]

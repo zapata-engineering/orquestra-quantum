@@ -152,6 +152,11 @@ from ._generators import (
     apply_gate_to_qubits,
     create_layer_of_gates,
 )
+from ._itertools import (
+    combine_measurement_counts,
+    expand_sample_sizes,
+    split_into_batches,
+)
 from ._operations import Operation
 from ._serde import (
     circuit_from_dict,

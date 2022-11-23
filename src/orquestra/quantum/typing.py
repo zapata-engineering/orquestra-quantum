@@ -44,3 +44,6 @@ ParameterizedVector = Union[Sequence[Parameter], np.ndarray]
 class SupportsLessThan(Protocol):
     def __lt__(self, other: Any) -> bool:
         """Return result of comparison self < other."""
+
+
+StateVector = Union[Sequence[complex], np.ndarray]

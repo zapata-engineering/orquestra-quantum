@@ -205,7 +205,7 @@ class PauliTerm:
     def identity() -> "PauliTerm":
         return PauliTerm("I0", 1.0)
 
-    def copy(self, new_coefficient: complex = None) -> "PauliTerm":
+    def copy(self, new_coefficient: Optional[complex] = None) -> "PauliTerm":
         """Copy PauliTerm, possibly changing its coefficient to a new one.
 
         The created copy is deep, in particular internal dictionary storing map
@@ -396,7 +396,7 @@ class PauliTerm:
 
 
 class PauliSum:
-    def __init__(self, terms: Union[str, Sequence[PauliTerm]] = None):
+    def __init__(self, terms: Optional[Union[str, Sequence[PauliTerm]]] = None):
         if isinstance(terms, str):
             terms = [PauliTerm(s.strip()) for s in re.split(r"\+(?![^(]*\))", terms)]
         if terms is None:

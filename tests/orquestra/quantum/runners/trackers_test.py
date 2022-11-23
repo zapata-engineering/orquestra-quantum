@@ -7,17 +7,15 @@ from os import remove
 import numpy as np
 import pytest
 
-from orquestra.quantum.backends import SymbolicSimulator
-from orquestra.quantum.backends.trackers import MeasurementTrackingBackend
 from orquestra.quantum.circuits import CNOT, Circuit, H, X
 from orquestra.quantum.distributions import MeasurementOutcomeDistribution
+from orquestra.quantum.runners import SymbolicSimulator
+from orquestra.quantum.runners.trackers import MeasurementTrackingBackend
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def backend():
     backend = MeasurementTrackingBackend(SymbolicSimulator(), "tracker_test")
-    backend.inner_backend.number_of_circuits_run = 0
-    backend.inner_backend.number_of_jobs_run = 0
     return backend
 
 
@@ -36,14 +34,14 @@ class TestMeasurementTrackingBackend:
 
         try:
             # When
-            measurements = backend.run_circuit_and_measure(circuit, n_samples)
+            measurements = backend.run_and_measure(circuit, n_samples)
 
             # Then (since SPAM error could result in unexpected bitstrings, we make
             # sure the most common bitstring is the one we expect)
             counts = measurements.get_counts()
             assert max(counts, key=counts.get) == "001"
-            assert backend.inner_backend.number_of_circuits_run == 1
-            assert backend.inner_backend.number_of_jobs_run == 1
+            assert backend.inner_backend.n_circuits_executed == 1
+            assert backend.inner_backend.n_jobs_executed == 1
         finally:
             # Cleanup
             remove(backend.raw_data_file_name)
@@ -57,11 +55,11 @@ class TestMeasurementTrackingBackend:
 
         # When
         with pytest.raises(ValueError):
-            backend.run_circuit_and_measure(circuit, n_samples)
+            backend.run_and_measure(circuit, n_samples)
             # Cleanup
             remove(backend.raw_data_file_name)
 
-    def test_run_circuitset_and_measure(self, backend):
+    def test_run_batch_and_measure(self, backend):
         # Given
         circuit = Circuit([X(0), X(0), X(1), X(1), X(2)])
         n_samples = 100
@@ -70,26 +68,20 @@ class TestMeasurementTrackingBackend:
         # When
         n_samples_per_circuit = [n_samples] * number_of_circuits
         try:
-            measurements_set = backend.run_circuitset_and_measure(
+            measurements_set = backend.run_batch_and_measure(
                 [circuit] * number_of_circuits, n_samples_per_circuit
             )
 
             for measurements in measurements_set:
                 counts = measurements.get_counts()
                 assert max(counts, key=counts.get) == "001"
-            assert backend.inner_backend.number_of_circuits_run == number_of_circuits
-
-            if backend.inner_backend.supports_batching:
-                assert backend.inner_backend.number_of_jobs_run == int(
-                    np.ceil(number_of_circuits / backend.inner_backend.batch_size)
-                )
-            else:
-                assert backend.inner_backend.number_of_jobs_run == number_of_circuits
+            assert backend.inner_backend.n_circuits_executed == number_of_circuits
+            assert backend.inner_backend.n_jobs_executed <= number_of_circuits
         finally:
             # Cleanup
             remove(backend.raw_data_file_name)
 
-    def test_run_circuitset_and_measure_n_samples(self, backend):
+    def test_run_batch_and_measure_n_samples(self, backend):
         # Note: this test may fail with noisy devices
         # Given
         first_circuit = Circuit([X(0), X(0), X(1), X(1), X(2)])
@@ -98,7 +90,7 @@ class TestMeasurementTrackingBackend:
 
         try:
             # When
-            measurements_set = backend.run_circuitset_and_measure(
+            measurements_set = backend.run_batch_and_measure(
                 [first_circuit, second_circuit], n_samples_per_circuit
             )
 
@@ -112,7 +104,7 @@ class TestMeasurementTrackingBackend:
             assert len(measurements_set[0].bitstrings) == n_samples_per_circuit[0]
             assert len(measurements_set[1].bitstrings) == n_samples_per_circuit[1]
 
-            assert backend.inner_backend.number_of_circuits_run == 2
+            assert backend.inner_backend.n_circuits_executed == 2
         finally:
             # Cleanup
             remove(backend.raw_data_file_name)
@@ -133,8 +125,8 @@ class TestMeasurementTrackingBackend:
             assert distribution.get_number_of_subsystems() == 3
             assert distribution.distribution_dict[(0, 0, 0)] > 1 / 3
             assert distribution.distribution_dict[(1, 1, 1)] > 1 / 3
-            assert backend.inner_backend.number_of_circuits_run == 1
-            assert backend.inner_backend.number_of_jobs_run == 1
+            assert backend.inner_backend.n_circuits_executed == 1
+            assert backend.inner_backend.n_jobs_executed == 1
         finally:
             # Cleanup
             remove(backend.raw_data_file_name)
@@ -142,7 +134,7 @@ class TestMeasurementTrackingBackend:
     def test_serialization_of_measurement_data_from_circuit(self, backend):
         try:
             # When
-            backend.run_circuit_and_measure(Circuit([X(0), X(0)]), n_samples=10)
+            backend.run_and_measure(Circuit([X(0), X(0)]), n_samples=10)
             with open(backend.raw_data_file_name) as f:
                 data = load(f)
 
@@ -163,7 +155,7 @@ class TestMeasurementTrackingBackend:
 
         try:
             # When
-            backend.run_circuitset_and_measure(circuitset, n_samples=n_samples)
+            backend.run_batch_and_measure(circuitset, n_samples=n_samples)
             f = open(backend.raw_data_file_name)
             data = load(f)
 
@@ -185,7 +177,7 @@ class TestMeasurementTrackingBackend:
 
         try:
             # When
-            backend.run_circuit_and_measure(Circuit([X(0), X(0)]), n_samples=10)
+            backend.run_and_measure(Circuit([X(0), X(0)]), n_samples=10)
             f = open(backend.raw_data_file_name)
             data = load(f)
 
@@ -225,8 +217,8 @@ class TestMeasurementTrackingBackend:
 
         try:
             # When
-            backend.run_circuit_and_measure(Circuit([X(0), X(0)]), n_samples=10)
-            backend_2.run_circuit_and_measure(Circuit([X(0)]), n_samples=10)
+            backend.run_and_measure(Circuit([X(0), X(0)]), n_samples=10)
+            backend_2.run_and_measure(Circuit([X(0)]), n_samples=10)
             with open(backend.raw_data_file_name) as f:
                 data = load(f)
             with open(backend_2.raw_data_file_name) as f_2:
@@ -240,8 +232,8 @@ class TestMeasurementTrackingBackend:
             """Assert solutions are in the recorded data"""
             assert {"0": 10} == data["raw-data"][0]["counts"]
             assert {"1": 10} == data_2["raw-data"][0]["counts"]
-            assert backend.inner_backend.number_of_circuits_run == 2
-            assert backend.inner_backend.number_of_jobs_run == 2
+            assert backend.inner_backend.n_circuits_executed == 2
+            assert backend.inner_backend.n_jobs_executed == 2
         finally:
             # Cleanup
             remove(backend.raw_data_file_name)
@@ -253,10 +245,8 @@ class TestMeasurementTrackingBackend:
 
         try:
             # When
-            backend.run_circuit_and_measure(Circuit([X(0), X(0)]), n_samples=10)
-            measurement = backend_2.run_circuit_and_measure(
-                Circuit([X(0)]), n_samples=10
-            )
+            backend.run_and_measure(Circuit([X(0), X(0)]), n_samples=10)
+            measurement = backend_2.run_and_measure(Circuit([X(0)]), n_samples=10)
             with open(backend.raw_data_file_name) as f:
                 data = load(f)
 

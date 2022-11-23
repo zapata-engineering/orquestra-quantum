@@ -434,7 +434,10 @@ def save_timing(walltime: float, filename: AnyPath) -> None:
 
 
 def save_nmeas_estimate(
-    nmeas: float, nterms: int, filename: AnyPath, frame_meas: np.ndarray = None
+    nmeas: float,
+    nterms: int,
+    filename: AnyPath,
+    frame_meas: Optional[np.ndarray] = None,
 ) -> None:
     """Save an estimate of the number of measurements to a file
 
