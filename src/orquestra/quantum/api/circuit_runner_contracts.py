@@ -82,19 +82,9 @@ class _ValidateRunBatchAndMeasure:
             runner.run_batch_and_measure(_EXAMPLE_CIRCUITS, _EXAMPLE_N_SAMPLES)
         ) == len(_EXAMPLE_CIRCUITS)
 
-    @staticmethod
-    def returns_number_of_measurements_greater_or_equal_to_n_samples(
-        runner: CircuitRunner,
-    ):
-        def _when_n_samples_is_the_same_for_each_circuit():
-            return all(
-                len(measurements.bitstrings) >= 10
-                for measurements in runner.run_batch_and_measure(
-                    _EXAMPLE_CIRCUITS, n_samples=10
-                )
-            )
-
-        def _when_n_samples_is_different_for_each_circuit():
+    class ReturnsNumberOfMeasurementsEqualToNSamples:
+        @staticmethod
+        def when_n_samples_different_for_each_circuit(runner: CircuitRunner):
             return all(
                 len(measurement.bitstrings) >= n_samples
                 for measurement, n_samples in zip(
@@ -103,13 +93,14 @@ class _ValidateRunBatchAndMeasure:
                 )
             )
 
-        # We make sure to run each subtest, otherwise short-circuiting of
-        # circuits might result in missing some errors
-        subtests = [
-            _when_n_samples_is_different_for_each_circuit(),
-            _when_n_samples_is_the_same_for_each_circuit(),
-        ]
-        return all(subtests)
+        @staticmethod
+        def when_n_samples_same_for_each_circuit(runner: CircuitRunner):
+            return all(
+                len(measurements.bitstrings) >= 10
+                for measurements in runner.run_batch_and_measure(
+                    _EXAMPLE_CIRCUITS, n_samples=10
+                )
+            )
 
     @staticmethod
     def returns_bitstrings_with_length_equal_to_number_of_qubits_in_circuit(
@@ -405,7 +396,8 @@ CIRCUIT_RUNNER_CONTRACTS = [
     _ValidateRunAndMeasure.returns_number_of_measurements_greater_or_equal_to_n_samples,  # noqa: E501
     _ValidateRunAndMeasure.returns_bitstrings_with_length_equal_to_number_of_qubits_in_circuit,  # noqa: E501
     _ValidateRunAndMeasure.raises_value_error_if_n_samples_is_nonpositive,  # noqa: E501
-    _ValidateRunBatchAndMeasure.returns_number_of_measurements_greater_or_equal_to_n_samples,  # noqa: E501
+    _ValidateRunBatchAndMeasure.ReturnsNumberOfMeasurementsEqualToNSamples.when_n_samples_different_for_each_circuit,  # noqa: E501
+    _ValidateRunBatchAndMeasure.ReturnsNumberOfMeasurementsEqualToNSamples.when_n_samples_same_for_each_circuit,  # noqa: E501
     _ValidateRunBatchAndMeasure.returns_bitstrings_with_length_equal_to_number_of_qubits_in_circuit,  # noqa: E501
     _ValidateRunBatchAndMeasure.returns_measurement_object_for_each_circuit_in_batch,  # noqa: E501
     _ValidateRunBatchAndMeasure.raises_value_error_if_n_samples_is_nonpositive,  # noqa: E501
