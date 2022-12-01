@@ -1,6 +1,7 @@
 ################################################################################
 # © Copyright 2022 Zapata Computing Inc.
 ################################################################################
+"""Definition of CircuitRunner protocol and ABC for implementing it."""
 from abc import ABC, abstractmethod
 from typing import List, Optional, Protocol, Sequence, Union
 
