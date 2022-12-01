@@ -180,7 +180,7 @@ class BaseCircuitRunner(ABC, CircuitRunner):
 
     @abstractmethod
     def _run_and_measure(self, circuit: Circuit, n_samples: int) -> Measurements:
-        """Underlying implementation of running and measuring  single circuit.
+        """Underlying implementation of running and measuring single circuit.
 
         Implementations of this method can assume that n_samples is positive.
         Furthermore, implementations of this method should not modify
