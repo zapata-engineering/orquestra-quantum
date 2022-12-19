@@ -296,7 +296,9 @@ def sample_from_wavefunction(
         outcome_tuples += convert_bitstrings_to_tuples(outcome_strings)
         outcome_tuples += [0]  # adding non tuple forces rng.choice to return tuples
         probabilities += [0]  # need to add corresponding probability of 0
-        samples = rng.choice(a=outcome_tuples, size=n_samples, p=probabilities).tolist()
+        samples = rng.choice(
+            a=np.array(outcome_tuples, dtype=object), size=n_samples, p=probabilities
+        ).tolist()
     else:
         string_samples = rng.choice(a=outcome_strings, size=n_samples, p=probabilities)
         samples = convert_bitstrings_to_tuples(string_samples)
