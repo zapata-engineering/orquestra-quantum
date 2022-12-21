@@ -61,6 +61,7 @@ def create_random_circuit(
             ONE_QUBIT_ONE_PARAM_GATES,
             TWO_QUBITS_ONE_PARAM_GATES,
         ],
+        dtype=object,
     )
 
     # Loop to add gates to circuit
