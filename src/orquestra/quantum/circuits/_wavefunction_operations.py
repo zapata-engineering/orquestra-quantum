@@ -76,6 +76,7 @@ class MultiPhaseOperation:
         """Unbound symbols in the gate matrix.
 
         Examples:
+
         - an `H` gate has no free symbols
         - a `RX(np.pi)` gate has no free symbols
         - a `RX(sympy.Symbol("theta"))` gate has a single free symbol `theta`
