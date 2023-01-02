@@ -39,6 +39,7 @@ class Gate(Protocol):
         In particular, nonparametric gates should always return ().
 
         Examples:
+
         - an `H` gate has no params
         - a `RX(np.pi)` gate has a single param with value of `np.pi`
         - a `RX(sympy.Symbol("theta"))` gate has a single symbolic param `theta`
@@ -54,6 +55,7 @@ class Gate(Protocol):
         """Unbound symbols in the gate matrix.
 
         Examples:
+
         - an `H` gate has no free symbols
         - a `RX(np.pi)` gate has no free symbols
         - a `RX(sympy.Symbol("theta"))` gate has a single free symbol `theta`
@@ -67,6 +69,7 @@ class Gate(Protocol):
     @property
     def num_qubits(self) -> int:
         """Number of qubits this gate acts on.
+
         We need it because matrix is computed lazily, and we don't want to create matrix
         just to know the number of qubits.
         """
@@ -198,7 +201,7 @@ class MatrixFactoryGate:
         """Unitary matrix defining action of this gate.
 
         This is a computed property using `self.matrix_factory` called with parameters
-            bound to this gate.
+        bound to this gate.
         """
         return self.matrix_factory(*self.params)
 

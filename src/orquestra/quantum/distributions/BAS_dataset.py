@@ -14,6 +14,7 @@ def get_bars_and_stripes_target_distribution(
     nrows, ncols, fraction=1.0, method="zigzag"
 ):
     """Generates bars and stripes (BAS) data in zigzag pattern
+
     Args:
         nrows: number of rows in BAS dataset
         ncols: number of columns in BAS dataset
@@ -51,6 +52,7 @@ def get_bars_and_stripes_target_distribution(
 # Generate BAS with specified rows and columns in zigzag pattern
 def bars_and_stripes_zigzag(nrows, ncols):
     """Generates bars and stripes data in zigzag pattern
+
     Args:
         nrows: number of rows in BAS dataset
         ncols: number of columns in BAS dataset
@@ -75,6 +77,7 @@ def bars_and_stripes_zigzag(nrows, ncols):
 
 def get_num_bars_and_stripes_patterns(nrows, ncols) -> int:
     """Get the number of bars and stripes patters for a 2-dimensional grid.
+
     Args:
         nrows (int): number of rows in BAS dataset
         ncols (int): number of columns in BAS dataset

@@ -9,7 +9,7 @@ import numpy as np
 from ..circuits import Circuit
 from ..measurements import ExpectationValues
 from ..operators import PauliRepresentation
-from . import CircuitRunner
+from .circuit_runner import CircuitRunner
 
 
 @dataclass(frozen=True)
@@ -41,9 +41,10 @@ class EstimationPreprocessor(Protocol):
 class EstimateExpectationValues(Protocol):
     """Protocol defining a function that estimates expectation values for a list of
     estimation tasks. Implementations of this protocol should obey the following rules:
+
     1. Return one ExpectationValue for each EstimationTask.
     2. The order in which ExpectationValues are returned should match the order
-       in which EstimationTasks were provided.
+        in which EstimationTasks were provided.
     3. Number of entries in each ExpectationValue is not restricted.
     4. Output ExpectationValue should include coefficients of the terms/operators.
     5. estimation_tasks can include tasks where operator consists of a constant term or

@@ -48,9 +48,11 @@ def split_into_batches(
     Returns:
         An iterable yielding tuples of the forms (circuits_chunk, n_samples)
         satisfying the following constraints:
+
         - len(circuits_chunk) <= max_batch_size
         - n_samples is large enough to accommodate sample sizes requested
           for each circuit in circuits_chunk
+
     Raises:
         ValueError: if input sequences are not of equal length, or if
           max_batch_size is not positive.
@@ -98,6 +100,7 @@ def expand_sample_sizes(
         max_sample_size: maximum allowable sample size
     Returns:
       Tuple of three sequences (new_circuits, new_sample_sizes, multiplicities):
+
       - new_circuits: sequence of circuits containing all of the original, possibly
         duplicated, circuits
       - new_n_samples: list of integers of the same length as new_circuits,

@@ -30,7 +30,7 @@ class WavefunctionSimulator(CircuitRunner, Protocol):
         Args:
             circuit: circuit whose wavefunction is to be computed.
             initial_state: state used as an input to the `circuit`. If not provided,
-              |0...0> will be used.
+              `|0...0>` will be used.
         Returns:
             Wavefunction comprising 2 ** n amplitudes, where n is number of qubits in
             `circuit`.
@@ -60,27 +60,33 @@ class BaseWavefunctionSimulator(BaseCircuitRunner, WavefunctionSimulator):
     the given simulator, whereas other operations are called "nonnative".
 
     The idea of simulating arbitrary circuit is thus as follows:
+
     - split circuit into alternating consecutive parts of only native and
       only "nonnative" operations.
+
     - start with some initial state
+
     - for each part:
+
       - if it is native, run it via third-party resource, save the new
         statevector
+
       - if it is nonnative, apply each operation in the sequence using
         operation.apply(previous_statevector). Save the new statevector.
+
       Last saved statevector is the wavefunction of the total circuit.
 
       For this to work, subclasses of this ABC should implement
       _get_wavefunction_from_the_native_circuit method.
 
-      Note:
-          Since this class inherits all the limitations of BaseCircuitRunner.
-          The _run_and_measure function is implemented via sampling from the
-          wavefunction. Care must be taken when using third-party service that
-          implements more sophisticated/more performant sampling method not
-          involving direct computation of the whole wavefunction. In such cases,
-          using BaseWavefunctionSimulator ABC will likely result in huge
-          performance hit.
+    Note:
+        Since this class inherits all the limitations of BaseCircuitRunner.
+        The _run_and_measure function is implemented via sampling from the
+        wavefunction. Care must be taken when using third-party service that
+        implements more sophisticated/more performant sampling method not
+        involving direct computation of the whole wavefunction. In such cases,
+        using BaseWavefunctionSimulator ABC will likely result in huge
+        performance hit.
     """
 
     def __init__(self, *, seed: Optional[int] = None):

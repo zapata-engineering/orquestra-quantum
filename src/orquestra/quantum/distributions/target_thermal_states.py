@@ -16,6 +16,7 @@ from ..utils import (
 
 def convert_integer_to_ising_bitstring(number: int, length: int) -> List[int]:
     """Converts an integer into a +/-1s bitstring (also called Ising bitstring).
+
     Args:
         number: positive number to be converted into its corresponding
             Ising bitstring representation

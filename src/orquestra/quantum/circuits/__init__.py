@@ -11,36 +11,60 @@ Allows:
 
 Examples:
 
-    Defining a circuit with a NOT gate on qubit 0 & Hadamard gate on qubit 1::
+    Defining a circuit with a NOT gate on qubit 0 & Hadamard gate on qubit 1:
+
+    .. code:: python
+
         circuit = Circuit()
         circuit += X(0)
         circuit += H(1)
 
-    Adding 2-qubit gates::
+    Adding 2-qubit gates:
+
+    .. code:: python
+
         circuit += CNOT(0, 4)
 
-    Adding parametrized gates::
+    Adding parametrized gates:
+
+    .. code:: python
+
         circuit += RX(np.pi / 2)(0)
         circuit += RX(sympy.sympify("theta / 2"))(1)
 
-    Adding 2-qubit parametrized gates::
+    Adding 2-qubit parametrized gates:
+
+    .. code:: python
+
         circuit += CPHASE(0.314)(3, 2)
 
-    Adding a built-in gate by its name::
+    Adding a built-in gate by its name:
+
+    .. code:: python
+
         circuit += builtin_gate_by_name("X")(0)
         circuit += builtin_gate_by_name("RX")(np.pi * 1.5)(1)
 
-    Binding parameters::
+    Binding parameters:
+
+    .. code:: python
+
         circuit = circuit.bind({sympy.Symbol("theta"): -np.pi / 5})
 
-    Iterating over circuit contents::
+    Iterating over circuit contents:
+
+    .. code:: python
+
         for gate_op in circuit.operations:
             name = gate_op.gate.name
             params = gate_op.gate.params
             qubits = gate_op.qubit_indices
             print(f"{name} with params {params} applied to {qubits}")
 
-    Making a different circuit (e.g. shifting gates by 1 qubit)::
+    Making a different circuit (e.g. shifting gates by 1 qubit):
+
+    .. code:: python
+
         new_circuit = Circuit(
             operations=[
                 gate_op.gate(*[qubit + 1 for qubit in gate_op.qubits])
@@ -49,13 +73,18 @@ Examples:
             n_qubits=circuit.n_qubits
         )
 
-    (De)serialization::
+    (De)serialization:
+
+    .. code:: python
+
         to_dict(circuit)
         circuit5 = circuit_from_dict(dict5)
 
     Inverting a circuit::
-        circuit_inverted = circuit.invert()
 
+    .. code:: python
+
+        circuit_inverted = circuit.invert()
 
 
 Defining new gates
@@ -64,7 +93,10 @@ Defining new gates
 To use a gate that isn't already covered by built-in ones you can define a custom gate
 or extend the set of the built-in ones and file a PR to orquestra-quantum.
 
-Using custom gates::
+Using custom gates:
+
+.. code:: python
+
     custom_a = circuits.CustomGateDefinition(
         gate_name="custom_a",  # names need to be unique
         matrix=sympy.Matrix(

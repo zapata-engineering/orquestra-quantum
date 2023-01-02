@@ -15,7 +15,7 @@ def compute_jensen_shannon_divergence(
     distance_measure_parameters: Dict,
 ) -> float:
     """Computes the symmetrized version of the clipped negative log likelihood between a
-     target distribution and a measured distribution.
+    target distribution and a measured distribution.
     See Equation (4) in https://advances.sciencemag.org/content/5/10/eaaw9918?rss=1
 
     Args:
