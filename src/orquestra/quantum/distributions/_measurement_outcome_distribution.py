@@ -393,10 +393,10 @@ def evaluate_distribution_distance(
          measured_distribution: The measured measurement outcome probability
           distribution
          distance_measure_function: function used to calculate the distance measure
-             Currently implemented: clipped negative log-likelihood, maximum mean
+            Currently implemented: clipped negative log-likelihood, maximum mean
             discrepancy (MMD).
 
-         Additional distance measure parameters can be passed as key word arguments.
+         Additional distance measure parameters can be passed as keyword arguments.
 
     Returns:
          The value of the distance measure.

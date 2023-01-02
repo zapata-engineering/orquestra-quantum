@@ -37,8 +37,8 @@ if TYPE_CHECKING:
 def compute_rbf_kernel(x_i: np.ndarray, y_j: np.ndarray, sigma: float) -> np.ndarray:
     """Compute the gaussian (RBF) kernel matrix.
 
-    The computed kernel matrix K has elements $K_ij = exp(-gamma |x_i - y_j|^2)$
-    where $gamma = 1/(2*sigma)$.
+    The computed kernel matrix K has elements :math:`K_ij = exp(-gamma |x_i - y_j|^2)`
+    where :math:`gamma = 1/(2*sigma)`.
 
     Args:
         x_i: Samples A (integers).
@@ -63,7 +63,7 @@ def compute_multi_rbf_kernel(
 ) -> np.ndarray:
     """Compute the multi-gaussian (RBF) kernel matrix K, with
 
-    $K_ij = 1/N * Sum_n [exp(-gamma_n |x_i - y_j|^2)]$
+    :math:`K_ij = 1/N * Sum_n [exp(-gamma_n |x_i - y_j|^2)]`
 
     with n = 1,...,N and gamma = 1/(2*sigma).
 

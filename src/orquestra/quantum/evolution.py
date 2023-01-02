@@ -53,7 +53,7 @@ def time_evolution_for_term(term: PauliTerm, time: Union[float, sympy.Expr]) -> 
         term: Pauli term to be evolved
         time: time of evolution
     Returns:
-        Circuit: Circuit representing evolved term.
+        Circuit representing evolved term.
     """
 
     base_changes = []

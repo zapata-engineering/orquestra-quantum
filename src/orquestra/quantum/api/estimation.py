@@ -9,7 +9,7 @@ import numpy as np
 from ..circuits import Circuit
 from ..measurements import ExpectationValues
 from ..operators import PauliRepresentation
-from . import CircuitRunner
+from .circuit_runner import CircuitRunner
 
 
 @dataclass(frozen=True)

@@ -282,6 +282,7 @@ def get_expectation_value(
     reverse_operator: bool = False,
 ) -> complex:
     """Get the expectation value of a qubit operator with respect to a wavefunction.
+
     Args:
         qubit_op: the operator
         wavefunction: the wavefunction
