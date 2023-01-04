@@ -329,6 +329,9 @@ class ControlledGate(Gate):
             self.num_control_qubits
         )
 
+    def __str__(self):
+        return self.num_control_qubits * "C-" + str(self.wrapped_gate)
+
 
 DAGGER_GATE_NAME = "Dagger"
 
@@ -372,6 +375,11 @@ class Dagger(Gate):
 
     def power(self, exponent: float) -> "Gate":
         return Power(self, exponent)
+
+    def __str__(self):
+        before_and_after_params = str(self.wrapped_gate).split("(")
+        before_and_after_params[0] += "†"
+        return "(".join(before_and_after_params)
 
 
 EXPONENTIAL_GATE_NAME = "Exponential"
@@ -424,6 +432,9 @@ class Exponential(Gate):
 
     def power(self, exponent: float) -> "Gate":
         return Power(self, exponent)
+
+    def __str__(self):
+        return "exp" + POWER_GATE_SYMBOL + str(self.wrapped_gate)
 
 
 POWER_GATE_SYMBOL = "^"
@@ -479,6 +490,9 @@ class Power(Gate):
 
     def replace_params(self, new_params: Tuple[Parameter, ...]) -> "Gate":
         return self.wrapped_gate.replace_params(new_params).power(self.exponent)
+
+    def __str__(self):
+        return str(self.wrapped_gate) + POWER_GATE_SYMBOL + str(self.exponent)
 
 
 def _n_qubits(matrix):

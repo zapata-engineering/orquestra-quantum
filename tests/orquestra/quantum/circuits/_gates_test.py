@@ -7,7 +7,6 @@ from unittest.mock import Mock
 import numpy as np
 import pytest
 import sympy
-
 from orquestra.quantum.circuits import _builtin_gates, _gates
 from orquestra.quantum.circuits._gates import (
     Exponential,
@@ -170,6 +169,10 @@ class TestMatrixFactoryGate:
         assert operation.gate == gate
         assert operation.qubit_indices == (4, 1)
 
+    def test_str_on_dagger_gives_correct_representation(self):
+        gate = MatrixFactoryGate("V", example_one_qubit_matrix_factory, (1, 0), 1)
+        assert str(gate.dagger) == "V†(1, 0)"
+
 
 @pytest.mark.parametrize("gate", GATES_REPRESENTATIVES)
 class TestControlledGate:
@@ -241,6 +244,20 @@ class TestControlledGate:
         with pytest.raises(ValueError):
             gate.controlled(0)
 
+    def test_str_gives_correct_string_for_one_control(self, gate):
+        controlled_gate = gate.controlled(1)
+        assert str(controlled_gate) == "C-" + str(gate)
+
+    def test_str_gives_correct_string_for_multiple_controls(self, gate):
+        controlled_gate_2 = gate.controlled(2)
+        controlled_gate_5 = gate.controlled(5)
+        assert str(controlled_gate_2) == "C-" * 2 + str(gate)
+        assert str(controlled_gate_5) == "C-" * 5 + str(gate)
+
+    def test_str_gives_correct_string_for_stacking_controls(self, gate):
+        double_controlled_gate = gate.controlled(1).controlled(1)
+        assert str(double_controlled_gate) == "C-" * 2 + str(gate)
+
 
 @pytest.mark.parametrize("gate", GATES_REPRESENTATIVES)
 @pytest.mark.parametrize("exponent", POWER_GATE_EXPONENTS)
@@ -305,6 +322,12 @@ class TestPowerGate:
                 new_params
             ).power(exponent)
 
+    def test_str_gives_correct_string(self, gate, exponent):
+        if len(gate.free_symbols) == 0:
+            power_gate = gate.power(exponent)
+            correct_str = str(gate) + f"{_gates.POWER_GATE_SYMBOL}{exponent}"
+            assert str(power_gate) == correct_str
+
 
 @pytest.mark.parametrize("gate", GATES_REPRESENTATIVES[:10])
 class TestGateExponential:
@@ -359,6 +382,10 @@ class TestGateExponential:
                 gate_exponential.replace_params(new_params)
                 == gate.replace_params(new_params).exp
             )
+
+    def test_str_gives_correct_string(self, gate):
+        if len(gate.free_symbols) == 0:
+            assert str(gate.exp) == "exp^" + str(gate)
 
 
 @pytest.mark.parametrize("gate", GATES_REPRESENTATIVES)
