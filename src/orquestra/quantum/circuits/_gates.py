@@ -310,10 +310,7 @@ class ControlledGate(Gate):
 
     @property
     def exp(self) -> "Gate":
-        return ControlledGate(
-            wrapped_gate=self.wrapped_gate.exp,
-            num_control_qubits=self.num_control_qubits,
-        )
+        return Exponential(self)
 
     def power(self, exponent: float) -> "Gate":
         return ControlledGate(
@@ -330,7 +327,7 @@ class ControlledGate(Gate):
         )
 
     def __str__(self):
-        return self.num_control_qubits * "C-" + str(self.wrapped_gate)
+        return self.num_control_qubits * "c-" + str(self.wrapped_gate)
 
 
 DAGGER_GATE_NAME = "Dagger"
@@ -377,7 +374,8 @@ class Dagger(Gate):
         return Power(self, exponent)
 
     def __str__(self):
-        before_and_after_params = str(self.wrapped_gate).split("(")
+        wrapped_string = str(self.wrapped_gate)
+        before_and_after_params = wrapped_string.split("(")
         before_and_after_params[0] += "†"
         return "(".join(before_and_after_params)
 
@@ -391,9 +389,7 @@ class Exponential(Gate):
 
     def __post_init__(self):
         if len(self.wrapped_gate.free_symbols) > 0:
-            raise ValueError(
-                "On gates with free symbols the exponential cannot be performed"
-            )
+            raise ValueError("Cannot be perform exponential on gates with free symbols")
 
     @property
     def matrix(self) -> sympy.Matrix:
@@ -412,7 +408,7 @@ class Exponential(Gate):
         return EXPONENTIAL_GATE_NAME
 
     def controlled(self, num_control_qubits: int) -> Gate:
-        return self.wrapped_gate.controlled(num_control_qubits).exp
+        return ControlledGate(self, num_control_qubits)
 
     def bind(self, symbols_map) -> "Gate":
         raise NotImplementedError(
@@ -434,6 +430,19 @@ class Exponential(Gate):
         return Power(self, exponent)
 
     def __str__(self):
+        non_commuting_gate_types = [ControlledGate, Power]
+        wrapped_gate = self.wrapped_gate
+        has_non_commuting_gate_type = False
+        while True:
+            if type(self.wrapped_gate) in non_commuting_gate_types:
+                has_non_commuting_gate_type = True
+            if hasattr(wrapped_gate, "wrapped_gate"):
+                wrapped_gate = wrapped_gate.wrapped_gate
+            else:
+                break
+
+        if has_non_commuting_gate_type:
+            return "exp" + POWER_GATE_SYMBOL + "{" + str(self.wrapped_gate) + "}"
         return "exp" + POWER_GATE_SYMBOL + str(self.wrapped_gate)
 
 
@@ -447,7 +456,7 @@ class Power(Gate):
 
     def __post_init__(self):
         if len(self.wrapped_gate.free_symbols) > 0:
-            raise ValueError("Gates with free symbols cannot be exponentiated")
+            raise ValueError("Cannot return power of gates with free symbols")
 
     @property
     def name(self) -> str:
@@ -492,7 +501,23 @@ class Power(Gate):
         return self.wrapped_gate.replace_params(new_params).power(self.exponent)
 
     def __str__(self):
-        return str(self.wrapped_gate) + POWER_GATE_SYMBOL + str(self.exponent)
+        non_commuting_gate_types = [Exponential]
+        wrapped_gate = self.wrapped_gate
+        has_non_commuting_gate_type = False
+        while True:
+            if type(self.wrapped_gate) in non_commuting_gate_types:
+                has_non_commuting_gate_type = True
+            if hasattr(wrapped_gate, "wrapped_gate"):
+                wrapped_gate = wrapped_gate.wrapped_gate
+            else:
+                break
+
+        if has_non_commuting_gate_type:
+            inner_string = "{" + str(self.wrapped_gate) + "}"
+        else:
+            inner_string = str(self.wrapped_gate)
+
+        return inner_string + POWER_GATE_SYMBOL + str(self.exponent)
 
 
 def _n_qubits(matrix):
