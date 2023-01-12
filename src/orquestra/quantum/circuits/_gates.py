@@ -426,7 +426,7 @@ class Exponential(Gate):
         return Power(self, exponent)
 
     def __str__(self):
-        if test_has_non_commuting_gate_type(self, [ControlledGate, Power]):
+        if check_has_non_commuting_gate_type(self, [ControlledGate, Power]):
             return "exp" + POWER_GATE_SYMBOL + "{" + str(self.wrapped_gate) + "}"
         return "exp" + POWER_GATE_SYMBOL + str(self.wrapped_gate)
 
@@ -483,7 +483,7 @@ class Power(Gate):
         return self.wrapped_gate.replace_params(new_params).power(self.exponent)
 
     def __str__(self):
-        if test_has_non_commuting_gate_type(self, [Exponential]):
+        if check_has_non_commuting_gate_type(self, [Exponential]):
             inner_string = "{" + str(self.wrapped_gate) + "}"
         else:
             inner_string = str(self.wrapped_gate)
@@ -608,7 +608,7 @@ def _are_matrices_equal(matrix, another_matrix):
     )
 
 
-def test_has_non_commuting_gate_type(self, non_commuting_gate_types):
+def check_has_non_commuting_gate_type(self, non_commuting_gate_types):
     wrapped_gate = self.wrapped_gate
     has_non_commuting_gate_type = False
     while True:
