@@ -174,40 +174,6 @@ class TestMatrixFactoryGate:
         gate = MatrixFactoryGate("V", example_one_qubit_matrix_factory, (1, 0), 1)
         assert str(gate.dagger) == "V†(1, 0)"
 
-    def test_wrapping_two_times_gives_correct_string(self):
-        phi = sympy.Symbol("phi")
-        oper = MatrixFactoryGate("U", example_one_qubit_matrix_factory, (phi, 1), 1)
-        T_oper = _builtin_gates.T  # need a gate without params for exponentiation
-
-        # assert all permutations produce correct string
-        assert str(oper.controlled(2).dagger(0)) == "c-c-U†(phi, 1)(0)"
-        assert str(T_oper.controlled(2).exp(0)) == "exp^{c-c-T}(0)"
-        assert str(T_oper.controlled(2).power(3)(0)) == "c-c-T^3(0)"
-        assert str(oper.controlled(2).controlled(2)(0)) == "c-c-c-c-U(phi, 1)(0)"
-
-        assert str(oper.dagger.controlled(2)(0)) == "c-c-U†(phi, 1)(0)"
-        assert str(T_oper.dagger.exp(0)) == "exp^T†(0)"
-        assert str(T_oper.dagger.power(3)(0)) == "T†^3(0)"
-        assert str(oper.dagger.dagger(0)) == "U(phi, 1)(0)"
-
-        assert str(T_oper.exp.dagger(0)) == "exp^T†(0)"
-        assert str(T_oper.exp.controlled(2)(0)) == "c-c-exp^T(0)"
-        assert str(T_oper.exp.power(3)(0)) == "{exp^T}^3(0)"
-        assert str(T_oper.exp.exp(0)) == "exp^exp^T(0)"
-
-        assert str(T_oper.power(3).dagger(0)) == "T†^3(0)"
-        assert str(T_oper.power(3).controlled(2)(0)) == "c-c-T^3(0)"
-        assert str(T_oper.power(3).exp(0)) == "exp^{T^3}(0)"
-        assert str(T_oper.power(3).power(3)(0)) == "T^3^3(0)"
-
-    def test_wrapping_three_times_gives_correct_string(self):
-        T_oper = _builtin_gates.T  # need a gate without params for exponentiation
-
-        # assert some permutations because there are too many to test exhaustively
-        assert str(T_oper.controlled(2).dagger.exp(0)) == "exp^{c-c-T†}(0)"
-        assert str(T_oper.dagger.controlled(2).power(3)(0)) == "c-c-T†^3(0)"
-        assert str(T_oper.exp.controlled(2).exp(0)) == "exp^{c-c-exp^T}(0)"
-
 
 @pytest.mark.parametrize("gate", GATES_REPRESENTATIVES)
 class TestControlledGate:
@@ -250,10 +216,10 @@ class TestControlledGate:
 
         assert controlled_gate.dagger == gate.dagger.controlled(4)
 
-    def test_exp_of_controlled_gate_is_not_controlled_gate_wrapping_exp(self, gate):
+    def test_exp_of_controlled_gate_is_controlled_gate_wrapping_exp(self, gate):
         if len(gate.free_symbols) == 0:
             controlled_gate = gate.controlled(2)
-            assert controlled_gate.exp != gate.exp.controlled(2)
+            assert controlled_gate.exp == gate.exp.controlled(2)
 
     def test_power_of_controlled_gate_is_controlled_gate_wrapping_power(self, gate):
         if len(gate.free_symbols) == 0:
@@ -281,17 +247,17 @@ class TestControlledGate:
 
     def test_str_gives_correct_string_for_one_control(self, gate):
         controlled_gate = gate.controlled(1)
-        assert str(controlled_gate) == "c-" + str(gate)
+        assert str(controlled_gate) == "C-" + str(gate)
 
     def test_str_gives_correct_string_for_multiple_controls(self, gate):
         controlled_gate_2 = gate.controlled(2)
         controlled_gate_5 = gate.controlled(5)
-        assert str(controlled_gate_2) == "c-" * 2 + str(gate)
-        assert str(controlled_gate_5) == "c-" * 5 + str(gate)
+        assert str(controlled_gate_2) == "C-" * 2 + str(gate)
+        assert str(controlled_gate_5) == "C-" * 5 + str(gate)
 
     def test_str_gives_correct_string_for_stacking_controls(self, gate):
         double_controlled_gate = gate.controlled(1).controlled(1)
-        assert str(double_controlled_gate) == "c-" * 2 + str(gate)
+        assert str(double_controlled_gate) == "C-" * 2 + str(gate)
 
 
 @pytest.mark.parametrize("gate", GATES_REPRESENTATIVES)

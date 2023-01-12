@@ -13,6 +13,11 @@ from ..typing import ParameterizedVector
 from ._operations import Parameter, get_free_symbols, sub_symbols
 from ._unitary_tools import _lift_matrix_numpy, _lift_matrix_sympy
 
+DAGGER_GATE_NAME = "Dagger"
+CONTROLLED_GATE_NAME = "Control"
+EXPONENTIAL_GATE_NAME = "Exponential"
+POWER_GATE_SYMBOL = "^"
+
 
 @runtime_checkable
 class Gate(Protocol):
@@ -262,9 +267,6 @@ class MatrixFactoryGate:
     __call__ = Gate.__call__
 
 
-CONTROLLED_GATE_NAME = "Control"
-
-
 @dataclass(frozen=True)
 class ControlledGate(Gate):
     wrapped_gate: Gate
@@ -330,9 +332,6 @@ class ControlledGate(Gate):
         return self.num_control_qubits * "c-" + str(self.wrapped_gate)
 
 
-DAGGER_GATE_NAME = "Dagger"
-
-
 @dataclass(frozen=True)
 class Dagger(Gate):
     wrapped_gate: Gate
@@ -378,9 +377,6 @@ class Dagger(Gate):
         before_and_after_params = wrapped_string.split("(")
         before_and_after_params[0] += "†"
         return "(".join(before_and_after_params)
-
-
-EXPONENTIAL_GATE_NAME = "Exponential"
 
 
 @dataclass(frozen=True)
@@ -444,9 +440,6 @@ class Exponential(Gate):
         if has_non_commuting_gate_type:
             return "exp" + POWER_GATE_SYMBOL + "{" + str(self.wrapped_gate) + "}"
         return "exp" + POWER_GATE_SYMBOL + str(self.wrapped_gate)
-
-
-POWER_GATE_SYMBOL = "^"
 
 
 @dataclass(frozen=True)
