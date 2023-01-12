@@ -170,6 +170,44 @@ class TestMatrixFactoryGate:
         assert operation.gate == gate
         assert operation.qubit_indices == (4, 1)
 
+    def test_str_on_dagger_gives_correct_representation(self):
+        gate = MatrixFactoryGate("V", example_one_qubit_matrix_factory, (1, 0), 1)
+        assert str(gate.dagger) == "V†(1, 0)"
+
+    def test_wrapping_two_times_gives_correct_string(self):
+        phi = sympy.Symbol("phi")
+        op = MatrixFactoryGate("U", example_one_qubit_matrix_factory, (phi, 1), 1)
+        T_op = _builtin_gates.T  # need a gate without params for exponentiation
+
+        # assert all permutations produce correct string
+        assert str(op.controlled(2).dagger(0)) == "c-c-U†(phi, 1)(0)"
+        assert str(T_op.controlled(2).exp(0)) == "exp^{c-c-T}(0)"
+        assert str(T_op.controlled(2).power(3)(0)) == "c-c-T^3(0)"
+        assert str(op.controlled(2).controlled(2)(0)) == "c-c-c-c-U(phi, 1)(0)"
+
+        assert str(op.dagger.controlled(2)(0)) == "c-c-U†(phi, 1)(0)"
+        assert str(T_op.dagger.exp(0)) == "exp^T†(0)"
+        assert str(T_op.dagger.power(3)(0)) == "T†^3(0)"
+        assert str(op.dagger.dagger(0)) == "U(phi, 1)(0)"
+
+        assert str(T_op.exp.dagger(0)) == "exp^T†(0)"
+        assert str(T_op.exp.controlled(2)(0)) == "c-c-exp^T(0)"
+        assert str(T_op.exp.power(3)(0)) == "{exp^T}^3(0)"
+        assert str(T_op.exp.exp(0)) == "exp^exp^T(0)"
+
+        assert str(T_op.power(3).dagger(0)) == "T†^3(0)"
+        assert str(T_op.power(3).controlled(2)(0)) == "c-c-T^3(0)"
+        assert str(T_op.power(3).exp(0)) == "exp^{T^3}(0)"
+        assert str(T_op.power(3).power(3)(0)) == "T^3^3(0)"
+
+    def test_wrapping_three_times_gives_correct_string(self):
+        T_op = _builtin_gates.T  # need a gate without params for exponentiation
+
+        # assert some permutations because there are too many to test exhaustively
+        assert str(T_op.controlled(2).dagger.exp(0)) == "exp^{c-c-T†}(0)"
+        assert str(T_op.dagger.controlled(2).power(3)(0)) == "c-c-T†^3(0)"
+        assert str(T_op.exp.controlled(2).exp(0)) == "exp^{c-c-exp^T}(0)"
+
 
 @pytest.mark.parametrize("gate", GATES_REPRESENTATIVES)
 class TestControlledGate:
@@ -212,10 +250,10 @@ class TestControlledGate:
 
         assert controlled_gate.dagger == gate.dagger.controlled(4)
 
-    def test_exp_of_controlled_gate_is_controlled_gate_wrapping_exp(self, gate):
+    def test_exp_of_controlled_gate_is_not_controlled_gate_wrapping_exp(self, gate):
         if len(gate.free_symbols) == 0:
             controlled_gate = gate.controlled(2)
-            assert controlled_gate.exp == gate.exp.controlled(2)
+            assert controlled_gate.exp != gate.exp.controlled(2)
 
     def test_power_of_controlled_gate_is_controlled_gate_wrapping_power(self, gate):
         if len(gate.free_symbols) == 0:
@@ -240,6 +278,20 @@ class TestControlledGate:
     def test_constructing_controlled_gate_with_zero_control_raises_error(self, gate):
         with pytest.raises(ValueError):
             gate.controlled(0)
+
+    def test_str_gives_correct_string_for_one_control(self, gate):
+        controlled_gate = gate.controlled(1)
+        assert str(controlled_gate) == "c-" + str(gate)
+
+    def test_str_gives_correct_string_for_multiple_controls(self, gate):
+        controlled_gate_2 = gate.controlled(2)
+        controlled_gate_5 = gate.controlled(5)
+        assert str(controlled_gate_2) == "c-" * 2 + str(gate)
+        assert str(controlled_gate_5) == "c-" * 5 + str(gate)
+
+    def test_str_gives_correct_string_for_stacking_controls(self, gate):
+        double_controlled_gate = gate.controlled(1).controlled(1)
+        assert str(double_controlled_gate) == "c-" * 2 + str(gate)
 
 
 @pytest.mark.parametrize("gate", GATES_REPRESENTATIVES)
@@ -305,6 +357,12 @@ class TestPowerGate:
                 new_params
             ).power(exponent)
 
+    def test_str_gives_correct_string(self, gate, exponent):
+        if len(gate.free_symbols) == 0:
+            power_gate = gate.power(exponent)
+            correct_str = str(gate) + f"{_gates.POWER_GATE_SYMBOL}{exponent}"
+            assert str(power_gate) == correct_str
+
 
 @pytest.mark.parametrize("gate", GATES_REPRESENTATIVES[:10])
 class TestGateExponential:
@@ -359,6 +417,10 @@ class TestGateExponential:
                 gate_exponential.replace_params(new_params)
                 == gate.replace_params(new_params).exp
             )
+
+    def test_str_gives_correct_string(self, gate):
+        if len(gate.free_symbols) == 0:
+            assert str(gate.exp) == "exp^" + str(gate)
 
 
 @pytest.mark.parametrize("gate", GATES_REPRESENTATIVES)

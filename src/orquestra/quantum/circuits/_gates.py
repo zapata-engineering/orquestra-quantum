@@ -13,6 +13,11 @@ from ..typing import ParameterizedVector
 from ._operations import Parameter, get_free_symbols, sub_symbols
 from ._unitary_tools import _lift_matrix_numpy, _lift_matrix_sympy
 
+DAGGER_GATE_NAME = "Dagger"
+CONTROLLED_GATE_NAME = "Control"
+EXPONENTIAL_GATE_NAME = "Exponential"
+POWER_GATE_SYMBOL = "^"
+
 
 @runtime_checkable
 class Gate(Protocol):
@@ -262,9 +267,6 @@ class MatrixFactoryGate:
     __call__ = Gate.__call__
 
 
-CONTROLLED_GATE_NAME = "Control"
-
-
 @dataclass(frozen=True)
 class ControlledGate(Gate):
     wrapped_gate: Gate
@@ -310,10 +312,7 @@ class ControlledGate(Gate):
 
     @property
     def exp(self) -> "Gate":
-        return ControlledGate(
-            wrapped_gate=self.wrapped_gate.exp,
-            num_control_qubits=self.num_control_qubits,
-        )
+        return Exponential(self)
 
     def power(self, exponent: float) -> "Gate":
         return ControlledGate(
@@ -329,8 +328,8 @@ class ControlledGate(Gate):
             self.num_control_qubits
         )
 
-
-DAGGER_GATE_NAME = "Dagger"
+    def __str__(self):
+        return self.num_control_qubits * "c-" + str(self.wrapped_gate)
 
 
 @dataclass(frozen=True)
@@ -373,8 +372,11 @@ class Dagger(Gate):
     def power(self, exponent: float) -> "Gate":
         return Power(self, exponent)
 
-
-EXPONENTIAL_GATE_NAME = "Exponential"
+    def __str__(self):
+        wrapped_string = str(self.wrapped_gate)
+        before_and_after_params = wrapped_string.split("(")
+        before_and_after_params[0] += "†"
+        return "(".join(before_and_after_params)
 
 
 @dataclass(frozen=True)
@@ -383,9 +385,7 @@ class Exponential(Gate):
 
     def __post_init__(self):
         if len(self.wrapped_gate.free_symbols) > 0:
-            raise ValueError(
-                "On gates with free symbols the exponential cannot be performed"
-            )
+            raise ValueError("Cannot be perform exponential on gates with free symbols")
 
     @property
     def matrix(self) -> sympy.Matrix:
@@ -404,7 +404,7 @@ class Exponential(Gate):
         return EXPONENTIAL_GATE_NAME
 
     def controlled(self, num_control_qubits: int) -> Gate:
-        return self.wrapped_gate.controlled(num_control_qubits).exp
+        return ControlledGate(self, num_control_qubits)
 
     def bind(self, symbols_map) -> "Gate":
         raise NotImplementedError(
@@ -425,8 +425,10 @@ class Exponential(Gate):
     def power(self, exponent: float) -> "Gate":
         return Power(self, exponent)
 
-
-POWER_GATE_SYMBOL = "^"
+    def __str__(self):
+        if check_has_non_commuting_gate_type(self, [ControlledGate, Power]):
+            return "exp" + POWER_GATE_SYMBOL + "{" + str(self.wrapped_gate) + "}"
+        return "exp" + POWER_GATE_SYMBOL + str(self.wrapped_gate)
 
 
 @dataclass(frozen=True)
@@ -436,7 +438,7 @@ class Power(Gate):
 
     def __post_init__(self):
         if len(self.wrapped_gate.free_symbols) > 0:
-            raise ValueError("Gates with free symbols cannot be exponentiated")
+            raise ValueError("Cannot return power of gates with free symbols")
 
     @property
     def name(self) -> str:
@@ -479,6 +481,14 @@ class Power(Gate):
 
     def replace_params(self, new_params: Tuple[Parameter, ...]) -> "Gate":
         return self.wrapped_gate.replace_params(new_params).power(self.exponent)
+
+    def __str__(self):
+        if check_has_non_commuting_gate_type(self, [Exponential]):
+            inner_string = "{" + str(self.wrapped_gate) + "}"
+        else:
+            inner_string = str(self.wrapped_gate)
+
+        return inner_string + POWER_GATE_SYMBOL + str(self.exponent)
 
 
 def _n_qubits(matrix):
@@ -596,3 +606,16 @@ def _are_matrices_equal(matrix, another_matrix):
         _are_matrix_elements_equal(element, another_element)
         for element, another_element in zip(matrix, another_matrix)
     )
+
+
+def check_has_non_commuting_gate_type(self, non_commuting_gate_types):
+    wrapped_gate = self.wrapped_gate
+    has_non_commuting_gate_type = False
+    while True:
+        if type(self.wrapped_gate) in non_commuting_gate_types:
+            has_non_commuting_gate_type = True
+        if hasattr(wrapped_gate, "wrapped_gate"):
+            wrapped_gate = wrapped_gate.wrapped_gate
+        else:
+            break
+    return has_non_commuting_gate_type
