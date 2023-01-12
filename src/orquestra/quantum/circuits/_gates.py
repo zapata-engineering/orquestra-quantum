@@ -426,18 +426,7 @@ class Exponential(Gate):
         return Power(self, exponent)
 
     def __str__(self):
-        non_commuting_gate_types = [ControlledGate, Power]
-        wrapped_gate = self.wrapped_gate
-        has_non_commuting_gate_type = False
-        while True:
-            if type(self.wrapped_gate) in non_commuting_gate_types:
-                has_non_commuting_gate_type = True
-            if hasattr(wrapped_gate, "wrapped_gate"):
-                wrapped_gate = wrapped_gate.wrapped_gate
-            else:
-                break
-
-        if has_non_commuting_gate_type:
+        if test_has_non_commuting_gate_type(self, [ControlledGate, Power]):
             return "exp" + POWER_GATE_SYMBOL + "{" + str(self.wrapped_gate) + "}"
         return "exp" + POWER_GATE_SYMBOL + str(self.wrapped_gate)
 
@@ -494,18 +483,7 @@ class Power(Gate):
         return self.wrapped_gate.replace_params(new_params).power(self.exponent)
 
     def __str__(self):
-        non_commuting_gate_types = [Exponential]
-        wrapped_gate = self.wrapped_gate
-        has_non_commuting_gate_type = False
-        while True:
-            if type(self.wrapped_gate) in non_commuting_gate_types:
-                has_non_commuting_gate_type = True
-            if hasattr(wrapped_gate, "wrapped_gate"):
-                wrapped_gate = wrapped_gate.wrapped_gate
-            else:
-                break
-
-        if has_non_commuting_gate_type:
+        if test_has_non_commuting_gate_type(self, [Exponential]):
             inner_string = "{" + str(self.wrapped_gate) + "}"
         else:
             inner_string = str(self.wrapped_gate)
@@ -628,3 +606,16 @@ def _are_matrices_equal(matrix, another_matrix):
         _are_matrix_elements_equal(element, another_element)
         for element, another_element in zip(matrix, another_matrix)
     )
+
+
+def test_has_non_commuting_gate_type(self, non_commuting_gate_types):
+    wrapped_gate = self.wrapped_gate
+    has_non_commuting_gate_type = False
+    while True:
+        if type(self.wrapped_gate) in non_commuting_gate_types:
+            has_non_commuting_gate_type = True
+        if hasattr(wrapped_gate, "wrapped_gate"):
+            wrapped_gate = wrapped_gate.wrapped_gate
+        else:
+            break
+    return has_non_commuting_gate_type
