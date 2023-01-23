@@ -185,6 +185,7 @@ from ._generators import (
     create_layer_of_gates,
 )
 from ._itertools import (
+    combine_bitstrings,
     combine_measurement_counts,
     expand_sample_sizes,
     split_into_batches,
