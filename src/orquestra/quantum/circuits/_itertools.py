@@ -165,7 +165,7 @@ def combine_measurement_counts(
     Returns:
         Sequence of combined measurements of length equal len(multiplicities)
     Raises:
-        ValueError: if len(all_measurements != sum(multiplicities)
+        ValueError: if len(all_measurements) != sum(multiplicities)
     """
     if len(all_measurements) != (sum_multiplicities := sum(multiplicities)):
         raise ValueError(
