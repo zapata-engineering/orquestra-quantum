@@ -3,6 +3,7 @@ import pytest
 from orquestra.quantum.circuits import CNOT, H, X
 from orquestra.quantum.circuits._circuit import Circuit
 from orquestra.quantum.circuits._itertools import (
+    combine_bitstrings,
     combine_measurement_counts,
     expand_sample_sizes,
     split_into_batches,
@@ -137,5 +138,52 @@ class TestCombiningMeasurements:
             for actual, expected in zip(
                 combine_measurement_counts(all_counts, multiplicities),
                 combined_counts,
+            )
+        )
+
+
+class TestCombiningBitstrings:
+    def test_raises_error_when_multiplicities_dont_match_measurements(self):
+        multiplicities = [1, 2, 3, 2, 2]
+        # Clearly a mismatch, we should have 10 bitstring sequences
+        measurements = [["00", "11"] for _ in range(5)]
+
+        with pytest.raises(ValueError):
+            combine_measurement_counts(measurements, multiplicities)
+
+    @pytest.mark.parametrize(
+        "all_bitstrings, multiplicities, combined_bitstrings",
+        [
+            ([["00", "11"]], [1], [["00", "11"]]),
+            (
+                [
+                    ["00", "11"],
+                    ["01", "00"],
+                    ["00", "00"],
+                    ["000"],
+                    ["111", "001"],
+                    ["00000"],
+                    ["0", "0", "0"],
+                    ["1", "0"],
+                    ["0", "0"],
+                ],
+                [3, 2, 1, 3],
+                [
+                    ["00", "11", "01", "00", "00", "00"],
+                    ["000", "111", "001"],
+                    ["00000"],
+                    ["0", "0", "0", "1", "0", "0", "0"],
+                ],
+            ),
+        ],
+    )
+    def test_counts_of_combined_bitstrings_are_correct(
+        self, all_bitstrings, multiplicities, combined_bitstrings
+    ):
+        assert all(
+            actual == expected
+            for actual, expected in zip(
+                combine_bitstrings(all_bitstrings, multiplicities),
+                combined_bitstrings,
             )
         )
