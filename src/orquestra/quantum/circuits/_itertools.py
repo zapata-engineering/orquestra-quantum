@@ -197,7 +197,7 @@ def combine_bitstrings(
     ]
 
     Args:
-        all_bitstrings: iterable of sequences containing bitstrings
+        all_bitstrings: sequence of lists containing bitstrings
           gathered from some, possibly duplicated, circuits. The bitstrings
           lists objects corresponding to the same circuit should be placed next
           to each other. Should have the same length as sum(multiplicities).
