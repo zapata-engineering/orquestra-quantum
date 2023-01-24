@@ -130,6 +130,26 @@ def u3_matrix(theta, phi, lambda_):
     )
 
 
+def gpi_matrix(theta):
+    """Based on https://ionq.com/docs/getting-started-with-native-gates"""
+    return sympy.Matrix(
+        [
+            [0, sympy.exp(-1j * theta)],
+            [sympy.exp(1j * theta), 0],
+        ]
+    )
+
+
+def gpi2_matrix(theta):
+    """Based on https://ionq.com/docs/getting-started-with-native-gates"""
+    return (2 ** (-0.5)) * sympy.Matrix(
+        [
+            [1, -1j * sympy.exp(-1j * theta)],
+            [-1j * sympy.exp(1j * theta), 1],
+        ]
+    )
+
+
 # --- non-parametric two qubit gates ---
 
 
@@ -217,6 +237,18 @@ def xy_matrix(angle):
             [0, sympy.cos(angle / 2), 1j * sympy.sin(angle / 2), 0],
             [0, 1j * sympy.sin(angle / 2), sympy.cos(angle / 2), 0],
             [0, 0, 0, 1],
+        ]
+    )
+
+
+def ms_matrix(phi_0, phi_1):
+    """Based on https://ionq.com/docs/getting-started-with-native-gates"""
+    return (2 ** (-0.5)) * sympy.Matrix(
+        [
+            [1, 0, 0, -1j * sympy.exp(-1j * (phi_0 + phi_1))],
+            [0, 1, -1j * sympy.exp(-1j * (phi_0 - phi_1)), 0],
+            [0, -1j * sympy.exp(1j * (phi_0 - phi_1)), 1, 0],
+            [-1j * sympy.exp(1j * (phi_0 + phi_1)), 0, 0, 1],
         ]
     )
 

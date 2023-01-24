@@ -32,6 +32,9 @@ class TestBuiltinGatesProperties:
             _builtin_gates.ZZ(0.3),
             _builtin_gates.PHASE(1),
             _builtin_gates.CPHASE(0.1),
+            _builtin_gates.GPi(0.1),
+            _builtin_gates.GPi2(0.1),
+            _builtin_gates.MS(0.1, 0.2),
             _builtin_gates.Delay(0.5),
         ],
     )
