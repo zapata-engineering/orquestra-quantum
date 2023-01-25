@@ -28,6 +28,8 @@ GATES_REPRESENTATIVES = [
     _builtin_gates.RZ(0),
     _builtin_gates.PHASE(sympy.pi / 5),
     _builtin_gates.U3(np.pi, sympy.pi / 2, sympy.Symbol("x")),
+    _builtin_gates.GPi(sympy.Symbol("theta")),
+    _builtin_gates.GPi2(sympy.Symbol("theta")),
     _builtin_gates.CZ,
     _builtin_gates.CNOT,
     _builtin_gates.SWAP,
@@ -36,6 +38,7 @@ GATES_REPRESENTATIVES = [
     _builtin_gates.YY(sympy.pi),
     _builtin_gates.ZZ(sympy.Symbol("x") + sympy.Symbol("y")),
     _builtin_gates.CPHASE(1.5),
+    _builtin_gates.MS(sympy.Symbol("theta"), np.pi / 2),
 ]
 
 POWER_GATE_EXPONENTS = [-2.0, 0, 0.5, 1.0]

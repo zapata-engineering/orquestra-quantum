@@ -54,6 +54,8 @@ RZ = make_parametric_gate_prototype("RZ", _matrices.rz_matrix, 1)
 RH = make_parametric_gate_prototype("RH", _matrices.rh_matrix, 1)
 PHASE = make_parametric_gate_prototype("PHASE", _matrices.phase_matrix, 1)
 U3 = make_parametric_gate_prototype("U3", _matrices.u3_matrix, 1)
+GPi = make_parametric_gate_prototype("GPi", _matrices.gpi_matrix, 1, is_hermitian=True)
+GPi2 = make_parametric_gate_prototype("GPi2", _matrices.gpi2_matrix, 1)
 
 
 # --- non-parametric, two qubit gates ---
@@ -71,6 +73,7 @@ XX = make_parametric_gate_prototype("XX", _matrices.xx_matrix, 2)
 YY = make_parametric_gate_prototype("YY", _matrices.yy_matrix, 2)
 ZZ = make_parametric_gate_prototype("ZZ", _matrices.zz_matrix, 2)
 XY = make_parametric_gate_prototype("XY", _matrices.xy_matrix, 2)
+MS = make_parametric_gate_prototype("MS", _matrices.ms_matrix, 2)
 
 
 # --- misc ----
