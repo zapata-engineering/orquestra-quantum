@@ -2,7 +2,7 @@ from collections import Counter
 from functools import reduce
 from itertools import islice
 from math import ceil
-from typing import Dict, Iterable, Sequence, Tuple, TypeVar
+from typing import Dict, Iterable, List, Sequence, Tuple, TypeVar
 
 T = TypeVar("T")
 
@@ -140,7 +140,7 @@ def _combine_measurements(
 
 def combine_measurement_counts(
     all_measurements: Sequence[Dict[str, int]], multiplicities: Sequence[int]
-) -> Sequence[Dict[str, int]]:
+) -> List[Dict[str, int]]:
     """Combine (aggregate) measurements of the same circuits run several times.
 
     Suppose multiplicities is a list [1, 2 ,3]. Then, the all_measurements should
@@ -165,7 +165,7 @@ def combine_measurement_counts(
     Returns:
         Sequence of combined measurements of length equal len(multiplicities)
     Raises:
-        ValueError: if len(all_measurements != sum(multiplicities)
+        ValueError: if len(all_measurements) != sum(multiplicities)
     """
     if len(all_measurements) != (sum_multiplicities := sum(multiplicities)):
         raise ValueError(
@@ -176,5 +176,50 @@ def combine_measurement_counts(
     measurements_it = iter(all_measurements)
     return [
         reduce(_combine_measurements, islice(measurements_it, multiplicity))
+        for multiplicity in multiplicities
+    ]
+
+
+def combine_bitstrings(
+    all_bitstrings: Sequence[List[str]], multiplicities: Sequence[int]
+) -> List[List[str]]:
+    """Combine (aggregate) bitstrings of the same circuits run several times.
+
+    Suppose multiplicities is a list [1, 2 ,3]. Then, the all_bitstrings should
+    be a sequence of 1+2+3=6 elements, each of them being a sequence of bitstrings.
+    For instance, all_bitstrings could be equal to:
+    [["00", "01"], ["1", "0"], ["0"], ["001", "001"], ["111", "000"], ["000"]]
+    and then the result would be:
+    [
+        ["00", "01"],
+        ["1", "0", "0],
+        ["001", "001", "111", "000", "000"]
+    ]
+
+    Args:
+        all_bitstrings: sequence of lists containing bitstrings
+          gathered from some, possibly duplicated, circuits. The bitstrings
+          lists objects corresponding to the same circuit should be placed next
+          to each other. Should have the same length as sum(multiplicities).
+        multiplicities: sequence of positive integers marking groups of
+          consecutive measurements corresponding to the same circuit. For
+          instance, multiplicities [1, 2, 3] mean that first group of
+          bitstrings comprises 1 sequence, second group comprises 2
+          consecutive sequences, third group contains 3 consecutive
+          sequences and so on.
+    Returns:
+        Sequence of combined measurements of length equal len(multiplicities)
+    Raises:
+        ValueError: if len(all_bitstrings) != sum(multiplicities)
+    """
+    if len(all_bitstrings) != (sum_multiplicities := sum(multiplicities)):
+        raise ValueError(
+            "Mismatch between multiplicities and number of measurements to combine. "
+            f"Got {len(all_bitstrings)} bitstrings lists objects to combine "
+            f"but multiplicities sum to {sum_multiplicities}"
+        )
+    bitstrings_it = iter(all_bitstrings)
+    return [
+        sum(islice(bitstrings_it, multiplicity), start=[])
         for multiplicity in multiplicities
     ]
