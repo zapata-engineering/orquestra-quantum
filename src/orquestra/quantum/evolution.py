@@ -47,7 +47,7 @@ def time_evolution(
 
 
 def time_evolution_for_term(term: PauliTerm, time: Union[float, sympy.Expr]) -> Circuit:
-    """returns a circuit which evolves a Pauli term for a given time.
+    """Returns a circuit which evolves a Pauli term for a given time.
     Based on section 4 from https://arxiv.org/abs/1001.3855 .
     Args:
         term: Pauli term to be evolved
