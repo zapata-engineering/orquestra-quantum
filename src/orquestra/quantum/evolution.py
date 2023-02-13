@@ -2,9 +2,7 @@
 # © Copyright 2020-2022 Zapata Computing Inc.
 ################################################################################
 """Functions for constructing circuits simulating evolution under given Hamiltonian."""
-import operator
 import warnings
-from functools import reduce
 from itertools import chain
 from typing import List, Optional, Tuple, Union
 
@@ -19,35 +17,37 @@ def time_evolution(
     hamiltonian: PauliRepresentation,
     time: Union[float, sympy.Expr],
     method: str = "Trotter",
-    trotter_order: int = 1,
+    n_steps: int = 1,
 ) -> Circuit:
-    """Create a circuit simulating evolution under given Hamiltonian.
+    """Create a circuit simulating evolution under given Hamiltonian. First, we
+    split the hamiltonian into n_steps with e^{-i t H} = prod_{j=1}^n e^{-i t/n H}.
+    We approximate each term e^{-i t/n H} ≈ prod_{k=1}^m e^{-i t/n H_k} + O((t/n)^2).
+    So then e^{-i t H} ≈ prod_{j=1}^n prod_{k=1}^m e^{-i t/n H_k} + O((t/n)^2).
+    Thus, we can approximate the given hamiltonian to precision O((time / n_steps)^2).
 
     Args:
         hamiltonian: The Hamiltonian to be evolved under.
         time: Time duration of the evolution.
         method: Time evolution method. Currently the only option is 'Trotter'.
-        trotter_order: order of Trotter evolution (1 by default).
+        n_steps: number of time steps in the approximation (1 by default).
 
     Returns:
-        Circuit approximating evolution under `hamiltonian`.
-        Circuit's unitary i approximately equal to exp(-i * time * hamiltonian).
+        Circuit approximating exp(-i * time * hamiltonian) to order
+          O((time / n_steps)^2).
     """
     if method != "Trotter":
         raise ValueError(f"Currently the method {method} is not supported.")
 
-    return reduce(
-        operator.add,
-        (
-            time_evolution_for_term(term, time / trotter_order)
-            for _index_order in range(trotter_order)
-            for term in hamiltonian.terms
-        ),
-    )
+    # concatenate the circuits for each term
+    circuit = Circuit()
+    for _ in range(n_steps):
+        for term in hamiltonian.terms:
+            circuit += time_evolution_for_term(term, time / n_steps)
+    return circuit
 
 
 def time_evolution_for_term(term: PauliTerm, time: Union[float, sympy.Expr]) -> Circuit:
-    """Evolves a Pauli term for a given time and returns a circuit representing it.
+    """returns a circuit which evolves a Pauli term for a given time.
     Based on section 4 from https://arxiv.org/abs/1001.3855 .
     Args:
         term: Pauli term to be evolved
@@ -56,10 +56,8 @@ def time_evolution_for_term(term: PauliTerm, time: Union[float, sympy.Expr]) -> 
         Circuit representing evolved term.
     """
 
-    base_changes = []
-    base_reversals = []
-    cnot_gates = []
-    central_gate: Optional[GateOperation] = None
+    basis_change = Circuit()
+    cnot_gates = Circuit()
     qubit_indices = sorted(term.qubits)
 
     circuit = Circuit()
@@ -72,32 +70,19 @@ def time_evolution_for_term(term: PauliTerm, time: Union[float, sympy.Expr]) -> 
         raise ValueError("Coefficients of terms must be real for Trotterization.")
 
     for i, qubit_id in enumerate(qubit_indices):
-        term_type = term[qubit_id]
-        if term_type == "X":
-            base_changes.append(H(qubit_id))
-            base_reversals.append(H(qubit_id))
-        elif term_type == "Y":
-            base_changes.append(RX(np.pi / 2)(qubit_id))
-            base_reversals.append(RX(-np.pi / 2)(qubit_id))
+        if term[qubit_id] == "X":
+            basis_change += H(qubit_id)
+        elif term[qubit_id] == "Y":
+            basis_change += RX(np.pi / 2)(qubit_id)
         if i == len(term.operations) - 1:
             central_gate = RZ(2 * time * term.coefficient.real)(qubit_id)
         else:
-            cnot_gates.append(CNOT(qubit_id, qubit_indices[i + 1]))
+            cnot_gates += CNOT(qubit_id, qubit_indices[i + 1])
 
-    for gate in base_changes:
-        circuit += gate
-
-    for gate in cnot_gates:
-        circuit += gate
-
-    if central_gate is not None:
-        circuit += central_gate
-
-    for gate in reversed(cnot_gates):
-        circuit += gate
-
-    for gate in base_reversals:
-        circuit += gate
+    # implement e^(-i * time * Z_1 * Z_2 * ... * Z_n)
+    all_z_rotation = cnot_gates + central_gate + cnot_gates.inverse()
+    # change the rotation to be in the diagonal basis of term
+    circuit = basis_change + all_z_rotation + basis_change.inverse()
 
     return circuit
 
@@ -106,7 +91,7 @@ def time_evolution_derivatives(
     hamiltonian: PauliRepresentation,
     time: float,
     method: str = "Trotter",
-    trotter_order: int = 1,
+    n_steps: int = 1,
 ) -> Tuple[List[Circuit], List[float]]:
     """Generates derivative circuits for the time evolution operator defined in
     function time_evolution
@@ -116,7 +101,7 @@ def time_evolution_derivatives(
             coefficients, symbolic expressions aren't supported.
         time: time duration of the evolution.
         method: time evolution method. Currently the only option is 'Trotter'.
-        trotter_order: order of Trotter evolution
+        n_steps: number of time steps in the approximation (1 by default).
 
     Returns:
         A Circuit simulating time evolution.
@@ -138,33 +123,33 @@ def time_evolution_derivatives(
                     "Only real coefficients are supported. The imaginary part of the "
                     "term {} will be ignored.".format(term_1)
                 )
-            r = term_1.coefficient.real / trotter_order
+            r = term_1.coefficient.real / n_steps
             output_factors.append(r * factor)
             shift = factor * (np.pi / (4.0 * r))
 
             for j, term_2 in enumerate(terms):
                 output += time_evolution_for_term(
                     term_2,
-                    (time + shift) / trotter_order if i == j else time / trotter_order,
+                    (time + shift) / n_steps if i == j else time / n_steps,
                 )
 
             single_trotter_derivatives.append(output)
 
-    if trotter_order > 1:
+    if n_steps > 1:
         output_circuits = []
         final_factors = []
 
         repeated_circuit = time_evolution(
-            hamiltonian, time, method="Trotter", trotter_order=1
+            hamiltonian, time, method="Trotter", n_steps=1
         )
 
-        for position in range(trotter_order):
+        for position in range(n_steps):
             for factor, different_circuit in zip(
                 output_factors, single_trotter_derivatives
             ):
                 output_circuits.append(
                     _generate_circuit_sequence(
-                        repeated_circuit, different_circuit, trotter_order, position
+                        repeated_circuit, different_circuit, n_steps, position
                     )
                 )
                 final_factors.append(factor)
