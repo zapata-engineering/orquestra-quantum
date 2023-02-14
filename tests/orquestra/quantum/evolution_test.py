@@ -24,8 +24,8 @@ TUPLE_TERM_TO_ORQUESTRA_GATE = {
 }
 
 
-def _orquestra_exponentiate_qubit_hamiltonian_term(term, time, trotter_order):
-    base_exponent = 2 * time / trotter_order / np.pi
+def _orquestra_exponentiate_qubit_hamiltonian_term(term, time, n_steps):
+    base_exponent = 2 * time / n_steps / np.pi
 
     base_gate = TUPLE_TERM_TO_ORQUESTRA_GATE[tuple(sorted(term.operations))]
     # This introduces a phase to the gate, but that's fine
@@ -40,10 +40,10 @@ def _orquestra_exponentiate_qubit_hamiltonian_term(term, time, trotter_order):
     return zquant_mat
 
 
-def _orquestra_exponentiate_hamiltonian(hamiltonian, time, trotter_order):
+def _orquestra_exponentiate_hamiltonian(hamiltonian, time, n_steps):
     ops = []
     for term in hamiltonian.terms:
-        mat = _orquestra_exponentiate_qubit_hamiltonian_term(term, time, trotter_order)
+        mat = _orquestra_exponentiate_qubit_hamiltonian_term(term, time, n_steps)
         ops.append(
             circuits.CustomGateDefinition(
                 gate_name="custom_a",
@@ -52,7 +52,7 @@ def _orquestra_exponentiate_hamiltonian(hamiltonian, time, trotter_order):
             )()(0, 1)
         )
 
-    circuit = Circuit(operations=ops * trotter_order)
+    circuit = Circuit(operations=ops * n_steps)
 
     return circuit
 
@@ -115,7 +115,7 @@ class TestTimeEvolutionOfPauliSum:
         )
 
         reference_unitary = expected_orquestra_circuit.to_unitary()
-        unitary = time_evolution(hamiltonian, time, trotter_order=order).to_unitary()
+        unitary = time_evolution(hamiltonian, time, n_steps=order).to_unitary()
 
         assert compare_unitary(unitary, reference_unitary, tol=1e-10)
 
@@ -134,7 +134,7 @@ class TestTimeEvolutionOfPauliSum:
         reference_unitary = expected_orquestra_circuit.to_unitary()
 
         unitary = (
-            time_evolution(hamiltonian, time_symbol, trotter_order=order)
+            time_evolution(hamiltonian, time_symbol, n_steps=order)
             .bind(symbols_map)
             .to_unitary()
         )
@@ -218,7 +218,7 @@ class TestTimeEvolutionDerivatives:
         reference_factors_2 = [-1.0 * x for x in reference_factors_1]
 
         derivatives, factors = time_evolution_derivatives(
-            hamiltonian, time, trotter_order=order
+            hamiltonian, time, n_steps=order
         )
 
         assert len(derivatives) == order * 2 * len(hamiltonian.terms)
