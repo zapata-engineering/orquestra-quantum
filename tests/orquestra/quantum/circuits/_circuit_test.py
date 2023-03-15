@@ -270,3 +270,26 @@ class TestCircuitInverse:
         circuit = Circuit(operations=[gate])
         with pytest.raises(AttributeError):
             circuit.inverse()
+
+
+@pytest.mark.parametrize(
+    "circuit, target_circuit",
+    [
+        (Circuit([X(0)]), Circuit([X.controlled(1)(0, 1)])),
+        (Circuit([H(0)]), Circuit([H.controlled(1)(0, 1)])),
+        (Circuit([CNOT(0, 1)]), Circuit([CNOT.controlled(1)(0, 1, 2)])),
+        (
+            Circuit([X(0), CNOT(0, 1)]),
+            Circuit([X.controlled(1)(0, 1), CNOT.controlled(1)(0, 1, 2)]),
+        ),
+        (
+            Circuit([X(2), CNOT(0, 1)]),
+            Circuit([X.controlled(1)(0, 3), CNOT.controlled(1)(0, 1, 2)]),
+        ),
+    ],
+)
+def test_controlled_circuit_gives_correct_output(circuit, target_circuit):
+    test_circuit = circuit.controlled()
+
+    assert test_circuit.n_qubits == target_circuit.n_qubits
+    assert test_circuit == target_circuit

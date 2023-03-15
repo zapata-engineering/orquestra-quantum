@@ -165,6 +165,17 @@ class Circuit:
                 " since there are operators in it without the `dagger` method."
             ) from e
 
+    def controlled(self):
+        """Return a circuit where all the operations from self are turned into their
+        respective controlled operations whose control is the 0th qubit."""
+        c_ops = []
+        for op in self.operations:
+            controlled_op = op.gate.controlled(1)
+            new_qubit_indices = (0, *(i + 1 for i in op.qubit_indices))
+            c_ops.append(controlled_op(*new_qubit_indices))
+
+        return Circuit(c_ops)
+
 
 @singledispatch
 def _append_to_circuit(other, circuit: Circuit):
