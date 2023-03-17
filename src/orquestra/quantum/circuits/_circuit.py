@@ -165,7 +165,7 @@ class Circuit:
                 " since there are operators in it without the `dagger` method."
             ) from e
 
-    def controlled(self, control_index) -> "Circuit":
+    def controlled(self, control_index: int) -> "Circuit":
         """Return a circuit where all the operations from self are turned into their
         respective controlled operations whose control is the qubit with index given
         by control_index.
