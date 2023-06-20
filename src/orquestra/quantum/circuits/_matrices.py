@@ -51,6 +51,24 @@ def t_matrix():
     )
 
 
+def reset_matrix():
+    return sympy.Matrix(
+        [
+            [1, 0],
+            [0, 0],
+        ]
+    )
+
+
+def sx_matrix():
+    return sympy.Matrix(
+        [
+            [1, 0],
+            [0, 0],
+        ]
+    )
+
+
 # --- gates with a single param ---
 
 
