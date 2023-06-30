@@ -51,20 +51,11 @@ def t_matrix():
     )
 
 
-def reset_matrix():
-    return sympy.Matrix(
-        [
-            [1, 0],
-            [0, 0],
-        ]
-    )
-
-
 def sx_matrix():
     return sympy.Matrix(
         [
-            [1, 0],
-            [0, 0],
+            [(1 + 1j) / 2, (1 - 1j) / 2],
+            [(1 - 1j) / 2, (1 + 1j) / 2],
         ]
     )
 
@@ -271,9 +262,21 @@ def ms_matrix(phi_0, phi_1):
     )
 
 
+# --- misc ---
+
+
 def delay_matrix(_duration):
     # Note that _duration parameter is not used when constructing the
     # matrix, because Delay always acts as identity.
     # Therefore, the Delay gate will always evaluate to identity on simulator,
     # but it will have an effect if used on an actual hardware.
     return i_matrix()
+
+
+def reset_matrix():
+    return sympy.Matrix(
+        [
+            [1, 0],
+            [0, 0],
+        ]
+    )

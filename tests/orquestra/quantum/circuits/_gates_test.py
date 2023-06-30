@@ -7,7 +7,6 @@ from unittest.mock import Mock
 import numpy as np
 import pytest
 import sympy
-
 from orquestra.quantum.circuits import _builtin_gates, _gates
 from orquestra.quantum.circuits._gates import (
     Exponential,
@@ -23,6 +22,7 @@ GATES_REPRESENTATIVES = [
     _builtin_gates.T,
     _builtin_gates.H,
     _builtin_gates.I,
+    _builtin_gates.SX,
     _builtin_gates.RX(sympy.Symbol("theta")),
     _builtin_gates.RY(0.5),
     _builtin_gates.RZ(0),
@@ -39,6 +39,7 @@ GATES_REPRESENTATIVES = [
     _builtin_gates.ZZ(sympy.Symbol("x") + sympy.Symbol("y")),
     _builtin_gates.CPHASE(1.5),
     _builtin_gates.MS(sympy.Symbol("theta"), np.pi / 2),
+    _builtin_gates.RESET,
 ]
 
 POWER_GATE_EXPONENTS = [-2.0, 0, 0.5, 1.0]
