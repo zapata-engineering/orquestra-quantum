@@ -7,6 +7,7 @@ from unittest.mock import Mock
 import numpy as np
 import pytest
 import sympy
+
 from orquestra.quantum.circuits import _builtin_gates, _gates
 from orquestra.quantum.circuits._gates import (
     Exponential,
