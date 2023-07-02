@@ -37,7 +37,6 @@ class TestBuiltinGatesProperties:
             _builtin_gates.GPi2(0.1),
             _builtin_gates.MS(0.1, 0.2),
             _builtin_gates.Delay(0.5),
-            _builtin_gates.RESET,
         ],
     )
     def test_gates_matrix_equals_its_adjoint_iff_gate_is_hermitian(self, gate):

@@ -40,7 +40,6 @@ GATES_REPRESENTATIVES = [
     _builtin_gates.ZZ(sympy.Symbol("x") + sympy.Symbol("y")),
     _builtin_gates.CPHASE(1.5),
     _builtin_gates.MS(sympy.Symbol("theta"), np.pi / 2),
-    _builtin_gates.RESET,
 ]
 
 POWER_GATE_EXPONENTS = [-2.0, 0, 0.5, 1.0]

@@ -82,6 +82,3 @@ MS = make_parametric_gate_prototype("MS", _matrices.ms_matrix, 2)
 Delay = make_parametric_gate_prototype(
     "Delay", _matrices.delay_matrix, 1, is_hermitian=True
 )
-RESET = _gates.MatrixFactoryGate(
-    "RESET", _matrices.reset_matrix, (), 1, is_hermitian=True
-)
