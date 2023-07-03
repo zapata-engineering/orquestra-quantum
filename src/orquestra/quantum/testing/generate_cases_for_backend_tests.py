@@ -23,6 +23,12 @@ X = sympy.Matrix([[0, 1], [1, 0]])
 Y = sympy.Matrix([[0, -sympy.I], [sympy.I, 0]])
 Z = sympy.Matrix([[1, 0], [0, -1]])
 S = sympy.Matrix([[1, 0], [0, sympy.I]])
+SX = sympy.Matrix(
+    [
+        [(1 + sympy.I) / 2, (1 - sympy.I) / 2],
+        [(1 - sympy.I) / 2, (1 + sympy.I) / 2],
+    ]
+)
 T = sympy.Matrix([[1, 0], [0, (1 + sympy.I) / sympy.sqrt(2)]])
 
 CNOT = sympy.Matrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 0, 1], [0, 0, 1, 0]])
@@ -322,6 +328,7 @@ def main():
     generate_cases_1_qubit_exp_vals(Z, "Z")
     generate_cases_1_qubit_exp_vals(H, "H")
     generate_cases_1_qubit_exp_vals(S, "S")
+    generate_cases_1_qubit_exp_vals(SX, "SX")
     generate_cases_1_qubit_exp_vals(T, "T")
     print("-" * 10)
     print("2 qubit gates")

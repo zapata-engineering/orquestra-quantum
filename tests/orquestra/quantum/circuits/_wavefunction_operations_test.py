@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 import sympy
 
-from orquestra.quantum.circuits import MultiPhaseOperation
+from orquestra.quantum.circuits import Circuit, H, MultiPhaseOperation, ResetOperation
 
 
 class TestMultiPhaseOperation:
@@ -156,3 +156,16 @@ class TestMultiPhaseOperation:
     ):
         operation = MultiPhaseOperation(params)
         assert operation.free_symbols == expected_free_symbols
+
+
+class TestResetOperation:
+    def test_apply_throws_error(self):
+        wavefunction = np.array([1, 0, 0, 0])
+        operation = ResetOperation(1)
+        with pytest.raises(RuntimeError):
+            operation.apply(wavefunction)
+
+    def test_reset_operation_in_circuit(self):
+        circuit = Circuit([H(0), ResetOperation(0)])
+        with pytest.raises(ValueError):
+            circuit.to_unitary()

@@ -51,6 +51,15 @@ def t_matrix():
     )
 
 
+def sx_matrix():
+    return sympy.Matrix(
+        [
+            [(1 + 1j) / 2, (1 - 1j) / 2],
+            [(1 - 1j) / 2, (1 + 1j) / 2],
+        ]
+    )
+
+
 # --- gates with a single param ---
 
 
@@ -251,6 +260,9 @@ def ms_matrix(phi_0, phi_1):
             [-1j * sympy.exp(1j * (phi_0 + phi_1)), 0, 0, 1],
         ]
     )
+
+
+# --- misc ---
 
 
 def delay_matrix(_duration):

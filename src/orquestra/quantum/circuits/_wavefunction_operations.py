@@ -1,7 +1,7 @@
 ################################################################################
 # © Copyright 2021-2022 Zapata Computing Inc.
 ################################################################################
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from functools import singledispatch
 from numbers import Complex
 from typing import Iterable, Tuple
@@ -85,4 +85,34 @@ class MultiPhaseOperation:
         - a `RX(sympy.sympify("theta * alpha")).bind({sympy.Symbol("theta"): 0.42})`
             gate has one free symbol, `alpha`
         """
+        return get_free_symbols(self.params)
+
+
+@dataclass
+class ResetOperation:
+    """Operation resetting a given qubit to the |0> state.
+    Cannot be implmented in orquestra because the result would not be a valid
+    wavefunction. However we include it to perform circuit conversions."""
+
+    params: Tuple[Parameter, ...] = ()
+
+    def __init__(self, qubit_index: int):
+        self.qubit_indices = (qubit_index,)
+
+    def bind(self, symbols_map) -> "ResetOperation":
+        return self.replace_params(
+            tuple(sub_symbols(param, symbols_map) for param in self.params)
+        )
+
+    def replace_params(self, new_params: Tuple[Parameter, ...]) -> "ResetOperation":
+        return replace(self, params=new_params)
+
+    def apply(self, amplitude_vector: ParameterizedVector) -> ParameterizedVector:
+        raise RuntimeError(
+            "ResetOperation.apply is not implemented because the result would not be "
+            "a valid wavefunction."
+        )
+
+    @property
+    def free_symbols(self) -> Iterable[sympy.Symbol]:
         return get_free_symbols(self.params)

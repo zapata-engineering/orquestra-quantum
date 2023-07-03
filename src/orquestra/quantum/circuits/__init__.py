@@ -154,6 +154,7 @@ from ._builtin_gates import (
     RY,
     RZ,
     SWAP,
+    SX,
     U3,
     XX,
     XY,
@@ -204,5 +205,5 @@ from ._serde import (
     to_dict,
 )
 from ._testing import create_random_circuit
-from ._wavefunction_operations import MultiPhaseOperation
+from ._wavefunction_operations import MultiPhaseOperation, ResetOperation
 from .symbolic import natural_key, natural_key_revlex
