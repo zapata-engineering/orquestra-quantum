@@ -271,12 +271,3 @@ def delay_matrix(_duration):
     # Therefore, the Delay gate will always evaluate to identity on simulator,
     # but it will have an effect if used on an actual hardware.
     return i_matrix()
-
-
-def reset_matrix():
-    return sympy.Matrix(
-        [
-            [1, 0],
-            [0, 0],
-        ]
-    )
