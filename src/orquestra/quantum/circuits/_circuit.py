@@ -123,9 +123,16 @@ class Circuit:
         """
         # The `reversed` iterator reflects the fact the matrices are multiplied
         # when composing linear operations (i.e. first operation is the rightmost).
-        lifted_matrices = [
-            op.lifted_matrix(self.n_qubits) for op in reversed(self.operations)
-        ]
+        lifted_matrices = []
+        for op in reversed(self.operations):
+            if isinstance(op, _gates.GateOperation):
+                lifted_matrices += [op.lifted_matrix(self.n_qubits)]
+            else:
+                raise ValueError(
+                    f"Operation {op} is not a gate operation and so circuit cannot"
+                    "be converted to a unitary matrix."
+                )
+
         return reduce(operator.matmul, lifted_matrices)
 
     def bind(self, symbols_map: Dict[sympy.Symbol, Any]):

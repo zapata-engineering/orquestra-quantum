@@ -90,17 +90,14 @@ class MultiPhaseOperation:
 
 @dataclass
 class ResetOperation:
-    """Operation resetting a given qubit to the |0> state."""
+    """Operation resetting a given qubit to the |0> state.
+    Cannot be implmented in orquestra because the result would not be a valid
+    wavefunction. However we include it to perform circuit conversions."""
 
     params: Tuple[Parameter, ...] = ()
 
     def __init__(self, qubit_index: int):
         self.qubit_indices = (qubit_index,)
-
-    def matrix(self):
-        raise NotImplementedError(
-            "ResetOperation does not have a matrix representation"
-        )
 
     def bind(self, symbols_map) -> "ResetOperation":
         return self.replace_params(
@@ -110,16 +107,8 @@ class ResetOperation:
     def replace_params(self, new_params: Tuple[Parameter, ...]) -> "ResetOperation":
         return replace(self, params=new_params)
 
-    def lifted_matrix(
-        self, amplitude_vector: ParameterizedVector
-    ) -> ParameterizedVector:
-        raise NotImplementedError(
-            "ResetOperation.apply is not implemented because the result would not be "
-            "a valid wavefunction."
-        )
-
     def apply(self, amplitude_vector: ParameterizedVector) -> ParameterizedVector:
-        raise NotImplementedError(
+        raise RuntimeError(
             "ResetOperation.apply is not implemented because the result would not be "
             "a valid wavefunction."
         )
