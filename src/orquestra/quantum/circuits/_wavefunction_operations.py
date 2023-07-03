@@ -93,10 +93,14 @@ class ResetOperation:
     """Operation resetting a given qubit to the |0> state."""
 
     params: Tuple[Parameter, ...] = ()
-    matrix = np.array([[1, 0], [0, 0]])
 
-    def __init__(self, *qubit_indices: Tuple[int]):
-        self.qubit_indices = qubit_indices
+    def __init__(self, qubit_index: int):
+        self.qubit_indices = (qubit_index,)
+
+    def matrix(self):
+        raise NotImplementedError(
+            "ResetOperation does not have a matrix representation"
+        )
 
     def bind(self, symbols_map) -> "ResetOperation":
         return self.replace_params(
