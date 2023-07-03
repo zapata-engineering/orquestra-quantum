@@ -4,6 +4,8 @@
 from abc import abstractmethod
 from typing import Iterable, Protocol, Sequence, TypeVar
 
+from orquestra.quantum.circuits import GateOperation
+
 OperationType = TypeVar("OperationType")
 
 
@@ -26,7 +28,7 @@ def decompose_operation(
     operation: OperationType,
     decomposition_rules: Sequence[DecompositionRule[OperationType]],
 ):
-    if not decomposition_rules:
+    if not decomposition_rules or not isinstance(operation, GateOperation):
         return [operation]
 
     current_rule, *remaining_rules = decomposition_rules
