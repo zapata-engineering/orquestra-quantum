@@ -218,8 +218,8 @@ class MatrixFactoryGate:
     def replace_params(self, new_params: Tuple[Parameter, ...]) -> "MatrixFactoryGate":
         return replace(self, params=new_params)
 
-    def controlled(self, num_controlled_qubits: int) -> Gate:
-        return ControlledGate(self, num_controlled_qubits)
+    def controlled(self, num_control_qubits: int) -> Gate:
+        return ControlledGate(self, num_control_qubits)
 
     @property
     def dagger(self) -> Union["MatrixFactoryGate", Gate]:

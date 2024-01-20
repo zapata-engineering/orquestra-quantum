@@ -31,7 +31,7 @@ class U3GateToRotation(DecompositionRule[GateOperation]):
         def preprocess_gate(gate):
             return (
                 gate.controlled(operation.gate.num_control_qubits)
-                if operation.gate.name == "Control"
+                if isinstance(operation.gate, ControlledGate)
                 else gate
             )
 
